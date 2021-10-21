@@ -1,5 +1,7 @@
 package bean;
 
+import java.util.Date;
+
 public class Empleado {
 
 	/**
@@ -8,9 +10,11 @@ public class Empleado {
 	private String nombre;
 	private String apellidos;
 	private String dni;
+	private String telefono;
 	private int edad;
-	private float sueldo;
-	private String estado;
+	private int sueldo;
+	private int experiencia;
+	private Date fechaIncorporacion;
 	
 	/**
 	 * Constructor sin argumentos
@@ -19,9 +23,11 @@ public class Empleado {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.dni = dni;
+		this.telefono = telefono;
 		this.edad = edad;
 		this.sueldo = sueldo;
-		this.estado = estado;
+		this.experiencia = experiencia;
+		this.fechaIncorporacion = fechaIncorporacion;
 	}
 	
 	//Getters y Setters
@@ -74,6 +80,22 @@ public class Empleado {
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
+	
+	/**
+	 * método de Acceso al telefono
+	 * @return String telefono
+	 */
+	public String getTelefono() {
+		return telefono;
+	}
+	
+	/**
+	 * Método de cambio de valor del telefono
+	 * @param String DNI
+	 */
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
 
 	/**
 	 * método de Acceso a la edad
@@ -95,7 +117,7 @@ public class Empleado {
 	 * Método de Acceso al sueldo
 	 * @return float sueldo
 	 */
-	public float getSueldo() {
+	public int getSueldo() {
 		return sueldo;
 	}
 
@@ -103,23 +125,39 @@ public class Empleado {
 	 * Método de cambio de valor del sueldo
 	 * @param float sueldo
 	 */
-	public void setSueldo(float sueldo) {
+	public void setSueldo(int sueldo) {
 		this.sueldo = sueldo;
 	}
 	
 	/**
-	 * Método de acceso al estado civil
-	 * @return String estado
+	 * Método de acceso a los años de experiencias
+	 * @return int años de experiencias
 	 */
-	public String getEstado() {
-		return estado;
+	public int getExperiencia() {
+		return experiencia;
 	}
 
 	/**
 	 * Método de cambio de valor del estado civil
-	 * @param String estado
+	 * @param int años de experiencia
 	 */
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setExperiencia(int experiencia) {
+		this.experiencia = experiencia;
+	}
+	
+	/**
+	 * Método de acceso a la fecha de incorporacion
+	 * @return fecha de incoroporacion
+	 */
+	public Date getFechaIncorporacion() {
+		return fechaIncorporacion;
+	}
+
+	/**
+	 * Método de cambio de valor de la fecha de incorporacion
+	 * @param int años de experiencia
+	 */
+	public void setFechaIncorporacion(Date fechaIncorporacion) {
+		this.fechaIncorporacion = fechaIncorporacion;
 	}
 }

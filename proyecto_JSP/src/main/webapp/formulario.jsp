@@ -11,44 +11,38 @@
 
 <div class="contenido">
 
-<form action="mostrarDatos.jsp" method="get">
+<form action="mostrarDatos.jsp" method="POST">
 <label>Nombre: </label>
-<input type="text" id="nombre">
+<input type="text" name="nombre">
 
 <br>
 
 <label>Apellidos: </label>
-<input type="text" id="apellidos">
+<input type="text" name="apellidos">
 
 <br>
 
-<label>Introduce tu DNI: </label>
-<input type="text" id="dni">
+<label>DNI: </label>
+<input type="text" name="dni">
+
+<br>
+
+<label>Teléfono: </label>
+<input type="text" name="telefono">
 
 <br>
 
 <label>Edad: </label>
-<input type="text" id="edad">
+<input type="text" name="edad">
 
 <br>
 
-<label>Sueldo: </label>
-<input type="text" id="sueldo">
+<label>Años de experiencia: </label>
+<input type="number" name="experiencia">
 
 <br>
 
-<label name ="estado">Estado Civil: </label>
-<select id="estado">
-	<option value="">--</option>
-	<option value="1">Soltero</option>
-	<option value="2">Casado</option>
-	<option value="3">Separado</option>
-	<option value="4">Viudo</option>
-</select>
-
-<br>
-
-<button type="submit" id="botonEnvio">ENVIAR</button>
+<button type="submit" value ="submit" id="botonEnvio">ENVIAR</button>
 
 
 </form>

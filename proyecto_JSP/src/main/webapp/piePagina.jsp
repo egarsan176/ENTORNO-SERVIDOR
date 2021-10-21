@@ -6,5 +6,7 @@
      <%! private int numVisitas = 0; %>
       <p>Visitas de la página: <%= ++numVisitas %> .</p>
       
+      <meta http-equiv="Refresh" CONTENT="10;url=index.jsp">
+      
    </body>
 </html>

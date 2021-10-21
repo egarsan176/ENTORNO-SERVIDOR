@@ -32,12 +32,13 @@ int year = dateNow.get(java.util.Calendar.YEAR);
 
 <p id="reloj">[loading...]<p>
 
-<button id="botonEmple"><a>Ver Lista Empleados</a></button>
+<!-- <button id="botonEmple"><a>Ver Lista Empleados</a></button> -->
 <button id="botonAdd"><a href="formulario.jsp">Añadir empleado</a></button>
 
 <%@ include file = "piePagina.jsp" %>
 </div>
 
+<meta http-equiv="Refresh" CONTENT="10;url=index.jsp">
 
 <script src="js/reloj.js"></script>
 </body>
