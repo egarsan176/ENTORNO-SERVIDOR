@@ -11,6 +11,8 @@
 
 <div class="contenido">
 
+<h2>Formulario de Inscripción:</h2>
+
 <form action="mostrarDatos.jsp" method="POST">
 <label>Nombre: </label>
 <input type="text" name="nombre">

@@ -1,3 +1,5 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -9,13 +11,16 @@
 <link rel="stylesheet" href="css/HojaDeEstilo1.css"></link>
 <body>
 
+
+
 <%
 
+//creo la fecha actual
 java.util.Calendar dateNow = java.util.Calendar.getInstance();
 
 int day = dateNow.get(java.util.Calendar.DAY_OF_WEEK);
-String dias []= {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
-String dayName = dias[day];
+String dias []= {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+String dayName = dias[day-1];
 
 int numberDay = dateNow.get(java.util.Calendar.DAY_OF_MONTH);
 
@@ -32,13 +37,12 @@ int year = dateNow.get(java.util.Calendar.YEAR);
 
 <p id="reloj">[loading...]<p>
 
-<!-- <button id="botonEmple"><a>Ver Lista Empleados</a></button> -->
 <button id="botonAdd"><a href="formulario.jsp">Añadir empleado</a></button>
+
 
 <%@ include file = "piePagina.jsp" %>
 </div>
 
-<meta http-equiv="Refresh" CONTENT="10;url=index.jsp">
 
 <script src="js/reloj.js"></script>
 </body>

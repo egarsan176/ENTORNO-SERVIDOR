@@ -11,8 +11,11 @@
 <body>
 <div class="contenido">
 	
-	<!-- se inicializa el bean Empleado -->
-	<jsp:useBean id="nuevoEmple" class="bean.Empleado"/>
+	<!-- se inicializa el bean Empleado y persiste durante la sesión-->
+	<jsp:useBean id="nuevoEmple" class="bean.Empleado" />
+	
+	<%-- <jsp:setProperty property="*" name="nuevoEmple"/> 
+	con el * automáticamente guarda todos los datos del formulario siempre que su nombre coincidan con los del bean--%>
 	
 		<!-- se modifican sus atributos -->
 	<jsp:setProperty property="nombre" name="nuevoEmple" param="nombre"/>
@@ -71,8 +74,8 @@
 	    <td><jsp:getProperty property="experiencia" name="nuevoEmple"/></td>
 	  </tr>
 	      <tr>
-	    <td id="title">Sueldo mensual:</td>
-	    <td><jsp:getProperty property="sueldo" name="nuevoEmple"/>€</td>
+	    <td id="title">Sueldo base:</td>
+	    <td><jsp:getProperty property="sueldo" name="nuevoEmple"/> €</td>
 	  </tr>
 	      <tr>
 	    <td id="title">Fecha incorporación a la empresa:</td>
@@ -80,6 +83,8 @@
 	    <jsp:getProperty property="fechaIncorporacion" name="nuevoEmple"/></td>
 	  </tr>
 	</table>
+	
+	
  
  	<button id="botonAdd"><a href="index.jsp">Volver al Inicio</a></button>
 
