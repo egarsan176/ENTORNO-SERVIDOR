@@ -35,15 +35,16 @@ int year = dateNow.get(java.util.Calendar.YEAR);
 <h1><%= new String ("Bienvenido a la página principal") %></h1>
 <h3>Hoy es <%=dayName%>, <%=numberDay%> de <%=monthName%> de <%=year%>.</h3> 
 
+<!-- se añade el espacio en el que se insertará el código javascript -->
 <p id="reloj">[loading...]<p>
 
 <button id="botonAdd"><a href="formulario.jsp">Añadir empleado</a></button>
 
-
+<!-- se incluye el footer a la página principal a través de otra página jsp -->
 <%@ include file = "piePagina.jsp" %>
 </div>
 
-
+<!-- insercción del código javascript del reloj de la página principal -->
 <script src="js/reloj.js"></script>
 </body>
 </html>

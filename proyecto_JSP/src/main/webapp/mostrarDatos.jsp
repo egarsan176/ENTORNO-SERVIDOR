@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <!-- se inserta la llamada a la página de error que gestiona las excepciones -->
     <%@ page errorPage = "edadException.jsp" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Lista Empleados</title>
-<link rel="stylesheet" href="css/HojaDeEstilo1.css"></link>
+<link rel="stylesheet" href="css/HojaDeEstilo1.css"></link> <!-- se añade la hoja de estilos -->
 </head>
 <body>
 <div class="contenido">
@@ -30,7 +32,7 @@
 	<jsp:getProperty property="apellidos" name="nuevoEmple"/>, bienvenido a nuestra plantilla.</h3>
 
 	<% 
-		//para asignar sueldo al empleado en función de su experiencia
+		//este scriptlet sirve para asignar el sueldo al empleado en función de su experiencia
 		if (nuevoEmple.getExperiencia() <= 2){%> 
 		<jsp:setProperty property="sueldo" name="nuevoEmple" value="1050"/>
 		<%} 
