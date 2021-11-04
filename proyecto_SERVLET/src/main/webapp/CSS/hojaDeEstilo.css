@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+* {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+
+.intro {
+  text-align: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  background-color: #f8c471;
+  padding: 3%;
+  border-style: double;
+}
+
+form{
+  padding: 2%;
+  text-align: center;
+  border-style: solid;
+  background-color: #f7dc6f;
+}
+
+.login input {
+  margin-top: 2%;
+}
+
+.login button, .cabeceraCatalogo button {
+  background-color: #f8c471;
+  margin-top: 2%;
+  font-weight: bold;
+  font-size: large;
+  color: black
+}
+
+body {
+  background-color: #fcf3cf;
+}
+
+a{
+	text-decoration: none;
+	color: black;
+}
