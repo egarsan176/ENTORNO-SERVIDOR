@@ -5,38 +5,13 @@
 <meta charset="UTF-8">
 <title>Catálogo</title>
 </head>
-  <style>
+<link rel="stylesheet" href="../CSS/hojaDeEstilo2.css">
 
-    img{
-      width: 300px;
-      height: 200px;
-    }
-
-   label{
-     margin-left: 31%;
-   }
-   #bot{
-     margin-top: 4%;
-     text-align: center;
-   }
-   button{
-    background-color: #f7dc6f;
-   }
-   
-	.cabeceraCatalogo{
-	padding: 2%;
-  	text-align: center;
-  	border-style: solid;
-  	background-color: #f7dc6f;
-	}
-
-  </style>
 <body>
-<div class="cabeceraCatalogo">
+<div id="header">
 <h1>Catálogo Online</h1>
 </div>
-<form action="/proyecto_SERVLET/Catalogo_servlet" method="POST">
-  <form>
+<form action="/proyecto_SERVLET/Catalogo_servlet" method="POST" >
 
     <div id="1">
       <table>
@@ -50,7 +25,7 @@
               <li>Compuesto por 36 piezas</li>
               <li>Fabricado en hierro y madera</li>
               <li>Precio:</li>
-              <p>49.99 €</p>
+              <p >49.99 €</p>
             </ul>
           </td>
   
@@ -234,15 +209,8 @@
     <div id="bot">
       <button type="submit">IR AL CARRITO</button>
     </div>
-    
-
-  </form>
 
 </form>
-<!-- <button type="submit"><a href="index_login.jsp">SALIR</a></button> -->
-
-<div></div>
-
 
 </body>
 </html>

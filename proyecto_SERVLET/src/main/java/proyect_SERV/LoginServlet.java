@@ -44,14 +44,14 @@ public class LoginServlet extends HttpServlet {
         String usuario = request.getParameter("usuario");
         String password = request.getParameter("password");
         
+        sesion.setAttribute("userName", usuario);	//establece el nombre del usuario en la sesion
+        sesion.setMaxInactiveInterval(100);	//invalidar la sesion transcurridos 10 segundos
         
-        if(validateUser(usuario, password) && sesion.getAttribute("userName") == null){ 
-            //si coincide usuario y password y además no hay sesión iniciada entra
-            
-        	sesion.setMaxInactiveInterval(10);	//invalidar la sesion transcurridos 10 segundos
+        
+        if(validateUser(usuario, password)){ 
+            //si coincide usuario y password
         	
-           	sesion.setAttribute("userName", usuario);	//establece el nombre del usuario en la sesion
-            //redirijo al catálogo
+             //redirijo al catálogo
             response.sendRedirect("/proyecto_SERVLET/model/catalogo.html");
             
         }else{

@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+form {
+  margin: 21px;
+  background-color: #fbe9a0;
+  padding: 5%;
+}
+
+#header {
+  text-align: center;
+  border-style: dashed;
+  background-color: #e3ae3f;
+  margin: 20px;
+}
+
+img {
+  border-radius: 6%;
+  border-style: dashed;
+  width: 300px;
+  height: 200px;
+}
+label {
+  margin-left: 28%;
+}
+#bot {
+  margin-top: 4%;
+  text-align: center;
+}
+table {
+  background-color: white;
+  width: 100%;
+}
+
+table,
+td,
+tr,
+th {
+  border: 1px;
+  border-style: solid;
+  border-collapse: collapse;
+  padding: 1%;
+}
+
+.bold {
+  font-weight: bold;
+  text-align: right;
+}
+#button {
+  margin-top: 2%;
+  text-align: center;
+}

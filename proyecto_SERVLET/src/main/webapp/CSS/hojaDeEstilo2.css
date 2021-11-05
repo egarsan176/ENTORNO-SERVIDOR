@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+form {
+  margin: 21px;
+  background-color: #fbe9a0;
+  padding: 5%;
+}
+
+#header {
+  text-align: center;
+  border-style: dashed;
+  background-color: #e3ae3f;
+  margin: 20px;
+}
+
+img {
+  border-radius: 6%;
+  border-style: dashed;
+  width: 300px;
+  height: 200px;
+}
+label {
+  margin-left: 35%;
+}
+#bot {
+  margin-top: 4%;
+  text-align: center;
+}

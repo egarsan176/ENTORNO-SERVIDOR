@@ -11,22 +11,38 @@
         <link rel="stylesheet" href="../CSS/hojaDeEstilo.css"></link>
     </head>
     <body>
-       <div class="intro">
-           <h1>Bienvenid@ a Don Tornillos</h1>
-           <h3>La ferretería de tu barrio, pero en la web</h3>
-       </div>
-       <div>
-       
-           <form class="login" method="POST" action="/proyecto_SERVLET/LoginServlet"> <!-- en action la ruta del servlet al que se dirije -->
-               <label>Nombre de usuario:</label>
-               <input name="usuario" placeholder="usuario" type="text">
-               <br>
-              
-               <label>Contraseña:</label>
-               <input name="password" placeholder="contraseña" type="password"> 
-               <br>
-               <button type="submit">ENTRAR</button>
-           </form>
-       </div>
+       <div id="contenedor">
+
+            <div id="header">
+                <h1>Don Tornillos</h1>
+                <h3>La ferretería de tu barrio, pero en la web</h3>
+            </div>
+                
+            <div id="form">
+
+                <form id="addUser" method="POST" action="/proyecto_SERVLET/LoginServlet">
+                    <label>Nombre de usuario:</label>
+                    <input name="usuario" placeholder="usuario" type="text">
+                    <br>
+            
+                    <label>Contraseña:</label>
+                    <input name="password" placeholder="contraseña" type="password"> 
+                    <br>
+                    
+
+                    <div id="botonesIndex">
+                        <button id ="send">ENTRAR</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div id="imag">
+                <img src="../img/ferrLogo.jpg">
+            </div>
+
+
+        </div>
     </body>
 </html>
