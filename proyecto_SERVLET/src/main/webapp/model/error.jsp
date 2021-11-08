@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Error de Login</title>
 </head>
 <body>
 
@@ -13,9 +13,7 @@
 <!-- se carga el login de nuevo en la parte superior -->
 <%@ include file = "index_login.jsp" %>
 </div>
-
-<%-- <%= request.getParameter("usuario")%>  --%>
-
+<br>
 <p style="text-align: center">El usuario no está registrado en el sistema</p>
 </body>
 </html>

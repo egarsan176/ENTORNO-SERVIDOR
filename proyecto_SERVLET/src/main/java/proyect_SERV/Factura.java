@@ -25,12 +25,12 @@ public class Factura extends HttpServlet {
      */
     public Factura() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response); 	//llama al doPost
 	}
@@ -38,6 +38,7 @@ public class Factura extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession sesion = request.getSession(false);
 		
@@ -162,7 +163,7 @@ public class Factura extends HttpServlet {
 					+ "          </tr>\n"
 					+ "\n"
 					+ "          <tr class=\"bold\">\n"
-					+ "            <td colspan=\"3\"\n"
+					+ "            <td colspan=\"3\">\n"
 					+ "                GASTOS DE ENVÍO:  \n"
 					+ "            </td>\n"
 					+ "            <td>\n"
@@ -223,11 +224,11 @@ public class Factura extends HttpServlet {
 	
 	private double calcularIVA(double cantidad) {
 		
-		return cantidad*IVA;
+		return Math.round((cantidad*IVA)*100d) / 100d;
 	}
 	
 	private double calcularTotalFactura(double IVA, double total, double envio) {
-		return (IVA+total+envio);
+		return Math.round((IVA+total+envio)*100d) /100d;
 	}
 
 }

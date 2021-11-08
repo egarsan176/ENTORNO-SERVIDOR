@@ -39,7 +39,7 @@
             </div>
 
             <div id="imag">
-                <img src="../img/ferrLogo.jpg">
+                <img alt= "Herramientas" src="../img/ferrLogo.jpg">
             </div>
 
 

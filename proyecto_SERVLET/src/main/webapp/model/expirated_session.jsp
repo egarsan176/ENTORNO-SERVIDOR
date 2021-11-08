@@ -35,7 +35,11 @@
   </div>
   <div id= "content">
     <h2>Uppss...</h2>
-    <h3>Lo sentimos, su sesión ha caducado.</h3>
+    <h3>Lo sentimos, ha ocurrido uno de los siguientes errores.</h3>
+    <ul>
+    <li>Su sesión ha caducado.</li>
+    <li>No está registrado en el sistema.</li>
+    </ul>
     <button><a href="index_login.jsp">VOLVER A INICIO</a></button>
   </div>
 </body>

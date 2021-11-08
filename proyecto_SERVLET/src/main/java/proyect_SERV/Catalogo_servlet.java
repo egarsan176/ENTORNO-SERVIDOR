@@ -22,12 +22,13 @@ public class Catalogo_servlet extends HttpServlet {
      */
     public Catalogo_servlet() {
         super();
-        // TODO Auto-generated constructor stub
+       
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		doPost(request, response);
@@ -38,65 +39,55 @@ public class Catalogo_servlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession sesion = request.getSession(false); //con false para que si se ha caducado la sesion anterior, no cree una nueva
 		
 		if(sesion != null) {
 			
-			//alamceno los productos y los guardo en la sesion
-			String [] listadoProductos = {"Kit Básico de Herramientas", "Taladro percutor", "Llave", "Juego de Destornilladores",
-											"Juego de LLaves", "Juego de Destornilladores", "Tornillo con tuerca", "Tornillo"};
-			sesion.setAttribute("p1", listadoProductos[0]);
-			sesion.setAttribute("p2", listadoProductos[1]);
-			sesion.setAttribute("p3", listadoProductos[2]);
-			sesion.setAttribute("p4", listadoProductos[3]);
-			sesion.setAttribute("p5", listadoProductos[4]);
-			sesion.setAttribute("p6", listadoProductos[5]);
-			sesion.setAttribute("p7", listadoProductos[6]);
-			sesion.setAttribute("p8", listadoProductos[7]);
-			
+			almacenarNombreProductosSesion(sesion);	
 			
 			//recupero las cantidades de cada producto introducidas en el catálogo y las almaceno en la sesión si tienen valor introducido
 			String cantidad1 = request.getParameter("id_1");
-			if(!"".equals(cantidad1)) {
+			if(!"".equals(cantidad1) && Integer.parseInt(cantidad1) > 0 && cantidad1!= null) {	//compruebo que haya seleccionado una cantidad y que no sea negativa
 				sesion.setAttribute("c1", Integer.parseInt(cantidad1));
 			}
 			
 			
 			String cantidad2 = request.getParameter("id_2");
-			if(!"".equals(cantidad2)) {
+			if(!"".equals(cantidad2) && Integer.parseInt(cantidad2) > 0 && cantidad2!= null) {
 				sesion.setAttribute("c2", Integer.parseInt(cantidad2));	
 			}
 			
 			String cantidad3 = request.getParameter("id_3");
-			if(!"".equals(cantidad3)) {				
+			if(!"".equals(cantidad3) && Integer.parseInt(cantidad3) > 0 && cantidad3!= null) {				
 				sesion.setAttribute("c3", Integer.parseInt(cantidad3));
 			}
 			
 			String cantidad4 = request.getParameter("id_4");
-			if(!"".equals(cantidad4)) {
+			if(!"".equals(cantidad4) && Integer.parseInt(cantidad4) > 0 && cantidad4!= null) {
 				sesion.setAttribute("c4", Integer.parseInt(cantidad4));
 			}
 			
 			String cantidad5 = request.getParameter("id_5");
-			if(!"".equals(cantidad5)) {
+			if(!"".equals(cantidad5) && Integer.parseInt(cantidad5) > 0 && cantidad5!= null) {
 				sesion.setAttribute("c5", Integer.parseInt(cantidad5));
 			}
 			
 			
 			String cantidad6 = request.getParameter("id_6");
-			if(!"".equals(cantidad6)) {				
+			if(!"".equals(cantidad6) && Integer.parseInt(cantidad6) > 0 && cantidad6!= null) {				
 				sesion.setAttribute("c6", Integer.parseInt(cantidad6));
 			}
 			
 			String cantidad7 = request.getParameter("id_7");
-			if(!"".equals(cantidad7)) {
+			if(!"".equals(cantidad7) && Integer.parseInt(cantidad7) > 0 && cantidad7!= null) {
 				sesion.setAttribute("c7", Integer.parseInt(cantidad7));
 			}
 			
 			String cantidad8 = request.getParameter("id_8");
-			if(!"".equals(cantidad8)) {
+			if(!"".equals(cantidad8) && Integer.parseInt(cantidad8) > 0 && cantidad8!= null) {
 				sesion.setAttribute("c8", Integer.parseInt(cantidad8));
 			}
 			
@@ -138,11 +129,66 @@ public class Catalogo_servlet extends HttpServlet {
 			for(int i=0; i< totalPrecios.length;i++) {
 			costeTotal += totalPrecios[i];
 			}
-			sesion.setAttribute("total", costeTotal);	//guardo en la sesion el coste total de todos los productos seleccionados
+			sesion.setAttribute("total", Math.round((costeTotal)*100d)/100d);	//guardo en la sesion el coste total de todos los productos seleccionados
+			
+			
+			String product1 = "";
+			String product2 = "";
+			String product3 = "";
+			String product4 = "";
+			String product5 = "";
+			String product6 = "";
+			String product7 = "";
+			String product8 = "";
+			
+			
+			//compruebo qué artículos son los seleccionados para mostrarlos en el html
+			if(sesion.getAttribute("c1")!= null) {
+				
+				product1 = generarHTML(sesion.getAttribute("p1"), sesion.getAttribute("pp1"), sesion.getAttribute("c1"), sesion.getAttribute("total1"));
+				
+			}
+			if(sesion.getAttribute("c2")!= null) {
+				
+				product2 = generarHTML(sesion.getAttribute("p2"), sesion.getAttribute("pp2"), sesion.getAttribute("c2"), sesion.getAttribute("total2"));
+				
+			}
+			if(sesion.getAttribute("c3")!= null) {
+				
+				product3 = generarHTML(sesion.getAttribute("p3"), sesion.getAttribute("pp3"), sesion.getAttribute("c3"), sesion.getAttribute("total3"));
+				
+			}
+			if(sesion.getAttribute("c4")!= null) {
+				
+				product4 = generarHTML(sesion.getAttribute("p4"), sesion.getAttribute("pp4"), sesion.getAttribute("c4"), sesion.getAttribute("total4"));
+				
+			}
+			if(sesion.getAttribute("c5")!= null) {
+				
+				product5 = generarHTML(sesion.getAttribute("p5"), sesion.getAttribute("pp5"), sesion.getAttribute("c5"), sesion.getAttribute("total5"));
+				
+			}
+			if(sesion.getAttribute("c6")!= null) {
+				
+				product6 = generarHTML(sesion.getAttribute("p6"), sesion.getAttribute("pp6"), sesion.getAttribute("c6"), sesion.getAttribute("total6"));
+				
+			}
+			if(sesion.getAttribute("c7")!= null) {
+				
+				product7 = generarHTML(sesion.getAttribute("p7"), sesion.getAttribute("pp7"), sesion.getAttribute("c7"), sesion.getAttribute("total7"));
+				
+			}
+			if(sesion.getAttribute("c8")!= null) {
+				
+				product8 = generarHTML(sesion.getAttribute("p8"), sesion.getAttribute("pp8"), sesion.getAttribute("c8"), sesion.getAttribute("total8"));
+		
+			}
+			
 			
 			response.setContentType("text/html");
 
 			PrintWriter out =response.getWriter();
+			
 			
 			out.println("<DOCTYPE html><html>"
 					+ "<!DOCTYPE html>\n"
@@ -151,7 +197,7 @@ public class Catalogo_servlet extends HttpServlet {
 					+ "    <meta charset=\"UTF-8\">\n"
 					+ "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n"
 					+ "    <meta name=\"viewport\" content=\"width=<device-width>, initial-scale=1.0\">\n"
-					+ "    <title>Document</title>\n"
+					+ "    <title>Resumen</title>\n"
 					+ "\n"
 					+ "    <link rel=\"stylesheet\" href=\"CSS/hojaDeEstilo3.css\">\n"
 					+ "</head>\n"
@@ -167,117 +213,21 @@ public class Catalogo_servlet extends HttpServlet {
 					+ "        \n"
 					+ "      <thead>\n"
 					+ "        <th>Nombre del Producto</th>\n"
+					+ "        <th>Precio Unidad</th>\n"
 					+ "        <th>Cantidad</th>\n"
-					+ "        <th>Precio</th>\n"
+					+ "        <th>Precio Total</th>\n"
 					+ "      </thead>\n"
 					+ "\n"
-					+ "        <tr>\n"
-					+ "            <td>\n"
-					+ "                Kit Básico de Herramientas   \n"
-					+ "            </td>\n"
-					+ "            <td>\n"
-					+ "              "+cantidad1+"\n"
-					+ "            </td>\n"
-					+ "            <td>\n"
-					+ "              "+totalPrecios[0]+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
-					+ "\n"
-					+ "          <tr>\n"
-					+ "            <td>\n"
-					+ "                Taladro Percutor   \n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+cantidad2+"\n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+totalPrecios[1]+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
-					+ "\n"
-					+ "          <tr>\n"
-					+ "            <td>\n"
-					+ "                Llave  \n"
-					+ "            </td>\n"
-					+ "            <td>\n"
-					+ "              "+cantidad3+"\n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+totalPrecios[2]+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
-					+ "\n"
-					+ "          <tr>\n"
-					+ "            <td>\n"
-					+ "                Juego de Destornilladores Intercambiables\n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+cantidad4+"\n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+totalPrecios[3]+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
-					+ "\n"
-					+ "          <tr>\n"
-					+ "            <td>\n"
-					+ "                Juego de Llaves   \n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+cantidad5+"\n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+totalPrecios[4]+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
-					+ "\n"
-					+ "          <tr>\n"
-					+ "            <td>\n"
-					+ "                Juego de Destornilladores   \n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+cantidad6+"\n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+totalPrecios[5]+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
-					+ "\n"
-					+ "          <tr>\n"
-					+ "            <td>\n"
-					+ "                Tornillo con tuerca   \n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+cantidad7+"\n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+totalPrecios[6]+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
-					+ "\n"
-					+ "          <tr>\n"
-					+ "            <td>\n"
-					+ "                Tornillo   \n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+cantidad8+"\n"
-					+ "            </td>\n"
-					+ "            <td >\n"
-					+ "              "+totalPrecios[7]+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
-					+ "\n"
-					+ "          <tr class=\"bold\">\n"
-					+ "            <td>\n"
-					+ "                Cantidad Total a Pagar:    \n"
-					+ "            </td>\n"
-					+ "            <td colspan=\"2\">\n"
-					+ "              "+costeTotal+"\n"
-					+ "            </td>\n"
-					+ "          </tr>\n"
+					+ ""+product1+"\n"
+					+ ""+product2+"\n"
+					+ ""+product3+"\n"
+					+ ""+product4+"\n"
+					+ ""+product5+"\n"
+					+ ""+product6+"\n"
+					+ ""+product7+"\n"
+					+ ""+product8+"\n"
 					+ "\n"
 					+ "      </table>\n"
-					+ "      <br>\n"
 					+ "\n"
 					+ "      <p>Seleccione opciones de envío:</p>\n"
 					+ "\n"
@@ -300,6 +250,21 @@ public class Catalogo_servlet extends HttpServlet {
 			
 	}
 	
+	private void almacenarNombreProductosSesion(HttpSession sesion) {
+		//almaceno los productos y los guardo en la sesion
+		String [] listadoProductos = {"Kit Básico de Herramientas", "Taladro percutor", "Llave", "Juego de Destornilladores",
+										"Juego de LLaves", "Juego de Destornilladores", "Tornillo con tuerca", "Tornillo"};
+		sesion.setAttribute("p1", listadoProductos[0]);
+		sesion.setAttribute("p2", listadoProductos[1]);
+		sesion.setAttribute("p3", listadoProductos[2]);
+		sesion.setAttribute("p4", listadoProductos[3]);
+		sesion.setAttribute("p5", listadoProductos[4]);
+		sesion.setAttribute("p6", listadoProductos[5]);
+		sesion.setAttribute("p7", listadoProductos[6]);
+		sesion.setAttribute("p8", listadoProductos[7]);
+		
+	}
+
 	/**
 	 * Calcula el precio a pagar de x producto según las cantidades pedidas
 	 * @param cantidad
@@ -316,6 +281,25 @@ public class Catalogo_servlet extends HttpServlet {
 		
 		return cantidad2*precio;
 		
+	}
+	
+	private String generarHTML(Object nombreProducto, Object precioUnidad, Object cantidadProducto,  Object precioTotal) {
+		String codigo = "<tr>\n"
+				+ "<td>\n"
+				+ ""+nombreProducto+"   \n"
+				+ "</td>\n"
+				+ "<td >\n"
+				+ ""+precioUnidad+"\n"
+				+ "</td>\n"
+				+ " <td >\n"
+				+ ""+cantidadProducto+"\n"
+				+ "</td>\n"
+				+ "<td >\n"
+				+ ""+precioTotal+"\n"
+				+ "</td>\n"
+				+ "</tr>\n";
+		
+		return codigo;
 	}
 	
 
