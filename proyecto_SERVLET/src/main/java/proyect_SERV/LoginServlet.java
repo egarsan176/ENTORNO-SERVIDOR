@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		doPost(request, response); 	//llama al doPost
+		doPost(request, response); 	//si entra en el GET, llama al doPost
 	}
 
 	/**
@@ -40,20 +40,33 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession sesion = request.getSession(true); //te devuelve la sesion que haya en el momento como un "objeto"
-														//si dentro tiene true, te devuelve la sesion, y si no existe, crea una nueva
+		/**
+		 * Recogemos un objeto de la sesion. Al ser true, te devuelve la sesión y si no existiera, crea una nueva
+		 */
+		HttpSession sesion = request.getSession(true); 
+														
 		
-
+		/**
+		 * Se recogen los datos de usuario y contraseña introducidos en el login
+		 */
         String usuario = request.getParameter("usuario");
         String password = request.getParameter("password");
         
-        sesion.setAttribute("userName", usuario);	//establece el nombre del usuario en la sesion
-        sesion.setMaxInactiveInterval(15);	//invalidar la sesion transcurridos 15 segundos
+        /**
+         * Se establece el nombre de usuario en la sesión y se invalida transcurridos 15 segundos
+         */
+        sesion.setAttribute("userName", usuario);	
+        sesion.setMaxInactiveInterval(15);	
         
         
-        if(validateUser(usuario, password)){ //si coincide usuario y password
+        /**
+         * Se comprueba si el usuario y la contraseña introducidos son válidos
+         */
+        if(validateUser(usuario, password)){ 
         
-        	//muestro el catálogo de productos
+        	/**
+        	 * Si el usuario y la contraseña son correctos se muestra el catálogo de productos
+        	 */
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
             
@@ -272,8 +285,11 @@ public class LoginServlet extends HttpServlet {
             		+ "</body></html>");
             
         }else{
+        	/**
+        	 * Si el login no es correcto, la sesión se invalida y se redirige a la página de error de login
+        	 */
         	sesion.invalidate();
-            //si el login falla redirige a página de error
+          
         	response.sendRedirect("/proyecto_SERVLET/model/error.jsp");
         	
         }
@@ -283,7 +299,7 @@ public class LoginServlet extends HttpServlet {
 	
 	
 	/**
-	 * Este método instancia la lista de usuarios, le carga los usuarios y comprueba que el usuario introducido existe 
+	 * Este método instancia la lista de usuarios, carga los usuarios y comprueba que el usuario y contraseña introducido existe 
 	 * @param usuario
 	 * @param password
 	 * @return true si el usuario y su contraseña existen en el HASHMAP, false si no existen

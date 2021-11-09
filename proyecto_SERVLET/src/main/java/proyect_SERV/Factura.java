@@ -17,8 +17,11 @@ import javax.servlet.http.HttpSession;
 public class Factura extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static final double ENVIO = 4.99;	//el coste de los gastos de envío
-	private static final double IVA = 0.16;		//el IVA añadido
+	/**
+	 * Declaro las constantes de los gastos de envío y del IVA
+	 */
+	private static final double _ENVIO = 4.99;	
+	private static final double _IVA = 0.16;		
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,10 +43,20 @@ public class Factura extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		/**
+		 * Recupero la sesión con false para que si la sesión anterior ha caducado, no cree una sesión nueva
+		 */
 		HttpSession sesion = request.getSession(false);
 		
+		/**
+		 * Si la sesión es válida, se ejecuta el código
+		 */
 		if(sesion != null) {
 			
+			/**
+			 * Creo las variables que contendrán el código HTML si éstas han sido seleccionadas en el catálogo
+			 */
 			String detalles1 ="";
 			String detalles2 ="";
 			String detalles3 ="";
@@ -54,7 +67,9 @@ public class Factura extends HttpServlet {
 			String detalles8 ="";
 			
 			
-			//compruebo qué artículos son los seleccionados para mostrarlos en el html
+			/**
+			 * Voy comprobando cuáles son los productos de los que se ha seleccionado una cantidad y genero el fragmento HTML que le corresponde a cada uno
+			 */
 			if(sesion.getAttribute("c1")!= null) {
 				
 				detalles1 = generarCodigo(sesion.getAttribute("p1"), sesion.getAttribute("pp1"), sesion.getAttribute("c1"), sesion.getAttribute("total1"));
@@ -96,14 +111,19 @@ public class Factura extends HttpServlet {
 		
 			}
 			
-			
-			String checkEnvio = request.getParameter("urgente");	//on si está marcado para añadir los gatsos de envío
+			/**
+			 * Compruebo si el campo del check de los gastos de envío ha sido marcado pra añadir el gasto extra
+			 */
+			String checkEnvio = request.getParameter("urgente");	
 			double envio = 0;
 			if("on".equals(checkEnvio)) {
-				envio = ENVIO;
+				envio = _ENVIO;
 			}
 			
 			
+			/**
+			 * Genero la respuesta HTML que ofrece el servlet
+			 */
 			response.setContentType("text/html");
 
 			PrintWriter out =response.getWriter();
@@ -185,11 +205,21 @@ public class Factura extends HttpServlet {
 					+ "\n"
 					+ "  </div>\n"
 					+ "     \n"
+					+ "<form method=\"POST\" action=\"/proyecto_SERVLET/CerrarSesion\">\n"
+
+					+"<div id=\"button\">\n"
+					+ "   <button >CERRAR SESIÓN</button>\n"
+					+ "   </div>"
+					+ "       \n"
+					+ "    </form>\n"
 					+ "</body>\n"
 					+ "</html>");
 			
 			
 		}else {
+			/**
+			 * Si la sesión no es válida redirige a página de error
+			 */
 			response.sendRedirect("/proyecto_SERVLET/model/expirated_session.jsp");
 		}
 	}
@@ -204,7 +234,7 @@ public class Factura extends HttpServlet {
 	 */
 	private String generarCodigo(Object nombre, Object precioUnidad, Object cantidad, Object total) {
 		
-		String detalles = "        <tr>\n"
+		return "        <tr>\n"
 				+ "            <td class=\"prod\">\n"
 				+ "                "+nombre+"   \n"
 				+ "            </td>\n"
@@ -218,17 +248,27 @@ public class Factura extends HttpServlet {
 				+ "              "+total+"\n"
 				+ "            </td>\n"
 				+ "        </tr>\n";
-		
-		return detalles;
 	}
 	
+	/**
+	 * Este método calcula el IVA de la cantidad que se le pasa por parámetro
+	 * @param cantidad
+	 * @return double con el IVA correspondiente
+	 */
 	private double calcularIVA(double cantidad) {
 		
-		return Math.round((cantidad*IVA)*100d) / 100d;
+		return Math.round((cantidad*_IVA)*100d) / 100d;
 	}
 	
-	private double calcularTotalFactura(double IVA, double total, double envio) {
-		return Math.round((IVA+total+envio)*100d) /100d;
+	/**
+	 * Este método calcula el total de la factura generada
+	 * @param IVA
+	 * @param total
+	 * @param envio
+	 * @return double con la cantidad total a pagar
+	 */
+	private double calcularTotalFactura(double iva, double total, double envio) {
+		return Math.round((iva+total+envio)*100d) /100d;
 	}
 
 }

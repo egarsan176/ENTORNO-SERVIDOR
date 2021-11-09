@@ -8,13 +8,16 @@ public class Listado_Usuarios {
 	private Map<String, String> listado;	//voy a usar un mapa para almacenar los usuarios porque así la clave será el nombre del usuario y el valor la constraseña
 	
 
+	/**
+	 * El constructor crea un nuevo HashMap de String, String
+	 */
 	public Listado_Usuarios() {
 		this.listado = new HashMap<String, String>();
 		
 	}
 	
 	/**
-	 * Este método carga los usuarios al mapa
+	 * Este método carga los usuarios predefinidos al mapa
 	 */
 	public void addDatos() {
 		listado.put("pepe123", "54321");
