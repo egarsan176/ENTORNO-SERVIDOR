@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<form action="/prueba_servlet/servletrespuesta">
+
+		<table border="0">
+
+			<tr>
+				<td><input type="radio" name="accion" value="primo" selected>
+					Obtener ultimo numero primo</td>
+				<td></td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td><input type="radio" name="accion" value="redirect">
+					Redirigir a una pagina</td>
+				<td>URL: <input type="text" name="url" value="https://www.google.es">
+				</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td><input type="radio" name="accion" value="error">
+					Mostrar pagina de error</td>
+				<td>Mensaje: <input type="text" name="mensaje"
+					value="Error generado por el usuario">
+				</td>
+				<td>Código: <select name="codigoMensaje">
+						<option name="codigoMensaje" value="400">400</option>
+						<option name="codigoMensaje" value="401">401</option>
+						<option name="codigoMensaje" value="403">403</option>
+						<option name="codigoMensaje" value="404" selected>404</option>
+				</select>
+				</td>
+			</tr>
+
+
+		</table>
+
+		<input type="submit" value="Enviar Datos">
+
+	</form>
+</body>
+</html>
