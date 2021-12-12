@@ -23,7 +23,25 @@
 	        </tr>
 	     </table>
 	     <br>
-	     	<button type="submit" id="submit">CONFIRMAR</button>
+	     <h3>DATOS DEL ENVÍO:</h3>
+	     <table border="1">
+	     	<tr>
+	     		<th>DIRECCIÓN</th>
+	     		<th>TELÉFONO</th>
+	     		<th>EMAIL</th>
+	     		<th>TIPO DE ENVÍO</th>
+	     	</tr>
+	     	<tr>
+		     	<!--  <td th:text="${usuario.getDireccion()}"></td>
+				<td th:text="${usuario.getTelefono()}"></td>
+				<td th:text="${usuario.getEmail()}"></td>-->
+				<td>
+				Envío Urgente<input type="radio" name="envio" value="urgente"/></br>
+				Envío Estándar<input type="radio" name="envio" value="estandar"/>
+				</td>
+	     	</tr>
+	     </table>
+	     	<button type="submit" id="doble">REALIZAR PEDIDO</button>
 	</form>
 </div>
 

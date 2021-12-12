@@ -19,12 +19,14 @@
 								<th>REFERENCIA</th>
 								<th>FECHA</th>
 								<th>DIRECCIÓN</th>
+								<th>TIPO DE ENVÍO</th>
 								<th>OPCIONES</th>
 							</tr>
 							<tr th:each="pedido : ${listaDePedidos}">
 								<td th:text="${pedido.getRef()}"></td>
 								<td th:text="${pedido.getFechaBonita()}"></td>
 								<td th:text="${pedido.getDireccion}"></td>
+								<td th:text="${pedido.getEnvio}"></td>
 								<td>
 								<button><a th:href="@{/pedido/editar/{ref}(ref=${pedido.ref})}">EDITAR</a></button>
 								<button><a th:href="@{/pedido/borrar/{ref}(ref=${pedido.ref})}">BORRAR</a></button>

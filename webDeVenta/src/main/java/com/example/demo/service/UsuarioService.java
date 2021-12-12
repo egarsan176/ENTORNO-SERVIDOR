@@ -92,10 +92,11 @@ public class UsuarioService {
 	
 	
 	
-	public void addPedido(Usuario user, Map<Producto, Integer> listaDeProductos, String direccion) {
+	public void addPedido(Usuario user, Map<Producto, Integer> listaDeProductos, String direccion, String envio) {
 		
-		Pedido pedido = new Pedido(direccion, listaDeProductos);
+		Pedido pedido = new Pedido(direccion, listaDeProductos, envio);
 		pedido.setListaDeProductos(listaDeProductos);
+		pedido.setEnvio(envio);
 		user.addPedido(pedido);
 		//funciona, añade el pedido al usuario
 		}

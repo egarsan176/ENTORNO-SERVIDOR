@@ -14,6 +14,7 @@ public class Pedido {
 	private static int contador = 0;
 	private String direccion;
 	private Date fecha;
+	private String envio;
 	private Map<Producto, Integer> listaDeProductos = new HashMap<>();
 	
 	//CONSTRUCTOR
@@ -23,14 +24,16 @@ public class Pedido {
 		this.ref= ref;
 	}
 	
-	public Pedido(String direccion, Map<Producto, Integer> listaDeProductos) {
+	public Pedido(String direccion, Map<Producto, Integer> listaDeProductos, String envio) {
 		super();
 		this.ref = "ref"+contador;
 		contador++;
 		this.fecha = new Date();
 		this.direccion = direccion;
 		this.listaDeProductos = listaDeProductos;
+		this.envio = envio;
 	}
+	
 
 	//GETTERS Y SETTERS
 	
@@ -72,14 +75,19 @@ public class Pedido {
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-
-
+	
+	public String getEnvio() {
+		return envio;
+	}
+	public void setEnvio(String envio) {
+		this.envio = envio;
+	}
+	
 	//HASHCODE, EQUALS, TO STRING
 	@Override
 	public int hashCode() {
-		return Objects.hash(direccion, fecha, listaDeProductos, ref);
+		return Objects.hash(direccion, envio, fecha, listaDeProductos, ref);
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -89,22 +97,20 @@ public class Pedido {
 		if (getClass() != obj.getClass())
 			return false;
 		Pedido other = (Pedido) obj;
-		return Objects.equals(direccion, other.direccion) && Objects.equals(fecha, other.fecha)
-				&& Objects.equals(listaDeProductos, other.listaDeProductos) && Objects.equals(ref, other.ref);
+		return Objects.equals(direccion, other.direccion) && Objects.equals(envio, other.envio)
+				&& Objects.equals(fecha, other.fecha) && Objects.equals(listaDeProductos, other.listaDeProductos)
+				&& Objects.equals(ref, other.ref);
 	}
-
-
+	
+	
 	@Override
 	public String toString() {
-		return "Pedido [ref=" + ref +", direccion=" + direccion + ", fecha=" + fecha
+		return "Pedido [ref=" + ref + ", direccion=" + direccion + ", fecha=" + fecha + ", envio=" + envio
 				+ ", listaDeProductos=" + listaDeProductos + "]";
 	}
-
-
 	public String getFechaBonita() {
 		return new SimpleDateFormat("dd-MM-yyyy || hh:mm:ss").format(this.fecha);
 	}
-	
 	
 	
 }

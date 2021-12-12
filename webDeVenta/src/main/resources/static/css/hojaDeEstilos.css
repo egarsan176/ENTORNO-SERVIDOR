@@ -26,7 +26,7 @@ button {
   margin-left: 20px;
 }
 
-form, #form {
+form, #form{
   margin: 21px;
   background-color: #f8dd6f;
   padding: 5%;
@@ -39,12 +39,13 @@ form, #form {
   margin: 20px;
 }
 #imag {
-  margin-top: -17.5%;
+  margin-top: -26%;
   margin-left: 60%;
 }
 img {
   border-radius: 6%;
   border-style: dashed;
+  width: 80%;
 }
 
 a{

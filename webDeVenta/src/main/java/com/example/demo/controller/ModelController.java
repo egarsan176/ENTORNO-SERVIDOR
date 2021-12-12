@@ -169,12 +169,16 @@ public class ModelController {
 	  * si está en la sesión, te muestra la lista de pedidos del usuario
 	  */
 	 @PostMapping("/nuevoPedido/listarPedidos")
-	 public String listarnuevoPedido(Model model) {
+	 public String listarnuevoPedido(Model model, @RequestParam(required=false,value="envio") String envio) {
 		 if(sesion.getAttribute("usuario") == null){
 			 return "redirect:/login";
-		 }else {
+		 }else if(envio == null) {
+			 return "redirect:/opcionesUsuario/nuevoPedido";
+		 }
+		 else {
 			 Usuario user = (Usuario) sesion.getAttribute("usuario");
-			 this.servicioUser.addPedido(user, this.servicioPedido.getAll(), user.getDireccion());
+			 this.servicioUser.addPedido(user, this.servicioPedido.getAll(), user.getDireccion(), envio);
+
 			 model.addAttribute("listaDePedidos", this.servicioPedido.findPedidoUser(user));
 			 
 			 return "redirect:/listarPedidos";
