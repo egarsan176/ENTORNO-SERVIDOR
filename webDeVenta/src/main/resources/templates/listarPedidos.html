@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Don Tornillos</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/hojaDeEstilos.css"></link>
+</head>
+    <body>
+       <div align="center">
+                
+                <h1>LISTA DE PEDIDOS</h1>
+		            <div id="form" align="center">
+						
+						<table border=1>
+							<tr>
+								<th>REFERENCIA</th>
+								<th>FECHA</th>
+								<th>DIRECCIÓN</th>
+								<th>OPCIONES</th>
+							</tr>
+							<tr th:each="pedido : ${listaDePedidos}">
+								<td th:text="${pedido.getRef()}"></td>
+								<td th:text="${pedido.getFechaBonita()}"></td>
+								<td th:text="${pedido.getDireccion}"></td>
+								<td>
+								<button><a th:href="@{/pedido/editar/{ref}(ref=${pedido.ref})}">EDITAR</a></button>
+								<button><a th:href="@{/pedido/borrar/{ref}(ref=${pedido.ref})}">BORRAR</a></button>
+								</td>
+							</tr>
+						</table>
+					<button id="doble"><a href="/cerrarSesion">CERRAR SESIÓN</a></button>
+					<button type="submit" id="doble"><a href="/opcionesUsuario">VOLVER ATRÁS</a></button>
+					</div>
+		</div>
+	</body>
+</html>
+								
+							

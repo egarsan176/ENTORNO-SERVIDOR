@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Don Tornillos</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+     <link href="/css/hojaDeEstilos.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<div align="center">
+	<h1>CATÁLOGO DE PRODUCTOS</h1>	
+	<form th:action="@{/nuevoPedido/submit}" method="post">
+		<table border=1>
+			<tr>
+				<th>PRODUCTO</th>
+				<th>DESCRIPCIÓN</th>
+				<th>PRECIO (€)</th>
+				<th>CANTIDAD</th>
+			</tr>
+			<tr th:each="producto : ${listaDeProductos}">
+				<td th:text="${producto.getNombre()}"></td>
+				<td th:text="${producto.getDescripcion()}"></td>
+				<td th:text="${producto.getPrecio()}"></td>
+				<td><input type="number" name="cantidad" min="0" value="0"/></td>
+			</tr>
+		</table>
+		</br>
+		<button type="submit" id="submit">ENVIAR</button>
+	</form>
+		<button><a href="/opcionesUsuario">VOLVER ATRÁS</a></button>
+</div>
+	
+</body>
+</html>
