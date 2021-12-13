@@ -15,6 +15,8 @@ public class Pedido {
 	private String direccion;
 	private Date fecha;
 	private String envio;
+	private String email;
+	private String telefono;
 	private Map<Producto, Integer> listaDeProductos = new HashMap<>();
 	
 	//CONSTRUCTOR
@@ -24,7 +26,7 @@ public class Pedido {
 		this.ref= ref;
 	}
 	
-	public Pedido(String direccion, Map<Producto, Integer> listaDeProductos, String envio) {
+	public Pedido( Map<Producto, Integer> listaDeProductos, String envio) {
 		super();
 		this.ref = "ref"+contador;
 		contador++;
@@ -32,6 +34,8 @@ public class Pedido {
 		this.direccion = direccion;
 		this.listaDeProductos = listaDeProductos;
 		this.envio = envio;
+		this.email = email;
+		this.telefono = telefono;
 	}
 	
 
@@ -83,6 +87,18 @@ public class Pedido {
 		this.envio = envio;
 	}
 	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getTelefono() {
+		return telefono;
+	}
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
 	//HASHCODE, EQUALS, TO STRING
 	@Override
 	public int hashCode() {
@@ -103,11 +119,13 @@ public class Pedido {
 	}
 	
 	
+
 	@Override
 	public String toString() {
-		return "Pedido [ref=" + ref + ", direccion=" + direccion + ", fecha=" + fecha + ", envio=" + envio
-				+ ", listaDeProductos=" + listaDeProductos + "]";
+		return "Pedido [ref=" + ref + ", direccion=" + direccion + ", fecha=" + fecha + ", envio=" + envio + ", email="
+				+ email + ", telefono=" + telefono + ", listaDeProductos=" + listaDeProductos + "]";
 	}
+	
 	public String getFechaBonita() {
 		return new SimpleDateFormat("dd-MM-yyyy || hh:mm:ss").format(this.fecha);
 	}

@@ -13,6 +13,10 @@
                 
                 <h1>LISTA DE PEDIDOS</h1>
 		            <div id="form" align="center">
+		            
+		            <h3>Bienvenido</h3>
+		            <h3 th:text="${usuario.getNombre()}"></h3>
+		            
 						
 						<table border=1>
 							<tr>
@@ -28,13 +32,12 @@
 								<td th:text="${pedido.getDireccion}"></td>
 								<td th:text="${pedido.getEnvio}"></td>
 								<td>
-								<button><a th:href="@{/pedido/editar/{ref}(ref=${pedido.ref})}">EDITAR</a></button>
-								<button><a th:href="@{/pedido/borrar/{ref}(ref=${pedido.ref})}">BORRAR</a></button>
+								<button style="width: 42%"><a th:href="@{/pedido/editar/{ref}(ref=${pedido.ref})}">EDITAR</a></button>
+								<button style="width: 42%"><a th:href="@{/pedido/borrar/{ref}(ref=${pedido.ref})}">BORRAR</a></button>
 								</td>
 							</tr>
 						</table>
 					<button id="doble"><a href="/cerrarSesion">CERRAR SESIÓN</a></button>
-					<button type="submit" id="doble"><a href="/opcionesUsuario">VOLVER ATRÁS</a></button>
 					</div>
 		</div>
 	</body>

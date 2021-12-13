@@ -13,6 +13,8 @@ import com.example.demo.model.Usuario;
 
 @Service
 public class PedidoService {
+	@Autowired
+	private UsuarioService servicioUser;
 	
 	@Autowired
 	private ProductoService productService;
@@ -68,9 +70,37 @@ public class PedidoService {
 	}
 	
 	
+	
 	public void eliminarProducto() {}
 	
 	
+	/**
+	 * Este método edita los datos de envío de un pedido concreto del usuario
+	 * @param ref
+	 * @param email
+	 * @param telefono
+	 * @param direccion
+	 * @param usuario
+	 */
+	public void editarPedido(String ref, String email, String telefono, String direccion,Integer[] listaDeCantidades,String envio, Usuario usuario) {
+		Pedido pedido = servicioUser.getPedidoByRef(ref, usuario);
+		
+		pedido.setDireccion(direccion);
+		pedido.setEmail(email);
+		pedido.setTelefono(telefono);
+		pedido.setEnvio(envio);
+		
+		Map<Producto, Integer> nuevoMapaProductosYCantidades = new HashMap<>(); //creo un nuevo mapa de producto y cantidades
+		List<Producto> listaDeProductos = productService.findAll(); //guardo la lista de productos del servicio
+		
+		//recorro los valores nuevos de cantidades y voy almacenando en el nuevo mapa los productos con las cantidades
+		for(int i=0; i<listaDeCantidades.length; i++) {
+			nuevoMapaProductosYCantidades.put(listaDeProductos.get(i), listaDeCantidades[i]);
+		}
+		
+		pedido.setListaDeProductos(nuevoMapaProductosYCantidades);	//modifico el mapa de productos y cantidades
+		
+	}
 	
 	
 	

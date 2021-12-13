@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>don Tornillos</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="/css/hojaDeEstilos.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<div align="center">
+	<h1>EDICIÓN DE PEDIDO</h1>
+		<form method="post" th:action="@{/editar/submit}">
+				<table border="1">
+					<tr>
+						<th>REFERENCIA PEDIDO</th>
+						<td ><input type="text" name="ref" th:value="${pedido.getRef()}"/></td>
+					</tr>
+					<tr>
+						<th>NOMBRE PRODUCTO</th>
+						<th>CANTIDAD</th>
+					</tr>
+					<tr th:each="producto : ${listaCantidadYProducto}">
+						<td th:text="${producto.key.getNombre()}"></td>
+			        	<td ><input type="number" name="cantidad" min="0" th:value="${producto.value}"/></td>
+					</tr>
+				</table>
+				<br>
+	     <h3>DATOS DEL ENVÍO:</h3>
+	     <table border="1">
+	     	<tr>
+	     		<th>DIRECCIÓN</th>
+	     		<th>TELÉFONO</th>
+	     		<th>EMAIL</th>
+	     		<th>TIPO DE ENVÍO</th>
+	     	</tr>
+	     	<tr>
+		     	<td><input type="text" name="direccion" th:value="${pedido.getDireccion()}"/></td>
+				<td><input type="text" name="telefono" th:value="${pedido.getTelefono()}"/></td>
+				<td><input type="text" name="email" th:value="${pedido.getEmail()}"/></td>
+				<td>
+				Estándar<input type="radio" name="envio" value="estandar"/>
+				Urgente<input type="radio" name="envio" value="urgente"/>
+				</td>
+	     	</tr>
+	     </table>
+	     <button type="submit" id="doble">GUARDAR CAMBIOS</button>
+		</form>
+	</div>
+
+</body>
+</html>

@@ -32,12 +32,12 @@
 	     		<th>TIPO DE ENVÍO</th>
 	     	</tr>
 	     	<tr>
-		     	<!--  <td th:text="${usuario.getDireccion()}"></td>
+		     	<td th:text="${usuario.getDireccion()}"></td>
 				<td th:text="${usuario.getTelefono()}"></td>
-				<td th:text="${usuario.getEmail()}"></td>-->
+				<td th:text="${usuario.getEmail()}"></td>
 				<td>
-				Envío Urgente<input type="radio" name="envio" value="urgente"/></br>
-				Envío Estándar<input type="radio" name="envio" value="estandar"/>
+				Estándar<input type="radio" name="envio" value="estandar" checked="checked"/>
+				Urgente<input type="radio" name="envio" value="urgente"/>
 				</td>
 	     	</tr>
 	     </table>

@@ -18,16 +18,16 @@
                 
             <div id="form">
 
-                <form id="addUser" method="POST" action="#" th:object="${usuario}" th:action=" @{/login/submit}">
+                <form method="POST" action="#" th:object="${usuario}" th:action=" @{/login/submit}">
                     <label>Nombre de usuario:</label>
                     <input name="userName" placeholder="usuario" type="text" th:field="*{userName}">
-                    <!--  <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" userName="userName-error">Errores</span>-->
+                    <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" userName="userName-error">Errores</span>
                     
                     <br>
             
                     <label>Contraseña:</label>
                     <input name="password" placeholder="contraseña" type="password" th:field="*{password}"> 
-                    <!--  <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" password="password-error">Errores</span>-->
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" password="password-error">Errores</span>
                     <br>
                     
 

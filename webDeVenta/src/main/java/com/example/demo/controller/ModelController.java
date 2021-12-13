@@ -1,10 +1,6 @@
 package com.example.demo.controller;
 
-import java.lang.ProcessBuilder.Redirect;
-import java.util.Map;
-
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +35,10 @@ public class ModelController {
 	 @Autowired
 	 private ProductoService serviceProducto;
 	 
+	 //USO DE CONSTANTES PARA NO DUCPLICAR LITERALES (SONARLINT)
+	 private static String redirigirListarPedidos = "redirect:/listarPedidos";
+	 private static String redirigirLogin = "redirect:/login";
+	 private static String usuarioString = "usuario";
 	 
 	 /**
 	  * Proporciona el login y crea un usuario vacío nada más inicializar la web
@@ -47,7 +47,7 @@ public class ModelController {
 	  */
 	 @GetMapping({"/", "/login"})
 	 public String newLoginUsuario(Model model) {
-		 model.addAttribute("usuario", new Usuario());
+		 model.addAttribute(usuarioString, new Usuario());
 		return "login";
 		 
 	 }
@@ -60,7 +60,7 @@ public class ModelController {
 		public String cerrarSesion() {
 		
 			sesion.invalidate();
-		return "redirect:/login";
+		return redirigirLogin;
 		}
 	 
 	 /**
@@ -69,20 +69,16 @@ public class ModelController {
 	  * @return ventana de opciones si el login es correcto. Permaneces en el login si no es correcto
 	  */
 	 @PostMapping("/login/submit")
-	 public String validarUsuario(@ModelAttribute("usuario") Usuario nuevoUsuario) {
-		//System.out.println(usuario.getUserName());
-		//System.out.println(usuario.getPassword());
-		
-		 //bindingResult.hasErrors() && 
-		if (!servicioUser.isFindUser(nuevoUsuario.getUserName(), nuevoUsuario.getPassword())) {
-			return "redirect:/login";
+	 public String validarUsuario(@ModelAttribute("usuario") Usuario nuevoUsuario, BindingResult bindingResult) {
+		 
+		if (!servicioUser.isFindUser(nuevoUsuario.getUserName(), nuevoUsuario.getPassword())
+				&& !bindingResult.hasErrors()) {
+			return redirigirLogin;
 		}else {
 			
 			//almaceno en la sesión al usuario introducido
-			sesion.setAttribute("usuario", servicioUser.getByUsername(nuevoUsuario.getUserName()));
+			this.sesion.setAttribute(usuarioString, servicioUser.getByUsername(nuevoUsuario.getUserName()));
 			
-			//System.out.println(serviceProducto.findAll()); //devuelve la lista de productos
-			//System.out.println(servicioPedido.getAll()); //devuelve los productos y sus cantidades
 			return "/opcionesUsuario";
 		}
 		 
@@ -99,19 +95,21 @@ public class ModelController {
 	  * @param model listaDePedidos
 	  * @return html listarPedidos
 	  */
-	 @GetMapping({"/listarPedidos" , "/nuevoPedido/listarPedidos"})
+	 @GetMapping("/listarPedidos")
 	 public String listarPedidos(Model model) {
-		 if(sesion.getAttribute("usuario") == null) {
-			 return "redirect:/login";
+		 if(sesion.getAttribute(usuarioString) == null) {
+			 return redirigirLogin;
 		 }else {
-			 Usuario user = (Usuario) sesion.getAttribute("usuario");
+			 Usuario user = (Usuario) sesion.getAttribute(usuarioString);
 			 
+			 model.addAttribute(usuarioString, user);
 			 //CARGO UN PEDIDO POR DEFECTO PARA COMPROBAR QUE FUNCIONA
 			 //this.servicioPedido.init();
 			 //this.servicioUser.addPedido(user, this.servicioPedido.getAll(), user.getDireccion());
 			 //System.out.println(user.getPedidos()); //ha funcionado porque se muestra el pedido asociado
 			 
 			 model.addAttribute("listaDePedidos", this.servicioPedido.findPedidoUser(user));
+			 
 			 return "listarPedidos";
 		 }
 	 }
@@ -123,8 +121,8 @@ public class ModelController {
 	  */
 	 @GetMapping("/opcionesUsuario/nuevoPedido")
 	 public String nuevoPedido(Model model) {
-		 if(sesion.getAttribute("usuario")==null) {
-			 return "redirect:/login";
+		 if(sesion.getAttribute(usuarioString)==null) {
+			 return redirigirLogin;
 		 }else {
 			 model.addAttribute("listaDeProductos", this.serviceProducto.findAll());
 			 return "/nuevoPedido";
@@ -143,7 +141,7 @@ public class ModelController {
 	 public String mostrarPedido(Model model, @RequestParam(required=false,name="cantidad") Integer [] listaCantidades) {
 		 int contador = 0;
 		 
-		 if(sesion.getAttribute("usuario")!=null) {
+		 if(sesion.getAttribute(usuarioString)!=null) {
 			 
 			 for(int i =0; i<listaCantidades.length; i++) {
 				 if(listaCantidades[i] == null) {
@@ -155,33 +153,36 @@ public class ModelController {
 			 if(contador>0) {
 				 this.servicioPedido.addProducto(listaCantidades);
 				 model.addAttribute("listaCantidadYProducto", this.servicioPedido.getAll());
+				 model.addAttribute(usuarioString, sesion.getAttribute("usuario"));
+				 
 				 return "/resumenPedido";
 			 }
 		 }
-		 return "redirect:/login";
+		 return redirigirLogin;
 	 }
 	 
 
 	 /**
-	  * Este método añade el nuevo pedido al usuario
+	  * Este método muestra la lista de pedidos del usuario al añadir un nuevo pedido
 	  * @param model
 	  * @return si no está en la sesión, pasa al login
 	  * si está en la sesión, te muestra la lista de pedidos del usuario
+	  * si el envío es nulo, te lleva a un nuevo pedido
 	  */
 	 @PostMapping("/nuevoPedido/listarPedidos")
 	 public String listarnuevoPedido(Model model, @RequestParam(required=false,value="envio") String envio) {
-		 if(sesion.getAttribute("usuario") == null){
-			 return "redirect:/login";
+		 if(sesion.getAttribute(usuarioString) == null){
+			 return redirigirLogin;
 		 }else if(envio == null) {
 			 return "redirect:/opcionesUsuario/nuevoPedido";
 		 }
 		 else {
-			 Usuario user = (Usuario) sesion.getAttribute("usuario");
-			 this.servicioUser.addPedido(user, this.servicioPedido.getAll(), user.getDireccion(), envio);
+			 Usuario user = (Usuario) sesion.getAttribute(usuarioString);
+			 this.servicioUser.addPedido(user, this.servicioPedido.getAll(), envio);
 
 			 model.addAttribute("listaDePedidos", this.servicioPedido.findPedidoUser(user));
 			 
-			 return "redirect:/listarPedidos";
+			 return redirigirListarPedidos; //redirect para que no duplique valores al repetir la petición
 		 }
 		 
 	 }
@@ -196,19 +197,72 @@ public class ModelController {
 	 @GetMapping("/pedido/borrar/{ref}")
 	 public String borrarPedido(Model model, @PathVariable String ref) {
 		 
-		 if(sesion.getAttribute("usuario") == null){
-			 return "redirect:/login";
+		 if(sesion.getAttribute(usuarioString) == null){
+			 return redirigirLogin;
 		 }else {
-			 Usuario user = (Usuario) sesion.getAttribute("usuario");
+			 Usuario user = (Usuario) sesion.getAttribute(usuarioString);
 			 
 			 Pedido pedido = this.servicioUser.getPedidoByRef(ref, user);
 			 this.servicioUser.eliminarPedido(pedido, user);
 			 
 			 model.addAttribute("listaDePedidos", this.servicioPedido.findPedidoUser(user));
 			 
-			 return "redirect:/listarPedidos";
+			 return redirigirListarPedidos;
 		 }
 		 
+		 
+	 }
+	 
+	 /**
+	  * Este método recibe el pedido que coincide con la referencia que se le pasa 
+	  * @param model
+	  * @param ref
+	  * @return pasa al html del login si el usuario no está en la sesión
+	  * pasa al html de editar si el usario está en la sesión
+	  */
+	 @GetMapping("/pedido/editar/{ref}")
+	 public String editarPedido(Model model, @PathVariable String ref) {
+		 if(sesion.getAttribute(usuarioString) == null){
+			 return redirigirLogin;
+		 }else {
+			 Usuario user = (Usuario) sesion.getAttribute(usuarioString);
+			 
+			 Pedido pedido = this.servicioUser.getPedidoByRef(ref, user);
+			 model.addAttribute("pedido", pedido);
+			 model.addAttribute(usuarioString, user);
+			 model.addAttribute("listaCantidadYProducto", pedido.getListaDeProductos());
+			 
+			 return "/editar";
+		 }
+	 }
+	 
+	 /**
+	  * Este método recibe los parámetros que se pueden editar en el html de editar y cambia los datos antiguos por los nuevos
+	  * @param ref
+	  * @param telefono
+	  * @param email
+	  * @param direccion
+	  * @param listaDeCantidades
+	  * @param envio
+	  * @return pasa al html del login si el usuario no está en la sesión
+	  * pasa al html de listarPedidos si el usuario está en la sesión
+	  */
+	 @PostMapping("/editar/submit")
+	 public String editarPedidoSubmit(
+			 @RequestParam (required=false, value="ref") String ref,
+			 @RequestParam (required=false, value="telefono") String telefono,
+			 @RequestParam (required=false, value="email") String email,
+			 @RequestParam (required=false, value="direccion") String direccion,
+			 @RequestParam (required=false, value="cantidad") Integer [] listaDeCantidades,
+			 @RequestParam (required=false, value="envio") String envio) {
+		 
+		 if(sesion.getAttribute(usuarioString) == null){
+			 return redirigirLogin;
+		 }else {
+			 Usuario usuario = (Usuario) sesion.getAttribute(usuarioString);
+			 this.servicioPedido.editarPedido(ref, email, telefono, direccion, listaDeCantidades, envio, usuario);
+			 return redirigirListarPedidos;
+		 }
 		 
 	 }
 	 

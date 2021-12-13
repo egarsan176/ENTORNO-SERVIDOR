@@ -92,16 +92,27 @@ public class UsuarioService {
 	
 	
 	
-	public void addPedido(Usuario user, Map<Producto, Integer> listaDeProductos, String direccion, String envio) {
+	public void addPedido(Usuario user, Map<Producto, Integer> listaDeProductos, String envio) {
 		
-		Pedido pedido = new Pedido(direccion, listaDeProductos, envio);
+		Pedido pedido = new Pedido(listaDeProductos, envio);
+		//establezco por defecto las propiedades del pedido para que coincidan con las del usuario
+		pedido.setDireccion(user.getDireccion());
+		pedido.setEmail(user.getEmail());
+		pedido.setTelefono(user.getTelefono());
 		pedido.setListaDeProductos(listaDeProductos);
 		pedido.setEnvio(envio);
+		
 		user.addPedido(pedido);
 		//funciona, añade el pedido al usuario
 		}
-	
-	public void getAllPedidos() {}
+	/**
+	 * Este método devuelve la lista con todos los pedidos de un usuario
+	 * @param usuario
+	 * @return lista de pedidos
+	 */
+	public List<Pedido> getAllPedidos(Usuario usuario) {
+		return usuario.getPedidos();
+	}
 	
 	/**
 	 * Este método devuelve un pedido según una referencia introducida y un usuario
