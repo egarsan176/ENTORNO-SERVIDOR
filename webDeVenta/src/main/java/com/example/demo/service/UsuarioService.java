@@ -120,10 +120,10 @@ public class UsuarioService {
 	 * @param user
 	 * @return pedido
 	 */
-	public Pedido getPedidoByRef(String ref, Usuario user) {
+	public Pedido getPedidoByRef(Integer ref, Usuario user) {
 		Pedido pedido = new Pedido(ref);
 		for(int i=0; i<user.getPedidos().size(); i++) {
-			if(user.getPedidos().get(i).getRef().equals(pedido.getRef())) {
+			if(user.getPedidos().get(i).getRef() == (pedido.getRef())) {
 				pedido = user.getPedidos().get(i);
 			}
 		}

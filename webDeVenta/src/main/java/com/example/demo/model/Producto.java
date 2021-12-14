@@ -6,7 +6,7 @@ public class Producto {
 
 	//PROPIEDADES
 	
-	private String id;
+	private Integer id;
 	private static int contador = 0;
 	private String nombre;
 	private double precio;
@@ -16,10 +16,9 @@ public class Producto {
 	
 	public Producto() {}
 	
-	public Producto(String nombre, double precio, String descripcion) {
+	public Producto(Integer id, String nombre, double precio, String descripcion) {
 		super();
-		this.id = "p"+contador;
-		contador++;
+		this.id = id;
 		this.nombre = nombre;
 		this.precio = precio;
 		this.descripcion = descripcion;
@@ -27,12 +26,12 @@ public class Producto {
 
 	//GETTERS Y SETTERS
 	
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -94,8 +93,12 @@ public class Producto {
 	}
 	
 	
-	
-	
+	/**
+	 * Este método aumenta el contador
+	 */
+	public void incrementarContador() {
+		this.contador++;
+	}
 	
 	
 	

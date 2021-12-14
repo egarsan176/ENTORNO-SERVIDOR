@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -69,11 +70,11 @@ public class ModelController {
 	  * @return ventana de opciones si el login es correcto. Permaneces en el login si no es correcto
 	  */
 	 @PostMapping("/login/submit")
-	 public String validarUsuario(@ModelAttribute("usuario") Usuario nuevoUsuario, BindingResult bindingResult, Model model) {
+	 public String validarUsuario(@Valid @ModelAttribute("usuario") Usuario nuevoUsuario, BindingResult bindingResult, Model model) {
 		 
 		if (!servicioUser.isFindUser(nuevoUsuario.getUserName(), nuevoUsuario.getPassword())
-				&& !bindingResult.hasErrors()) {
-			return redirigirLogin;
+				&& bindingResult.hasErrors()) {
+			return "login"; //no se hace redirect porque sino recarga la página y no muestra el mensaje de error
 		}else {
 			
 			//almaceno en la sesión al usuario introducido
@@ -190,7 +191,7 @@ public class ModelController {
 	  * si está en la sesión, te devuelve a la lista de pedidos del usuario
 	  */
 	 @GetMapping("/pedido/borrar/{ref}")
-	 public String borrarPedido(Model model, @PathVariable String ref) {
+	 public String borrarPedido(Model model, @PathVariable Integer ref) {
 		 
 		 if(sesion.getAttribute(usuarioString) == null){
 			 return redirigirLogin;
@@ -216,7 +217,7 @@ public class ModelController {
 	  * pasa al html de editar si el usario está en la sesión
 	  */
 	 @GetMapping("/pedido/editar/{ref}")
-	 public String editarPedido(Model model, @PathVariable String ref) {
+	 public String editarPedido(Model model, @PathVariable Integer ref) {
 		 if(sesion.getAttribute(usuarioString) == null){
 			 return redirigirLogin;
 		 }else {
@@ -244,7 +245,7 @@ public class ModelController {
 	  */
 	 @PostMapping("/editar/submit")
 	 public String editarPedidoSubmit(
-			 @RequestParam (required=false, value="ref") String ref,
+			 @RequestParam (required=false, value="ref") Integer ref,
 			 @RequestParam (required=false, value="telefono") String telefono,
 			 @RequestParam (required=false, value="email") String email,
 			 @RequestParam (required=false, value="direccion") String direccion,
@@ -257,13 +258,14 @@ public class ModelController {
 		 }else {
 			 Usuario usuario = (Usuario) sesion.getAttribute(usuarioString);
 			 this.servicioPedido.editarPedido(ref, email, telefono, direccion, listaDeCantidades, envio, usuario);
-			 
+			 System.out.println(direccion);
+			 System.out.println(listaDeCantidades);
 			 Pedido pedido = this.servicioUser.getPedidoByRef(ref, usuario);
 			 model.addAttribute("pedido", pedido);
 			 model.addAttribute(usuarioString, usuario);
 			 model.addAttribute("listaCantidadYProducto", pedido.getListaDeProductos());
 			 
-			 return "/resumenPedido";
+			 return redirigirListarPedidos;
 		 }
 		 
 	 }

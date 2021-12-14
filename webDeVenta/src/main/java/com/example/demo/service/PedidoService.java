@@ -78,9 +78,9 @@ public class PedidoService {
 	 * @param direccion
 	 * @param usuario
 	 */
-	public void editarPedido(String ref, String email, String telefono, String direccion,Integer[] listaDeCantidades,String envio, Usuario usuario) {
+	public void editarPedido(Integer ref, String email, String telefono, String direccion,Integer[] listaDeCantidades,String envio, Usuario usuario) {
 		Pedido pedido = servicioUser.getPedidoByRef(ref, usuario);
-		
+
 		pedido.setDireccion(direccion);
 		pedido.setEmail(email);
 		pedido.setTelefono(telefono);

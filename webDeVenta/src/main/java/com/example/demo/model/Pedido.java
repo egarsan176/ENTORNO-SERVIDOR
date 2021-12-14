@@ -10,7 +10,7 @@ public class Pedido {
 	
 	//PROPIEDADES
 	
-	private String ref;
+	private Integer ref;
 	private static int contador = 0;
 	private String direccion;
 	private Date fecha;
@@ -22,14 +22,16 @@ public class Pedido {
 	//CONSTRUCTOR
 	
 	public Pedido() {}
-	public Pedido(String ref) {
+	public Pedido(Integer ref) {
+		super();
 		this.ref= ref;
+		
 	}
 	
 	public Pedido( Map<Producto, Integer> listaDeProductos, String envio) {
 		super();
-		this.ref = "ref"+contador;
-		contador++;
+		this.ref = contador;
+		incrementarContador();
 		this.fecha = new Date();
 		this.direccion = direccion;
 		this.listaDeProductos = listaDeProductos;
@@ -41,12 +43,12 @@ public class Pedido {
 
 	//GETTERS Y SETTERS
 	
-	public String getRef() {
+	public Integer getRef() {
 		return ref;
 	}
 
 
-	public void setRef(String ref) {
+	public void setRef(Integer ref) {
 		this.ref = ref;
 	}
 
@@ -110,6 +112,8 @@ public class Pedido {
 				+ email + ", telefono=" + telefono + ", listaDeProductos=" + listaDeProductos + "]";
 	}
 	
+
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(ref);
@@ -125,9 +129,18 @@ public class Pedido {
 		Pedido other = (Pedido) obj;
 		return Objects.equals(ref, other.ref);
 	}
+	/**
+	 * Este método muestra la fecha en un formato más entendible
+	 * @return
+	 */
 	public String getFechaBonita() {
 		return new SimpleDateFormat("dd-MM-yyyy || hh:mm:ss").format(this.fecha);
 	}
-	
+	/**
+	 * Este método aumenta el contador
+	 */
+	public void incrementarContador() {
+		this.contador++;
+	}
 	
 }
