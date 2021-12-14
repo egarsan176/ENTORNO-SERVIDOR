@@ -1,28 +1,34 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head> 
     <title>Don Tornillos</title> 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-     <link href="/css/hojaDeEstilos.css" rel="stylesheet" type="text/css"/>
+     <link href="/css/resumenStyle.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 
-<div align="center">
-	<h1>RESUMEN PEDIDO</h1>
-	<form th:action="@{/nuevoPedido/listarPedidos}" method="post">
-		<table id="bienvenidaUser">
-           <tr>
-	            <td th:text="${usuario.getNombre()}"></td>
-	            <td>, </td>
-	            <td> aquí el resumen de tu pedido:</td>
-           </tr>
-		</table>
-		            <br>
-		<table border="1">
-			<tr>
-				<th>PRODUCTO</th>
-				<th>CANTIDAD</th>
-				<th>TOTAL</th>
+<div>
+    <div class="tit">
+ 		<h1>RESUMEN PEDIDO</h1>
+    </div>
+    
+    <div class="content">
+    	<form th:action="@{/nuevoPedido/listarPedidos}" method="post">
+    		<table class="intro">
+	           <tr>
+		           <th th:text="${usuario.getNombre()}" scope="col"></th>
+	            	<th scope="col">, </th>
+	            	<th scope="col"> aquí el resumen de tu pedido:</th>
+	           	</tr>
+		  	</table>
+		  	
+		  	<br>
+		  	
+		  	<table border="1" class="pedido">
+			<tr class="cabeceraTabla">
+				<th scope="col">PRODUCTO</th>
+				<th scope="col">CANTIDAD</th>
+				<th scope="col">TOTAL</th>
 			</tr>
 			<tr th:each="producto : ${listaCantidadYProducto}">
 	        <td th:if="${producto.value>0}" th:text="${producto.key.getNombre()}"></td>
@@ -30,14 +36,17 @@
 	        <td th:if="${producto.value>0}" th:text="${producto.key.getPrecio()*producto.value}"></td>
 	        </tr>
 	     </table>
+	     
 	     <br>
+	     
 	     <h3>DATOS DEL ENVÍO:</h3>
-	     <table border="1">
-	     	<tr>
-	     		<th>DIRECCIÓN</th>
-	     		<th>TELÉFONO</th>
-	     		<th>EMAIL</th>
-	     		<th>TIPO DE ENVÍO</th>
+	     
+	     <table border="1" class="pedido">
+	     	<tr class="cabeceraTabla">
+	     		<th scope="col">DIRECCIÓN</th>
+	     		<th scope="col">TELÉFONO</th>
+	     		<th scope="col">EMAIL</th>
+	     		<th scope="col">TIPO DE ENVÍO</th>
 	     	</tr>
 	     	<tr>
 		     	<td th:text="${usuario.getDireccion()}"></td>
@@ -49,9 +58,12 @@
 				</td>
 	     	</tr>
 	     </table>
-	     	<button type="submit" id="doble">REALIZAR PEDIDO</button>
-	</form>
+	     
+	     <br>
+		  	
+	     	<button type="submit">CONFIRMAR PEDIDO</button>
+    	</form>
+    </div>
 </div>
-
 </body>
 </html>

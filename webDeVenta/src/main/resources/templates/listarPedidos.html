@@ -6,45 +6,47 @@
     <title>Don Tornillos</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/hojaDeEstilos.css"></link>
+    <link rel="stylesheet" href="css/listarStyle.css"></link>
 </head>
     <body>
-       <div align="center">
-                
-                <h1>LISTA DE PEDIDOS</h1>
-		            <div id="form" align="center">
-		            
-		            <table id="bienvenidaUser">
-			            <tr>
-				            <td th:text="${usuario.getNombre()}"></td>
-				            <td>,</td>
-				            <td> aquí está tu lista de pedidos:</td>
-			            </tr>
-		            </table>
-		            <br>
-
-						<table border=1>
-							<tr>
-								<th scope="col">REFERENCIA</th>
-								<th scope="col">FECHA</th>
-								<th scope="col">DIRECCIÓN</th>
-								<th scope="col">TIPO DE ENVÍO</th>
-								<th scope="col">OPCIONES</th>
-							</tr>
-							<tr th:each="pedido : ${listaDePedidos}">
-								<td th:text="${pedido.getRef()}"></td>
-								<td th:text="${pedido.getFechaBonita()}"></td>
-								<td th:text="${pedido.getDireccion}"></td>
-								<td th:text="${pedido.getEnvio}"></td>
-								<td>
-								<button style="width: 42%"><a th:href="@{/pedido/editar/{ref}(ref=${pedido.ref})}">EDITAR</a></button>
-								<button style="width: 42%"><a th:href="@{/pedido/borrar/{ref}(ref=${pedido.ref})}">BORRAR</a></button>
-								</td>
-							</tr>
-						</table>
-					<button id="doble"><a href="/cerrarSesion">CERRAR SESIÓN</a></button>
-					</div>
-		</div>
+        <div>
+          <div class="tit">
+       		<h1>LISTA DE PEDIDOS</h1>
+          </div>
+          
+          <div class="content">
+            <table class="intro">
+	           <tr>
+		           <th scope="col">Bienvenid@ </th>
+		           <th th:text="${usuario.getNombre()}" scope="col"></th>
+		           <th scope="col">, </th>
+		           <th scope="col"> aquí está tu lista de pedidos:</th>
+	           </tr>
+		  	</table>
+		  	
+		  	<br>
+          
+			<table border=1 class="pedido">
+				<tr class="cabeceraTabla">
+					<th scope="col">REFERENCIA</th>
+					<th scope="col">FECHA</th>
+					<th scope="col">DIRECCIÓN</th>
+					<th scope="col">TIPO DE ENVÍO</th>
+					<th scope="col">OPCIONES</th>
+				</tr>
+				<tr th:each="pedido : ${listaDePedidos}">
+					<td th:text="${pedido.getRef()}"></td>
+					<td th:text="${pedido.getFechaBonita()}"></td>
+					<td th:text="${pedido.getDireccion}"></td>
+					<td th:text="${pedido.getEnvio}"></td>
+					<td>
+					<button><a th:href="@{/pedido/editar/{ref}(ref=${pedido.ref})}">EDITAR</a></button>
+					<button><a th:href="@{/pedido/borrar/{ref}(ref=${pedido.ref})}">BORRAR</a></button>
+					</td>
+				</tr>
+			</table>
+        </div>
+		<button ><a href="/cerrarSesion">CERRAR SESIÓN</a></button>
 	</body>
 </html>
 								

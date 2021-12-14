@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,22 @@ public class PedidoService {
 		
 		pedido.setListaDeProductos(nuevoMapaProductosYCantidades);	//modifico el mapa de productos y cantidades
 		
+	}
+	
+	/**
+	 * Este método calacula el precio total de un pedido
+	 * @param pedido
+	 * @return double precio
+	 */
+	public double calcularPrecioTotal(Pedido pedido) {
+		double precioTotal = 0;
+		
+		for(Map.Entry<Producto, Integer> producto : pedido.getListaDeProductos().entrySet() ) {
+			
+			precioTotal += producto.getKey().getPrecio()*producto.getValue();
+		}
+		
+		return precioTotal;
 	}
 	
 	

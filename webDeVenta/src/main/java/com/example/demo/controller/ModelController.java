@@ -40,6 +40,8 @@ public class ModelController {
 	 private static String redirigirListarPedidos = "redirect:/listarPedidos";
 	 private static String redirigirLogin = "redirect:/login";
 	 private static String usuarioString = "usuario";
+	 private static String listaDePedidos = "listaDePedidos";
+	 private static String listaCantidadesYProducto = "listaCantidadYProducto";
 	 
 	 /**
 	  * Proporciona el login y crea un usuario vacío nada más inicializar la web
@@ -60,8 +62,22 @@ public class ModelController {
 	 @GetMapping({"/cerrarSesion"})
 		public String cerrarSesion() {
 		
-			sesion.invalidate();
-		return redirigirLogin;
+			this.sesion.invalidate();
+			return redirigirLogin;
+		}
+	 
+		/**
+		 * Pagina de error al opciones de envio del pedido
+		 * @return devuelve al login si no existe la sesion o la pagina de error
+		 */
+		@GetMapping({"/error"})
+		public String mostrarPaginaDeError() {
+			
+			if(sesion.getAttribute("usuario")!=null) {
+				return "error";
+			}
+			return redirigirLogin;
+			
 		}
 	 
 	 /**
@@ -79,7 +95,8 @@ public class ModelController {
 			
 			//almaceno en la sesión al usuario introducido
 			this.sesion.setAttribute(usuarioString, this.servicioUser.getByUsername(nuevoUsuario.getUserName()));
-			model.addAttribute(usuarioString, (Usuario) this.sesion.getAttribute(usuarioString));
+			Usuario user = (Usuario) sesion.getAttribute(usuarioString);
+			model.addAttribute(usuarioString, user);
 			return "/opcionesUsuario";
 		}
 		 
@@ -99,12 +116,7 @@ public class ModelController {
 			 Usuario user = (Usuario) sesion.getAttribute(usuarioString);
 			 
 			 model.addAttribute(usuarioString, user);
-			 //CARGO UN PEDIDO POR DEFECTO PARA COMPROBAR QUE FUNCIONA
-			 //this.servicioPedido.init();
-			 //this.servicioUser.addPedido(user, this.servicioPedido.getAll(), user.getDireccion());
-			 //System.out.println(user.getPedidos()); //ha funcionado porque se muestra el pedido asociado
-			 
-			 model.addAttribute("listaDePedidos", this.servicioPedido.findPedidoUser(user));
+			 model.addAttribute(listaDePedidos, this.servicioPedido.findPedidoUser(user));
 			 
 			 return "listarPedidos";
 		 }
@@ -148,8 +160,9 @@ public class ModelController {
 			 }
 			 if(contador>0) {
 				 this.servicioPedido.addProducto(listaCantidades);
-				 model.addAttribute("listaCantidadYProducto", this.servicioPedido.getAll());
-				 model.addAttribute(usuarioString, sesion.getAttribute("usuario"));
+				 Usuario usu = (Usuario) this.sesion.getAttribute(usuarioString);
+				 model.addAttribute(listaCantidadesYProducto, this.servicioPedido.getAll());
+				 model.addAttribute(usuarioString, usu);
 				 
 				 return "/resumenPedido";
 			 }
@@ -176,7 +189,7 @@ public class ModelController {
 			 Usuario user = (Usuario) sesion.getAttribute(usuarioString);
 			 this.servicioUser.addPedido(user, this.servicioPedido.getAll(), envio);
 
-			 model.addAttribute("listaDePedidos", this.servicioPedido.findPedidoUser(user));
+			 model.addAttribute(listaDePedidos, this.servicioPedido.findPedidoUser(user));
 			 
 			 return redirigirListarPedidos; //redirect para que no duplique valores al repetir la petición
 		 }
@@ -201,7 +214,7 @@ public class ModelController {
 			 Pedido pedido = this.servicioUser.getPedidoByRef(ref, user);
 			 this.servicioUser.eliminarPedido(pedido, user);
 			 
-			 model.addAttribute("listaDePedidos", this.servicioPedido.findPedidoUser(user));
+			 model.addAttribute(listaDePedidos, this.servicioPedido.findPedidoUser(user));
 			 
 			 return redirigirListarPedidos;
 		 }
@@ -226,7 +239,7 @@ public class ModelController {
 			 Pedido pedido = this.servicioUser.getPedidoByRef(ref, user);
 			 model.addAttribute("pedido", pedido);
 			 model.addAttribute(usuarioString, user);
-			 model.addAttribute("listaCantidadYProducto", pedido.getListaDeProductos());
+			 model.addAttribute(listaCantidadesYProducto, pedido.getListaDeProductos());
 			 
 			 return "/editar";
 		 }
@@ -255,21 +268,25 @@ public class ModelController {
 		 
 		 if(sesion.getAttribute(usuarioString) == null){
 			 return redirigirLogin;
+		 }else if("".equals(telefono) || "".equals(email) || "".equals(direccion) || listaDeCantidades.length==0 || "".equals(envio)){
+			 return "/error";
 		 }else {
 			 Usuario usuario = (Usuario) sesion.getAttribute(usuarioString);
+			 
 			 this.servicioPedido.editarPedido(ref, email, telefono, direccion, listaDeCantidades, envio, usuario);
-			 System.out.println(direccion);
-			 System.out.println(listaDeCantidades);
+			 
 			 Pedido pedido = this.servicioUser.getPedidoByRef(ref, usuario);
+			 
 			 model.addAttribute("pedido", pedido);
 			 model.addAttribute(usuarioString, usuario);
-			 model.addAttribute("listaCantidadYProducto", pedido.getListaDeProductos());
+			 model.addAttribute(listaCantidadesYProducto, pedido.getListaDeProductos());
 			 
 			 return redirigirListarPedidos;
 		 }
 		 
+		 
+		 
 	 }
-	 
 	 
 	 
 	 

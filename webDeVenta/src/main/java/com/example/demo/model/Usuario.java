@@ -12,7 +12,7 @@ public class Usuario {
 
 	@NotEmpty
 	private String nombre;
-	@NotEmpty 
+	@NotEmpty(message="El usuario no puede estar vacío") 
 	private String userName;
 	@Email
 	private String email;
@@ -55,6 +55,13 @@ public class Usuario {
 		this.userName = userName;
 		this.password = password;
 		this.pedidos = pedidos;
+	}
+	
+	public Usuario( String userName) {
+		this.userName = userName;
+		this.pedidos = pedidos;
+
+		this.password = password;
 	}
 
 	//GETTERS Y SETTERS

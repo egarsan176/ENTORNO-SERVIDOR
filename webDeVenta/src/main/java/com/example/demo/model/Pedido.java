@@ -17,6 +17,7 @@ public class Pedido {
 	private String envio;
 	private String email;
 	private String telefono;
+	private double costeTotalPedido;
 	private Map<Producto, Integer> listaDeProductos = new HashMap<>();
 	
 	//CONSTRUCTOR
@@ -38,6 +39,7 @@ public class Pedido {
 		this.envio = envio;
 		this.email = email;
 		this.telefono = telefono;
+		this.costeTotalPedido = costeTotalPedido;
 	}
 	
 
@@ -101,19 +103,15 @@ public class Pedido {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-	//HASHCODE, EQUALS, TO STRING
-	
-	
-	
-
-	@Override
-	public String toString() {
-		return "Pedido [ref=" + ref + ", direccion=" + direccion + ", fecha=" + fecha + ", envio=" + envio + ", email="
-				+ email + ", telefono=" + telefono + ", listaDeProductos=" + listaDeProductos + "]";
+	public double getCosteTotalPedido() {
+		return costeTotalPedido;
+	}
+	public void setCosteTotalPedido(double costeTotalPedido) {
+		this.costeTotalPedido = costeTotalPedido;
 	}
 	
-
 	
+	//HASHCODE, EQUALS, TO STRING
 	@Override
 	public int hashCode() {
 		return Objects.hash(ref);
@@ -128,6 +126,15 @@ public class Pedido {
 			return false;
 		Pedido other = (Pedido) obj;
 		return Objects.equals(ref, other.ref);
+	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "Pedido [ref=" + ref + ", direccion=" + direccion + ", fecha=" + fecha + ", envio=" + envio + ", email="
+				+ email + ", telefono=" + telefono + ", costeTotalPedido=" + costeTotalPedido + ", listaDeProductos="
+				+ listaDeProductos + "]";
 	}
 	/**
 	 * Este método muestra la fecha en un formato más entendible

@@ -48,6 +48,8 @@ public class UsuarioService {
 			}
 		}
 		
+		
+		
 		return result;
 	}
 	
@@ -69,6 +71,7 @@ public class UsuarioService {
 				indice++;
 			}
 		}
+		
 		
 		return isEncontrado;
 	}
