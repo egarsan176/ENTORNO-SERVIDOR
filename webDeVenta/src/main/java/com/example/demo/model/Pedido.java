@@ -100,9 +100,19 @@ public class Pedido {
 		this.telefono = telefono;
 	}
 	//HASHCODE, EQUALS, TO STRING
+	
+	
+	
+
+	@Override
+	public String toString() {
+		return "Pedido [ref=" + ref + ", direccion=" + direccion + ", fecha=" + fecha + ", envio=" + envio + ", email="
+				+ email + ", telefono=" + telefono + ", listaDeProductos=" + listaDeProductos + "]";
+	}
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(direccion, envio, fecha, listaDeProductos, ref);
+		return Objects.hash(ref);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -113,19 +123,8 @@ public class Pedido {
 		if (getClass() != obj.getClass())
 			return false;
 		Pedido other = (Pedido) obj;
-		return Objects.equals(direccion, other.direccion) && Objects.equals(envio, other.envio)
-				&& Objects.equals(fecha, other.fecha) && Objects.equals(listaDeProductos, other.listaDeProductos)
-				&& Objects.equals(ref, other.ref);
+		return Objects.equals(ref, other.ref);
 	}
-	
-	
-
-	@Override
-	public String toString() {
-		return "Pedido [ref=" + ref + ", direccion=" + direccion + ", fecha=" + fecha + ", envio=" + envio + ", email="
-				+ email + ", telefono=" + telefono + ", listaDeProductos=" + listaDeProductos + "]";
-	}
-	
 	public String getFechaBonita() {
 		return new SimpleDateFormat("dd-MM-yyyy || hh:mm:ss").format(this.fecha);
 	}

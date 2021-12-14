@@ -2,15 +2,12 @@ package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Pedido;
@@ -21,9 +18,7 @@ import com.example.demo.model.Usuario;
 public class UsuarioService {
 
 	private List<Usuario> listaUsuarios = new ArrayList<>();
-	
-	@Autowired
-	private PedidoService pedidoService;
+
 	
 	/**
 	 * Este método devuelve la lista de usuarios
@@ -91,7 +86,12 @@ public class UsuarioService {
 	}
 	
 	
-	
+	/**
+	 * Este  método añade un pedido al usuario
+	 * @param user
+	 * @param listaDeProductos
+	 * @param envio
+	 */
 	public void addPedido(Usuario user, Map<Producto, Integer> listaDeProductos, String envio) {
 		
 		Pedido pedido = new Pedido(listaDeProductos, envio);

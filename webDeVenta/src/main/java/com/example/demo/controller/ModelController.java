@@ -69,7 +69,7 @@ public class ModelController {
 	  * @return ventana de opciones si el login es correcto. Permaneces en el login si no es correcto
 	  */
 	 @PostMapping("/login/submit")
-	 public String validarUsuario(@ModelAttribute("usuario") Usuario nuevoUsuario, BindingResult bindingResult) {
+	 public String validarUsuario(@ModelAttribute("usuario") Usuario nuevoUsuario, BindingResult bindingResult, Model model) {
 		 
 		if (!servicioUser.isFindUser(nuevoUsuario.getUserName(), nuevoUsuario.getPassword())
 				&& !bindingResult.hasErrors()) {
@@ -77,18 +77,13 @@ public class ModelController {
 		}else {
 			
 			//almaceno en la sesión al usuario introducido
-			this.sesion.setAttribute(usuarioString, servicioUser.getByUsername(nuevoUsuario.getUserName()));
-			
+			this.sesion.setAttribute(usuarioString, this.servicioUser.getByUsername(nuevoUsuario.getUserName()));
+			model.addAttribute(usuarioString, (Usuario) this.sesion.getAttribute(usuarioString));
 			return "/opcionesUsuario";
 		}
 		 
 	 }
 	 
-	 @GetMapping("/lista")
-	 public String listaDeUsuarios(Model model) {
-		 model.addAttribute("listaUsuarios", servicioUser.findAll());
-		 return "lista";
-	 }
 	 
 	 /**
 	  * Este método muestra una tabla con los pedidos del usuario de la sesión
@@ -254,14 +249,21 @@ public class ModelController {
 			 @RequestParam (required=false, value="email") String email,
 			 @RequestParam (required=false, value="direccion") String direccion,
 			 @RequestParam (required=false, value="cantidad") Integer [] listaDeCantidades,
-			 @RequestParam (required=false, value="envio") String envio) {
+			 @RequestParam (required=false, value="envio") String envio, 
+			 Model model) {
 		 
 		 if(sesion.getAttribute(usuarioString) == null){
 			 return redirigirLogin;
 		 }else {
 			 Usuario usuario = (Usuario) sesion.getAttribute(usuarioString);
 			 this.servicioPedido.editarPedido(ref, email, telefono, direccion, listaDeCantidades, envio, usuario);
-			 return redirigirListarPedidos;
+			 
+			 Pedido pedido = this.servicioUser.getPedidoByRef(ref, usuario);
+			 model.addAttribute("pedido", pedido);
+			 model.addAttribute(usuarioString, usuario);
+			 model.addAttribute("listaCantidadYProducto", pedido.getListaDeProductos());
+			 
+			 return "/resumenPedido";
 		 }
 		 
 	 }

@@ -153,11 +153,13 @@ public class Usuario {
 	
 	
 	/**
-	 * Este método añade un pedido al usuario
+	 * Este método añade un pedido al usuario siempre al principio de la lista de pedidos
+	 *  (para que estén ordenados por fecha)
 	 * @param pedido
 	 */
 	public void addPedido(Pedido pedido) {
-		this.pedidos.add(pedido);
+		this.pedidos.add(0, pedido);
+		
 		
 	}
 

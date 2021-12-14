@@ -14,6 +14,16 @@
        <h1>OPCIONES DE USUARIO</h1>
                 
             <div id="form">
+            
+            <table id="bienvenidaUser">
+	           <tr>
+		           <td>Bienvenid@ </td>
+		           <td th:text="${usuario.getNombre()}"></td>
+		           <td> </td>
+		           <td>¿Qué quieres hacer?</td>
+	           </tr>
+		  	</table>
+		  	<br>
                     
                     <button id="doble"><a href="/listarPedidos">Listar Pedidos</a></button>
 

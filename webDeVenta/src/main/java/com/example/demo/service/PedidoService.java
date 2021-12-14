@@ -68,11 +68,7 @@ public class PedidoService {
 		
 		this.pedidoProductoYcantidad = aux;
 	}
-	
-	
-	
-	public void eliminarProducto() {}
-	
+
 	
 	/**
 	 * Este método edita los datos de envío de un pedido concreto del usuario

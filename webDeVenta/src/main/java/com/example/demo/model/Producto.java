@@ -68,9 +68,17 @@ public class Producto {
 
 	//HASHCODE, EQUALS, TO STRING
 	
+	
+
+	@Override
+	public String toString() {
+		return "Producto [id=" + id + ", nombre=" + nombre + ", precio=" + precio + ", descripcion=" + descripcion
+				+ "]";
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(descripcion, id, nombre, precio);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -82,15 +90,7 @@ public class Producto {
 		if (getClass() != obj.getClass())
 			return false;
 		Producto other = (Producto) obj;
-		return Objects.equals(descripcion, other.descripcion) && Objects.equals(id, other.id)
-				&& Objects.equals(nombre, other.nombre)
-				&& Double.doubleToLongBits(precio) == Double.doubleToLongBits(other.precio);
-	}
-
-	@Override
-	public String toString() {
-		return "Producto [id=" + id + ", nombre=" + nombre + ", precio=" + precio + ", descripcion=" + descripcion
-				+ "]";
+		return Objects.equals(id, other.id);
 	}
 	
 	

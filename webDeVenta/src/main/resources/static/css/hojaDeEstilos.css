@@ -57,12 +57,22 @@ table{
 	border: 1px;
 	border-color: black;
 	border-collapse: collapse;	
-	width: 80%;
+	width: 85%;
 	background-color: white;
 }
 th, td{
-	padding: 2%;
+	padding: 1%;
+	text-align: center;
 }
 th{
 	background-color: #e3ae3f;
+}
+
+#bienvenidaUser{
+	width: 40%;
+	background-color: #f8dd6f;
+	font-size: 25px;
+	font-weight: bold;
+	border-collapse: collapse;
+	
 }

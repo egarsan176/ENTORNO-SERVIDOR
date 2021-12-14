@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,17 +14,22 @@
                 <h1>LISTA DE PEDIDOS</h1>
 		            <div id="form" align="center">
 		            
-		            <h3>Bienvenido</h3>
-		            <h3 th:text="${usuario.getNombre()}"></h3>
-		            
-						
+		            <table id="bienvenidaUser">
+			            <tr>
+				            <td th:text="${usuario.getNombre()}"></td>
+				            <td>,</td>
+				            <td> aquí está tu lista de pedidos:</td>
+			            </tr>
+		            </table>
+		            <br>
+
 						<table border=1>
 							<tr>
-								<th>REFERENCIA</th>
-								<th>FECHA</th>
-								<th>DIRECCIÓN</th>
-								<th>TIPO DE ENVÍO</th>
-								<th>OPCIONES</th>
+								<th scope="col">REFERENCIA</th>
+								<th scope="col">FECHA</th>
+								<th scope="col">DIRECCIÓN</th>
+								<th scope="col">TIPO DE ENVÍO</th>
+								<th scope="col">OPCIONES</th>
 							</tr>
 							<tr th:each="pedido : ${listaDePedidos}">
 								<td th:text="${pedido.getRef()}"></td>

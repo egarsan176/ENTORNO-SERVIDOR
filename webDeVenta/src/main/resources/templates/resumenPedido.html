@@ -10,6 +10,14 @@
 <div align="center">
 	<h1>RESUMEN PEDIDO</h1>
 	<form th:action="@{/nuevoPedido/listarPedidos}" method="post">
+		<table id="bienvenidaUser">
+           <tr>
+	            <td th:text="${usuario.getNombre()}"></td>
+	            <td>, </td>
+	            <td> aquí el resumen de tu pedido:</td>
+           </tr>
+		</table>
+		            <br>
 		<table border="1">
 			<tr>
 				<th>PRODUCTO</th>
