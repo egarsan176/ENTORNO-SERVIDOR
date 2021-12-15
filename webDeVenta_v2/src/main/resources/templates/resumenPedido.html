@@ -1,0 +1,88 @@
+<!-- v2 -->
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head> 
+    <title>Don Tornillos</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+     <link href="/css/resumenStyle.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<div>
+    <div class="tit">
+ 		<h1>RESUMEN PEDIDO</h1>
+    </div>
+    
+    <div class="content">
+    	<form th:action="@{/nuevoPedido/listarPedidos}" method="post">
+    		<table class="intro">
+	           <tr>
+		           <th th:text="${usuario.getNombre()}" scope="col"></th>
+	            	<th scope="col">, </th>
+	            	<th scope="col"> aquí el resumen de tu pedido:</th>
+	           	</tr>
+		  	</table>
+		  	
+		  	<br>
+		  	
+		  	<table border="1" class="pedido">
+			<tr class="cabeceraTabla">
+				<th scope="col">PRODUCTO</th>
+				<th scope="col">CANTIDAD</th>
+				<th scope="col">TOTAL</th>
+			</tr>
+			<tr th:each="producto : ${listaCantidadYProducto}">
+	        <td th:if="${producto.value>0}" th:text="${producto.key.getNombre()}"></td>
+	        <td th:if="${producto.value>0}" th:text="${producto.value}"></td>
+	        <td th:if="${producto.value>0}" th:text="${producto.key.getPrecio()*producto.value}"></td>
+	        </tr>
+	        
+	     </table>
+	     
+	     <table border="1" class="pedido">
+	     	<tr>
+		        <th scope="col">PRECIO TOTAL DEL PEDIDO:</th>
+		        <td th:text="${pedido.getCosteTotalPedido()}"></td>
+		        <td>€</td>
+	        </tr>
+	     </table>
+	     
+	     <br>
+	     
+	     <h3>DATOS DEL ENVÍO:</h3>
+	     
+	     <table border="1" class="pedido">
+	     	<tr >
+	     		<th scope="col">DIRECCIÓN</th>
+	     		<th scope="col">TELÉFONO</th>
+	     		<th scope="col">EMAIL</th>
+	     		<th scope="col">TIPO DE ENVÍO</th>
+	     	</tr>
+	     	<tr>
+		     	<td th:text="${usuario.getDireccion()}"></td>
+				<td th:text="${usuario.getTelefono()}"></td>
+				<td th:text="${usuario.getEmail()}"></td>
+				<td>
+				Estándar<input type="radio" name="envio" value="estandar" checked="checked"/>
+				Urgente<input type="radio" name="envio" value="urgente"/>
+				</td>
+	     	</tr>
+	     </table>
+	     
+	     <br>
+	     
+	     <table border="1" class="pedido">
+	     	<tr class="cabeceraTabla">
+	     		<th scope="col">REFERENCIA DE SU PEDIDO:</th>
+	     		<td><input type="text" name="ref" th:value="${pedido.getRef()}"></td>
+	     	<tr>
+	     </table>
+		  	<br>
+	     	<button type="submit">CERRAR</button>
+    	
+    	</form>
+    </div>
+</div>
+</body>
+</html>
