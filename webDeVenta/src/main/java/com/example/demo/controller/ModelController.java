@@ -159,10 +159,14 @@ public class ModelController {
 				 }
 			 }
 			 if(contador>0) {
-				 this.servicioPedido.addProducto(listaCantidades);
+				 this.servicioPedido.addProducto(listaCantidades); //actualizo el mapa de cantidades del servicio
+				 
 				 Usuario usu = (Usuario) this.sesion.getAttribute(usuarioString);
+				 double auxPrecio = this.servicioPedido.calcularPrecioTotal();
+				 
 				 model.addAttribute(listaCantidadesYProducto, this.servicioPedido.getAll());
 				 model.addAttribute(usuarioString, usu);
+				 model.addAttribute("precioTotal", auxPrecio);
 				 
 				 return "/resumenPedido";
 			 }
@@ -179,7 +183,8 @@ public class ModelController {
 	  * si el envío es nulo, te lleva a un nuevo pedido
 	  */
 	 @PostMapping("/nuevoPedido/listarPedidos")
-	 public String listarnuevoPedido(Model model, @RequestParam(required=false,value="envio") String envio) {
+	 public String listarnuevoPedido(Model model, @RequestParam(required=false,value="envio") String envio, 
+			 @RequestParam(required=false,value="precioTotal") double precioTotal) {
 		 if(sesion.getAttribute(usuarioString) == null){
 			 return redirigirLogin;
 		 }else if(envio == null) {
@@ -187,7 +192,7 @@ public class ModelController {
 		 }
 		 else {
 			 Usuario user = (Usuario) sesion.getAttribute(usuarioString);
-			 this.servicioUser.addPedido(user, this.servicioPedido.getAll(), envio);
+			 this.servicioUser.addPedido(user, this.servicioPedido.getAll(), envio, precioTotal);
 
 			 model.addAttribute(listaDePedidos, this.servicioPedido.findPedidoUser(user));
 			 
@@ -263,7 +268,7 @@ public class ModelController {
 			 @RequestParam (required=false, value="email") String email,
 			 @RequestParam (required=false, value="direccion") String direccion,
 			 @RequestParam (required=false, value="cantidad") Integer [] listaDeCantidades,
-			 @RequestParam (required=false, value="envio") String envio, 
+			 @RequestParam (required=false, value="envio") String envio,
 			 Model model) {
 		 
 		 if(sesion.getAttribute(usuarioString) == null){
@@ -287,7 +292,7 @@ public class ModelController {
 		 
 		 
 	 }
-	 
+
 	 
 	 
 	 

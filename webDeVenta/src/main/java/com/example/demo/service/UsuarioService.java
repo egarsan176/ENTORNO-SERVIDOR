@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Pedido;
@@ -87,7 +88,8 @@ public class UsuarioService {
 				new Usuario("Pedro", "pelopez","pelopez@gmail.com", "777444999", "C/Pulpo 4, 41109 Sevilla", "28510639M", "000000")));
 	
 	}
-	
+	 @Autowired
+	 private PedidoService servicioPedido;
 	
 	/**
 	 * Este  método añade un pedido al usuario
@@ -95,7 +97,7 @@ public class UsuarioService {
 	 * @param listaDeProductos
 	 * @param envio
 	 */
-	public void addPedido(Usuario user, Map<Producto, Integer> listaDeProductos, String envio) {
+	public void addPedido(Usuario user, Map<Producto, Integer> listaDeProductos, String envio, double precioTotal) {
 		
 		Pedido pedido = new Pedido(listaDeProductos, envio);
 		//establezco por defecto las propiedades del pedido para que coincidan con las del usuario
@@ -104,8 +106,10 @@ public class UsuarioService {
 		pedido.setTelefono(user.getTelefono());
 		pedido.setListaDeProductos(listaDeProductos);
 		pedido.setEnvio(envio);
+		pedido.setCosteTotalPedido(precioTotal);
 		
 		user.addPedido(pedido);
+		System.out.println(pedido);
 		//funciona, añade el pedido al usuario
 		}
 	/**
@@ -141,5 +145,6 @@ public class UsuarioService {
 		
 		user.getPedidos().remove(pedido);
 	}
+
 	
 }

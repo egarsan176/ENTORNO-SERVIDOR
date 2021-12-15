@@ -72,7 +72,7 @@ public class PedidoService {
 
 	
 	/**
-	 * Este método edita los datos de envío de un pedido concreto del usuario
+	 * Este método edita los datos de un pedido concreto del usuario
 	 * @param ref
 	 * @param email
 	 * @param telefono
@@ -80,7 +80,7 @@ public class PedidoService {
 	 * @param usuario
 	 */
 	public void editarPedido(Integer ref, String email, String telefono, String direccion,Integer[] listaDeCantidades,String envio, Usuario usuario) {
-		Pedido pedido = servicioUser.getPedidoByRef(ref, usuario);
+		Pedido pedido = servicioUser.getPedidoByRef(ref, usuario); //guardo el pedido
 
 		pedido.setDireccion(direccion);
 		pedido.setEmail(email);
@@ -90,30 +90,37 @@ public class PedidoService {
 		Map<Producto, Integer> nuevoMapaProductosYCantidades = new HashMap<>(); //creo un nuevo mapa de producto y cantidades
 		List<Producto> listaDeProductos = productService.findAll(); //guardo la lista de productos del servicio
 		
+		double total = 0;
+		
+		//recorro el mapa, la lista de unidades y la lista de productos
 		//recorro los valores nuevos de cantidades y voy almacenando en el nuevo mapa los productos con las cantidades
+		//almaceno en total el precio de los productos por sus cantidades
 		for(int i=0; i<listaDeCantidades.length; i++) {
+			total+=listaDeProductos.get(i).getPrecio()*listaDeCantidades[i];	
 			nuevoMapaProductosYCantidades.put(listaDeProductos.get(i), listaDeCantidades[i]);
 		}
-		
+		pedido.setCosteTotalPedido(total);
 		pedido.setListaDeProductos(nuevoMapaProductosYCantidades);	//modifico el mapa de productos y cantidades
-		
+		//System.out.println(pedido);
 	}
 	
 	/**
-	 * Este método calacula el precio total de un pedido
+	 * Este método calcula el precio total de un pedido
 	 * @param pedido
 	 * @return double precio
 	 */
-	public double calcularPrecioTotal(Pedido pedido) {
-		double precioTotal = 0;
-		
-		for(Map.Entry<Producto, Integer> producto : pedido.getListaDeProductos().entrySet() ) {
+	public double calcularPrecioTotal() {
+		double precioTotal = 10.0;
+		//uso un forEach para iterar el mapa
+		for(Map.Entry<Producto, Integer> producto : this.pedidoProductoYcantidad.entrySet() ) {
 			
 			precioTotal += producto.getKey().getPrecio()*producto.getValue();
 		}
 		
 		return precioTotal;
 	}
+	
+
 	
 	
 	
