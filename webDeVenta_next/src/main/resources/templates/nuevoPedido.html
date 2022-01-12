@@ -1,0 +1,44 @@
+<!-- v2 -->
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head> 
+    <title>Don Tornillos</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+     <link href="/css/listarStyle.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<div>
+
+	<div class="tit">
+       	<h1>CATÁLOGO DE PRODUCTOS</h1>
+    </div>
+
+	<div class="content">
+		<form th:action="@{/nuevoPedido/submit}" method="post">		<!-- Debería tener un th:object que fuera el producto para pasarlo al modelo -->
+		<table border=1 class="pedido">
+			<tr class="cabeceraTabla">
+				<th scope="col">PRODUCTO</th>
+				<th scope="col">DESCRIPCIÓN</th>
+				<th scope="col">PRECIO (€)</th>
+				<th scope="col">CANTIDAD</th>
+			</tr>
+			<tr th:each="producto : ${listaDeProductos}">
+				<td th:text="${producto.getNombre()}"></td>
+				<td th:text="${producto.getDescripcion()}"></td>
+				<td th:text="${producto.getPrecio()}"></td>
+				<td><input type="number" name="cantidad" min="0" value="0"/></td>
+			</tr>
+		</table>
+		</br>
+		<button type="submit" id="submit">ENVIAR</button>
+		<button ><a href="/opcionesUsuario">ATRÁS</a></button>
+	</form>
+	</div>
+	
+	
+</div>
+	
+</body>
+</html>
