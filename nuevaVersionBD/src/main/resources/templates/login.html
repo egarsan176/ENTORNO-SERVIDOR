@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>LOGIN</title>
+	<link type="text/css" rel="stylesheet" href="css/loginStyles.css" />
+</head>
+
+<body>
+	<div class="login">
+	  <div class="form">
+	    <h1>Don Tornillos</h1>
+	    <h2>La ferretería de tu barrio, en la web</h2>
+	    <form method="POST" action="#" th:object="${usuario}" th:action=" @{/login/submit}">
+	    
+		    <input name="userName" placeholder="usuario" type="text" th:field="*{userName}">
+		    <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" userName="userName-error">Errores</span>
+		    
+		    <input name="password" placeholder="contraseña" type="password" th:field="*{password}"> 
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" password="password-error">Errores</span>
+		   
+		    <input type="submit" value="ENTRAR" class="submit">
+	    
+	    </form>
+	  </div>
+	</div>
+
+
+</body>
+
+</html>
