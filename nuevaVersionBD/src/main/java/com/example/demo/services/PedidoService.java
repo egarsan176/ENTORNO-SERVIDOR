@@ -168,6 +168,23 @@ public class PedidoService {
 		
 		
 	}
+
+	public Pedido getPedidoSinLineas(Long idUSuario) {
+		
+		Pedido pedido = new Pedido();
+		 
+		 //recorro la lista de todos los pedidos del usuario y si existen pedidos vacíos sin lineas asociadas, los borro
+		 for (int i = 0; i< this.pedidoREPO.findByUsuarioId(idUSuario).size(); i++) {
+			 if(this.pedidoREPO.findByUsuarioId(idUSuario).get(i).getListadoLineasPedido().size() == 0) {
+				 pedido = this.pedidoREPO.findByUsuarioId(idUSuario).get(i);
+			 }
+			 
+		 }
+		 
+		return pedido;
+		
+		
+	}
 	
 	
 

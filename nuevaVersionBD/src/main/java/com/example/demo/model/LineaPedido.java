@@ -87,4 +87,7 @@ public class LineaPedido {
 		LineaPedido other = (LineaPedido) obj;
 		return Objects.equals(pedido, other.pedido) && Objects.equals(producto, other.producto);
 	}
+
+	
+	
 }

@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.Objects;
-
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -50,7 +48,20 @@ public class MainController {
 		return "redirect:/login";
 	 }
 	 
-	 
+		/**
+		 * Pagina de error al opciones de envio del pedido
+		 * @return devuelve al login si no existe la sesion o la pagina de error
+		 */
+		 @GetMapping({"/error"})
+		 public String mostrarPaginaDeError() {
+			
+			if(sesion.getAttribute("usuario")!=null) {
+				return "error";
+			}
+			return "redirect:/login";
+			
+		 }
+
 	 
 	 /**
 	  * Proporciona el login y crea un usuario vacío nada más inicializar la web para añadirlo al modelo
@@ -87,7 +98,8 @@ public class MainController {
 			 //paso el usuario al modelo
 			 model.addAttribute("usuario", usuBD);
 			 
-			 return "opcionesUsuario";
+			 
+			 return "/opcionesUsuario";
 		 }
 		  
 	 }
@@ -109,7 +121,8 @@ public class MainController {
 			//lo paso al modelo
 			 model.addAttribute("usuario", usuBD);
 			 
-			 return "opcionesUsuario";
+			 
+			 return "/opcionesUsuario";
 		 }
 	 }
 	 
@@ -131,23 +144,25 @@ public class MainController {
 			 //añado al modelo el usuario para poder mostrarlo en /listarPedidos
 			 model.addAttribute("usuario", usuBD);
 			 
-			 
 			 //PARA ELIMINAR LOS PEDIDOS QUE SE CARGAN POR DEFECTO AL ENTRAR EN NUEVO PEDIDO
-			 Pedido pedido = new Pedido();
+			  Pedido pedido = this.servicioPedido.getPedidoSinLineas(usuBD.getId());
 			 
-			 //recorro la lista de todos los pedidos del usuario y si existen pedidos vacíos sin lineas asociadas, los borro
-			 for (int i = 0; i<this.servicioPedido.findListaPedidosUser(usuBD.getId()).size(); i++) {
-				 if(this.servicioPedido.findListaPedidosUser(usuBD.getId()).get(i).getListadoLineasPedido().size() == 0) {
-					 pedido = servicioPedido.findListaPedidosUser(usuBD.getId()).get(i);
-				 }
-				 
-			 }
+//			 Pedido pedido = new Pedido();
+//			 
+//			 //recorro la lista de todos los pedidos del usuario y si existen pedidos vacíos sin lineas asociadas, los borro
+//			 for (int i = 0; i<this.servicioPedido.findListaPedidosUser(usuBD.getId()).size(); i++) {
+//				 if(this.servicioPedido.findListaPedidosUser(usuBD.getId()).get(i).getListadoLineasPedido().size() == 0) {
+//					 pedido = servicioPedido.findListaPedidosUser(usuBD.getId()).get(i);
+//				 }
+//				 
+//			 }
 			 
 			 this.servicioPedido.eliminarPedido(pedido);
 
 			 
 			 //añado al modelo los pedidos de la BBDD de ese usuario para poder mostrarlo en /listarPedidos
 			 model.addAttribute("listaDePedidos", this.servicioPedido.findListaPedidosUser(usuBD.getId()));
+			 
 			 
 			 return "listarPedidos";
 		 }
@@ -181,6 +196,7 @@ public class MainController {
 			 Pedido pedido = new Pedido();
 			 pedido.setUsuario(user);
 			 this.servicioPedido.establecerDatosInicialesPedido(pedido, user);
+			 System.out.println("pedido con datos actualizados memoria : "+pedido.toString());
 			
 			 //añado el pedido a la base de datos y al añadirlo, se le genera el id
 			 this.servicioPedido.addPedidoaLaBBDD(pedido);
@@ -188,8 +204,8 @@ public class MainController {
 			 //paso el id del pedido al modelo
 			 model.addAttribute("pedidoID", pedido.getId());
 			 
-			 System.out.println("pedido con datos actualizados memoria: "+pedido.toString());
-			 System.out.println("pedido con datos actualizados BBDD: "+this.servicioPedido.findPedido(pedido.getId()).toString());
+			 System.out.println("pedido con datos actualizados de la BBDD : "+this.servicioPedido.findPedido(pedido.getId()).toString());
+		
 			 
 			 return "nuevoPedido";
 		 }
@@ -223,6 +239,7 @@ public class MainController {
 		 
 			 //se añaden al pedido las líneas de pedido con cada producto y su cantidad
 			 servicioPedido.addLineaPedido(pedido, product.getId(), unidades);
+			 
 			 	 
 			 return "nuevoPedido";
 		 }
@@ -251,17 +268,20 @@ public class MainController {
 			 
 			 //modifico el precio del pedido
 			pedido.setCosteTotalPedido(this.servicioPedido.calcularPrecioTotal(pedido));
+			
+			System.out.println("submit nuevo pedido memoria : "+pedido.toString());
 
 			//añado el pedido a la base de datos
 			this.servicioPedido.addPedidoaLaBBDD(pedido);
 			
-			System.out.println("submit nuevo pedido: "+pedido.toString());
+			System.out.println("submit nuevo pedido guardado en BD : "+this.servicioPedido.findPedido(pedidoID).toString());
 			 
 			model.addAttribute("lineaDePedidos", this.servicioPedido.findPedido(pedidoID).getListadoLineasPedido()); 
 			model.addAttribute("usuario", usu);
 			model.addAttribute("pedido", pedido);
+			
 					 
-			return "resumenPedido";	//cuando doy a cerrar el resumen me lleva a listarPedidos
+			return "/resumenPedido";	//cuando doy a cerrar el resumen me lleva a listarPedidos   en pasado no barra
 		 }
 
 	 }
@@ -278,10 +298,13 @@ public class MainController {
 	 @PostMapping("/nuevoPedido/listarPedidos")
 	 public String listarNuevoPedido(Model model, @RequestParam(required=false,value="envio") String envio,
 			 @RequestParam(required=false,value="id") Integer id) {
+		 
+		 System.out.println("envio rescatado de parámetros"+envio);
 		
 		 if(this.sesion.getAttribute("idUsuario")== null) {
 			 return "redirect:/login";
 			 }
+		 
 		 else if(envio == null) {
 			 return "redirect:/opcionesUsuario/nuevoPedido";
 		 }else {
@@ -289,7 +312,8 @@ public class MainController {
 			 System.out.println(envio);
 			 Usuario user = this.servicioUser.findById((Long) sesion.getAttribute("idUsuario"));
 			 Pedido pedido = this.servicioPedido.findPedido(id);
-			 pedido.setEnvio(envio);
+			 System.out.println(pedido.getEnvio());
+			 //pedido.setEnvio(envio);
 			 
 			 //añado el pedido a la base de datos
 			 this.servicioPedido.addPedidoaLaBBDD(pedido);
@@ -325,7 +349,8 @@ public class MainController {
 			 model.addAttribute("pedido", this.servicioPedido.findPedido(id));
 			 System.out.println("pedido resumen:"+this.servicioPedido.findPedido(id));
 			 
-			 return "resumenPedido";
+			 
+			 return "/resumenPedido";	//en anterior sin /
 		 }
 		 
 	 }
@@ -350,6 +375,7 @@ public class MainController {
 			 this.servicioPedido.eliminarPedido(pedido);
 			 
 			 model.addAttribute("listaDePedidos", this.servicioPedido.findListaPedidosUser(user.getId()));
+			
 			 
 			 return "redirect:/listarPedidos";
 		 }
@@ -377,7 +403,7 @@ public class MainController {
 			 model.addAttribute("pedido", pedido);
 			 model.addAttribute("usuario", user);
 			 
-			 return "editar";
+			 return "/editar";		//en pasado no barra
 		 }
 	 }
 	 
@@ -422,7 +448,8 @@ public class MainController {
 			 model.addAttribute("usuario", usuario);
 			 model.addAttribute("listaDePedidos", this.servicioPedido.findListaPedidosUser(usuario.getId()));
 			 
-			 return "redirect:/listarPedidos";
+			 
+			 return "listarPedidos";		//"redirect:/listarPedidos"
 		 }
 		 
 	 }

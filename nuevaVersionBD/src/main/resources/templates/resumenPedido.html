@@ -61,9 +61,9 @@
 		     	<td th:text="${usuario.getDireccion()}"></td>
 				<td th:text="${usuario.getTelefono()}"></td>
 				<td th:text="${usuario.getEmail()}"></td>
-				<td>
-				Estándar<input type="radio" name="envio" value="estandar" checked="checked" th:value="${envio}"/>
-				Urgente<input type="radio" name="envio" value="urgente" th:value="${envio}"/>
+				<td > 
+				Estándar<input type="radio" name="envio" value="ESTANDAR" th:value="${envio}"/>
+				Urgente<input type="radio" name="envio" value="URGENTE" th:value="${envio}" checked="checked"/> 
 				</td>
 	     	</tr>
 	     </table>

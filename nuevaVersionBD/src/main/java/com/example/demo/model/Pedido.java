@@ -56,7 +56,7 @@ public class Pedido {
 	
 	public Pedido() {
 		this.fecha = new Date();
-		this.envio = "estandar";
+		this.envio = "URGENTE";
 	}
 	
 	public Pedido(Integer id) {
