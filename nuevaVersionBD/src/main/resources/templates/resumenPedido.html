@@ -58,11 +58,11 @@
 	     		<th scope="col">TIPO DE ENVÍO</th>
 	     	</tr>
 	     	<tr>
-		     	<td th:text="${usuario.getDireccion()}"></td>
-				<td th:text="${usuario.getTelefono()}"></td>
-				<td th:text="${usuario.getEmail()}"></td>
+		     	<td th:text="${pedido.getDireccion()}"></td>
+				<td th:text="${pedido.getTelefono()}"></td>
+				<td th:text="${pedido.getEmail()}"></td>
 				<td > 
-				Estándar<input type="radio" name="envio" value="ESTANDAR" />
+				<!--  Estándar<input type="radio" name="envio" value="ESTANDAR" />-->
 				Urgente<input type="radio" name="envio" value="URGENTE" checked="checked"/> 
 				</td>
 	     	</tr>
@@ -74,6 +74,7 @@
 	     	<tr class="cabeceraTabla">
 	     		<th scope="col">REFERENCIA PEDIDO:</th>
 	     		<td th:text="${pedido.getId()}"></td>
+	     		<input type="hidden" th:value="${pedido.getId()}" name="pedidoID" >
 	     	<tr>
 	     	<tr class="cabeceraTabla">
 	     		<th scope="col">PEDIDO FECHA || HORA:</th>

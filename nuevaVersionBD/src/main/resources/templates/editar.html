@@ -105,6 +105,7 @@
 				<tr class="cabeceraTabla">
 					<th scope="col" colspan="2">REFERENCIA PEDIDO</th>
 					<td th:text="${pedido.getId()}"></td>
+					<input type="hidden" th:value="${pedido.id}" name="id" >
 				</tr>
 				<tr class="cabeceraTabla">
 					<th scope="col">NOMBRE PRODUCTO</th>

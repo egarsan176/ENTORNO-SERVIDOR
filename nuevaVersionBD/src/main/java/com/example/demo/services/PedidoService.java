@@ -37,6 +37,7 @@ public class PedidoService {
 	 * @param pedido
 	 * @return
 	 */
+	@Transactional
 	public Pedido addPedidoaLaBBDD(Pedido pedido) {
 		return this.pedidoREPO.save(pedido);
 		}
@@ -164,25 +165,34 @@ public class PedidoService {
 	public Pedido editarPedido(Integer id, String email, String telefono, String direccion, Integer[] listaDeCantidades,
 			String envio, Usuario usuario) {
 		
-		Pedido pedido = this.pedidoREPO.getById(id);
+		Pedido pedido = this.pedidoREPO.findById(id).orElse(null);
 		
 		pedido.setEmail(email);
 		pedido.setTelefono(telefono);
 		pedido.setDireccion(direccion);
 		pedido.setEnvio(envio);
 		
-		int i=0;
-		for(LineaPedido linea : pedido.getListadoLineasPedido()) {
+		//int i=0;
+		
+		for(int i=0; i<pedido.getListadoLineasPedido().size(); i++){
 			if(listaDeCantidades[i]>=0) {
-				linea.setCantidad(listaDeCantidades[i]);
-				i++;
+				pedido.getListadoLineasPedido().get(i).setCantidad(listaDeCantidades[i]);
+			}else if( listaDeCantidades[i]==0) {
+				eliminarLineaVacia(pedido);
 			}
 		}
+		System.out.println("cantidad lineas pedido: "+pedido.getListadoLineasPedido().size());
+		this.pedidoREPO.save(pedido);
 		return pedido;
 		
 		
 	}
 
+	/**
+	 * Este método localiza los pedidos que no tienen asociada ninguna línea de pedido
+	 * @param idUSuario
+	 * @return pedido que no tiene lineas
+	 */
 	public Pedido getPedidoSinLineas(Long idUSuario) {
 		
 		Pedido pedido = new Pedido();
@@ -200,13 +210,17 @@ public class PedidoService {
 		
 	}
 
-	public void addLineaEdicion(LineaPedido linea, Integer id) {
+	@Transactional
+	public void eliminarLineaVacia(Pedido pedido) {
+		//creo un iterador para recorrer las lineas de pedido
+		Iterator<LineaPedido> iterator = pedido.getListadoLineasPedido().iterator();
 		
-		//Pedido pedido = this.pedidoREPO.findById(id).orElse(null);
-		
-		this.lineaREPO.save(linea);
-		
-		
+		while(iterator.hasNext()) {	//mientras haya siguiente linea
+			LineaPedido linea = iterator.next();
+			if(linea.getCantidad()==0) {
+				this.lineaREPO.delete(linea);	//elimino la linea del repositorio			
+			}
+		}
 	}
 
 

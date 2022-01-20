@@ -260,6 +260,7 @@ public class MainController {
 			 return "redirect:/login";
 			 }
 		 else {
+			 System.out.println(pedidoID +"pedido ID nuevoPEdido/submit POST");
 			 //recupero al usuario
 			 Usuario usu = this.servicioUser.findById(usuarioID);
 			 
@@ -268,8 +269,6 @@ public class MainController {
 			 
 			 //modifico el precio del pedido
 			pedido.setCosteTotalPedido(this.servicioPedido.calcularPrecioTotal(pedido));
-			
-			System.out.println("submit nuevo pedido memoria : "+pedido.toString());
 
 			//añado el pedido a la base de datos
 			this.servicioPedido.addPedidoaLaBBDD(pedido);
@@ -279,6 +278,7 @@ public class MainController {
 			model.addAttribute("lineaDePedidos", this.servicioPedido.findPedido(pedidoID).getListadoLineasPedido()); 
 			model.addAttribute("usuario", usu);
 			model.addAttribute("pedido", pedido);
+			model.addAttribute("pedidoID", pedidoID);
 			
 					 
 			return "/resumenPedido";	//cuando doy a cerrar el resumen me lleva a listarPedidos   en pasado no barra
@@ -297,9 +297,8 @@ public class MainController {
 	  */
 	 @PostMapping("/nuevoPedido/listarPedidos")
 	 public String listarNuevoPedido(Model model, @RequestParam(required=false,name="envio") String envio,
-			 @RequestParam(required=false,value="id") Integer id) {
-		 
-		 System.out.println("envio rescatado de parámetros"+envio);
+			 @RequestParam(required=false,name="pedidoID") Integer id) {
+
 		
 		 if(this.sesion.getAttribute("idUsuario")== null) {
 			 return "redirect:/login";
@@ -309,7 +308,6 @@ public class MainController {
 			 return "redirect:/opcionesUsuario/nuevoPedido";
 		 }else {
 			 System.out.println("id pedido: "+id);
-			 System.out.println(envio);
 			 Usuario user = this.servicioUser.findById((Long) sesion.getAttribute("idUsuario"));
 			 Pedido pedido = this.servicioPedido.findPedido(id);
 			 //System.out.println(pedido.getEnvio());
@@ -343,11 +341,10 @@ public class MainController {
 			 }
 		 else {
 			 Usuario user = this.servicioUser.findById((Long) sesion.getAttribute("idUsuario"));	 
-
+			 
 			 model.addAttribute("usuario", user);
 			 model.addAttribute("lineaDePedidos", this.servicioPedido.findPedido(id).getListadoLineasPedido());
 			 model.addAttribute("pedido", this.servicioPedido.findPedido(id));
-			 System.out.println("pedido resumen:"+this.servicioPedido.findPedido(id));
 			 
 			 
 			 return "/resumenPedido";	//en anterior sin /
@@ -437,20 +434,18 @@ public class MainController {
 		 }else {
 			 Usuario usuario = this.servicioUser.findById((Long) sesion.getAttribute("idUsuario"));
 			 
-			 //this.servicioPedido.editarPedido(id, email, telefono, direccion, listaDeCantidades, envio, usuario);
 			 
 			 Pedido pedido = this.servicioPedido.editarPedido(id, email, telefono, direccion, listaDeCantidades, envio, usuario);
-			 System.out.println(pedido+"edit");
-			 
+
+			 pedido.setCosteTotalPedido(this.servicioPedido.calcularPrecioTotal(pedido));
 			 this.servicioPedido.addPedidoaLaBBDD(pedido);
-			 System.out.println(this.servicioPedido.findPedido(id).toString()+"pedidoBD");
-			 
-			 model.addAttribute("pedido", pedido);	//lo añado de este modo para que me coja los cambios de la bbdd
+		 
+			 model.addAttribute("pedido", this.servicioPedido.findPedido(id));	//lo añado de este modo para que me coja los cambios de la bbdd
 			 model.addAttribute("usuario", usuario);
 			 model.addAttribute("listaDePedidos", this.servicioPedido.findListaPedidosUser(usuario.getId()));
 			 
 			 
-			 return "listarPedidos";		//"redirect:/listarPedidos"
+			 return "redirect:/listarPedidos";		//"redirect:/listarPedidos"
 		 }
 		 
 	 }
