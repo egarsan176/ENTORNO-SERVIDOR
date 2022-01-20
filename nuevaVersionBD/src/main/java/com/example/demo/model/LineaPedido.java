@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @IdClass(LineaPedidoID.class)
 public class LineaPedido {
+
 
 	//PROPIEDADES
 	@Id
@@ -88,6 +90,5 @@ public class LineaPedido {
 		return Objects.equals(pedido, other.pedido) && Objects.equals(producto, other.producto);
 	}
 
-	
 	
 }

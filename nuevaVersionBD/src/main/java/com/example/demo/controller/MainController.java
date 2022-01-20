@@ -296,7 +296,7 @@ public class MainController {
 	  * si todo es correcto redirije a la lista de pedidos del usuario
 	  */
 	 @PostMapping("/nuevoPedido/listarPedidos")
-	 public String listarNuevoPedido(Model model, @RequestParam(required=false,value="envio") String envio,
+	 public String listarNuevoPedido(Model model, @RequestParam(required=false,name="envio") String envio,
 			 @RequestParam(required=false,value="id") Integer id) {
 		 
 		 System.out.println("envio rescatado de parámetros"+envio);
@@ -312,8 +312,8 @@ public class MainController {
 			 System.out.println(envio);
 			 Usuario user = this.servicioUser.findById((Long) sesion.getAttribute("idUsuario"));
 			 Pedido pedido = this.servicioPedido.findPedido(id);
-			 System.out.println(pedido.getEnvio());
-			 //pedido.setEnvio(envio);
+			 //System.out.println(pedido.getEnvio());
+			 pedido.setEnvio(envio);
 			 
 			 //añado el pedido a la base de datos
 			 this.servicioPedido.addPedidoaLaBBDD(pedido);
@@ -395,6 +395,7 @@ public class MainController {
 			 return "redirect:/login";
 			 }
 		 else {
+			 System.out.println(id+"id editar");
 			 Usuario user = this.servicioUser.findById((Long) sesion.getAttribute("idUsuario"));
 			 
 			 Pedido pedido = this.servicioPedido.findPedido(id);
@@ -457,3 +458,90 @@ public class MainController {
 	 
 
 }
+//	 @PostMapping("/pedido/editar/{id}")
+//	 public String editarPedidoLINEA(Model model, @PathVariable Integer id, 
+//			 @ModelAttribute("linea")LineaPedido linea, 
+//			 @RequestParam(required=false,name="cantidad") Integer cantidad,
+//			 @RequestParam(required=false,name="usuarioID") Long usuarioID,
+//			 @RequestParam(required=false,name="productoID") Integer productoID){
+//		 if(this.sesion.getAttribute("idUsuario")== null) {
+//			 return "redirect:/login";
+//			 }
+//		 else {
+//			 
+//			 Usuario user = this.servicioUser.findById((Long) sesion.getAttribute("idUsuario"));
+//			 
+//			 Pedido pedido = this.servicioPedido.findPedido(id);
+//			 System.out.println(pedido);
+//			 
+//			 model.addAttribute("linea", new LineaPedido());
+//			 model.addAttribute("lineaDePedidos", pedido.getListadoLineasPedido());
+//			 model.addAttribute("pedido", pedido);
+//			 model.addAttribute("usuario", user);
+//			 
+//			 //se añaden al pedido las líneas de pedido con cada producto y su cantidad
+//			 //servicioPedido.addLineaPedido(pedido, productoID, cantidad);
+//			 servicioPedido.addLineaEdicion(linea, id);
+//			 System.out.println(productoID +"produID");
+//			 System.out.println(cantidad+"cantidad");
+//			 System.out.println(id+"id pedido");
+//			 System.out.println(linea);
+//			 
+//			 
+//			 
+//			 
+//			 return "editar"; 
+//	 }
+//	 }
+//	 
+//	 
+//	 
+//	 /**
+//	  * Este método recibe los parámetros que se pueden editar en el html de editar y cambia los datos antiguos por los nuevos
+//	  * @param ref
+//	  * @param telefono
+//	  * @param email
+//	  * @param direccion
+//	  * @param listaDeCantidades
+//	  * @param envio
+//	  * @return pasa al html del login si el usuario no está en la sesión
+//	  * pasa al html de listarPedidos si el usuario está en la sesión
+//	  */
+//	 @PostMapping("/editar/submit")
+//	 public String editarPedidoSubmit(
+//			 @RequestParam (required=false, value="id") Integer id,
+//			 @RequestParam (required=false, value="telefono") String telefono,
+//			 @RequestParam (required=false, value="email") String email,
+//			 @RequestParam (required=false, value="direccion") String direccion,
+//			 //@RequestParam (required=false, value="cantidad") Integer [] listaDeCantidades,
+//			 @RequestParam (required=false, value="envio") String envio,
+//			 Model model) {
+//		 
+//		 if(this.sesion.getAttribute("idUsuario")== null) {
+//			 return "redirect:/login";
+//			 }
+////		 else if("".equals(telefono) || "".equals(email) || "".equals(direccion) || listaDeCantidades.length==0 || "".equals(envio)){
+////			 return "/error";
+////		 }
+//		 else {
+//			 Usuario usuario = this.servicioUser.findById((Long) sesion.getAttribute("idUsuario"));
+//			 
+//			 //this.servicioPedido.editarPedido(id, email, telefono, direccion, listaDeCantidades, envio, usuario);
+//			 
+//			 Pedido pedido = this.servicioPedido.editarPedido(id, email, telefono, direccion, envio, usuario);
+//			 System.out.println(pedido+"edit");
+//			 
+//			 this.servicioPedido.addPedidoaLaBBDD(pedido);
+//			 System.out.println(this.servicioPedido.findPedido(id).toString()+"pedidoBD");
+//			 
+//			 model.addAttribute("pedido", pedido);	//lo añado de este modo para que me coja los cambios de la bbdd
+//			 model.addAttribute("usuario", usuario);
+//			 model.addAttribute("listaDePedidos", this.servicioPedido.findListaPedidosUser(usuario.getId()));
+//			 
+//			 
+//			 return "redirect:/listarPedidos";		//"redirect:/listarPedidos"
+//		 }
+//		 
+//	 }
+	 
+

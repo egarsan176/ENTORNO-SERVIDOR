@@ -1,3 +1,89 @@
+<!-- v2 
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head> 
+    <title>don Tornillos</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="/css/resumenStyle.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div>
+	<div class="tit">
+     	<h1>EDICIÓN DE PEDIDO</h1>
+     </div>
+     
+     <div class="content">
+     		<table border="1" class="pedido">
+				<tr class="cabeceraTabla">
+					<th scope="col" colspan="2">REFERENCIA PEDIDO</th>
+					<td th:text="${pedido.getId()}"></td>
+				</tr>
+				<tr class="cabeceraTabla">
+					<th scope="col">NOMBRE PRODUCTO</th>
+					<th scope="col">PRECIO UNIDAD</th>
+					<th scope="col">CANTIDAD</th>
+				</tr>
+			  	<tr th:each="linea : ${pedido.getListadoLineasPedido()}">
+			  	<form th:action="@{/pedido/editar/{id}(id=${pedido.id})}" method="post" th:object="${linea}">
+					<td th:text="${linea.getProducto().getNombre()}"></td>
+					<td th:text="${linea.getProducto().getPrecio()}"></td>
+					<input type="hidden" th:value="${linea.getProducto().id}"  th:name="productoID" th:id="id">
+		        	<td><input type="number" name="cantidad" min="0" /></td>
+		        	<td><button type="submit" id="submit">MODIFICAR</button></td>
+		        <form>
+				</tr> 
+				
+				<!--<tr th:each="producto : ${listaDeProductos}">
+			<form th:action="@{/opcionesUsuario/nuevoPedido}" method="post" th:object="${produ}">
+				<td th:text="${producto.getNombre()}"></td>
+				<td th:text="${producto.getDescripcion()}"></td>
+				<td th:text="${producto.getPrecio()}"></td>
+				<input type="hidden" th:value="${usuarioID}"  name="usuarioID" >
+				<input type="hidden" th:value="${pedidoID}" name="pedidoID" >
+				<input type="hidden" th:value="${producto.id}"  th:name="id" th:id="id">
+				<td><input type="number" name="unidades" min="0"/></td>
+				<td><button type="submit" id="submit">AÑADIR</button></td>
+			</form>
+			</tr>
+			</table>
+				
+			<br>
+				
+			<h3>DATOS DEL ENVÍO:</h3>
+				
+		    <table border="1" class="pedido">
+		    	<tr class="cabeceraTabla">
+		     		<th scope="col">DIRECCIÓN</th>
+		     		<th scope="col">TELÉFONO</th>
+		     		<th scope="col">EMAIL</th>
+		     		<th scope="col">TIPO DE ENVÍO</th>
+		     	</tr>
+		     	<tr>
+		     	
+     	<form method="post" th:action="@{/editar/submit}">
+     	<input type="hidden" th:value="${usuarioID}"  name="usuarioID" >
+     	<input type="hidden" name="id" th:value="${pedido.getId()}"/>
+			     	<td><input type="text" name="direccion" th:value="${pedido.Direccion}"/></td>
+					<td><input type="text" name="telefono" th:value="${pedido.Telefono}"/></td>
+					<td><input type="text" name="email" th:value="${pedido.Email}"/></td>
+					<td>
+					Estándar<input type="radio" name="envio" value="estandar"/>
+					Urgente<input type="radio" name="envio" value="urgente" checked="checked"/>
+					</td>
+		     	</tr>
+		    </table>
+		    <br>
+	     	<button type="submit" id="doble">GUARDAR CAMBIOS</button>
+     	</form>
+     </div>
+     
+</div>
+
+</body>
+</html>
+-->
+
 <!-- v2 -->
 
 <!DOCTYPE HTML>
@@ -18,7 +104,7 @@
      		<table border="1" class="pedido">
 				<tr class="cabeceraTabla">
 					<th scope="col" colspan="2">REFERENCIA PEDIDO</th>
-					<td ><input type="text" name="id" th:value="${pedido.getId()}"/></td>
+					<td th:text="${pedido.getId()}"></td>
 				</tr>
 				<tr class="cabeceraTabla">
 					<th scope="col">NOMBRE PRODUCTO</th>

@@ -62,8 +62,8 @@
 				<td th:text="${usuario.getTelefono()}"></td>
 				<td th:text="${usuario.getEmail()}"></td>
 				<td > 
-				Estándar<input type="radio" name="envio" value="ESTANDAR" th:value="${envio}"/>
-				Urgente<input type="radio" name="envio" value="URGENTE" th:value="${envio}" checked="checked"/> 
+				Estándar<input type="radio" name="envio" value="ESTANDAR" />
+				Urgente<input type="radio" name="envio" value="URGENTE" checked="checked"/> 
 				</td>
 	     	</tr>
 	     </table>
@@ -73,11 +73,11 @@
 	     <table border="1" class="pedido">
 	     	<tr class="cabeceraTabla">
 	     		<th scope="col">REFERENCIA PEDIDO:</th>
-	     		<td><input type="text" name="id" th:value="${pedido.getId()}"></td>
+	     		<td th:text="${pedido.getId()}"></td>
 	     	<tr>
 	     	<tr class="cabeceraTabla">
 	     		<th scope="col">PEDIDO FECHA || HORA:</th>
-	     		<td><input type="text"  th:value="${pedido.getFechaBonita()}"></td>
+	     		<td th:text="${pedido.getFechaBonita()}"></td>
 	     	<tr>
 	     	
 	     </table>

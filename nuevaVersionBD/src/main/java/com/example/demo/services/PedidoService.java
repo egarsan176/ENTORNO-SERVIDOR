@@ -1,9 +1,11 @@
 package com.example.demo.services;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.LineaPedido;
 import com.example.demo.model.Pedido;
@@ -44,9 +46,18 @@ public class PedidoService {
 	 * @param pedido
 	 * @param user
 	 */
+	@Transactional
 	public void eliminarPedido(Pedido pedido) {
 
-		this.pedidoREPO.delete(pedido);
+		//creo un iterador para recorrer las lineas de pedido
+		Iterator<LineaPedido> iterator = pedido.getListadoLineasPedido().iterator();
+		
+		while(iterator.hasNext()) {	//mientras haya siguiente linea
+			LineaPedido linea = iterator.next();
+			this.lineaREPO.delete(linea);	//elimino la linea del repositorio
+		}
+		
+		this.pedidoREPO.delete(pedido);	//una vez eliminadas todas las lineas, puedo eliminar el pedido del repositorio
 		
 	};
 	
@@ -65,7 +76,7 @@ public class PedidoService {
 	 * @return pedido que coincide con ese ID
 	 */
 	public Pedido findPedido(Integer pedidoID) {
-		return this.pedidoREPO.getById(pedidoID);
+		return this.pedidoREPO.findById(pedidoID).orElse(null);
 	}
 	
 	/**
@@ -125,6 +136,7 @@ public class PedidoService {
 		
 	}
 	
+	
 	/**
 	 * Este método establece por defecto los datos iniciales de un pedido
 	 * @param pedido
@@ -135,6 +147,7 @@ public class PedidoService {
 		pedido.setEmail(usuario.getEmail());
 		pedido.setTelefono(usuario.getTelefono());
 	}
+
 
 	/**
 	 * Este método edita los datos de un pedido
@@ -147,6 +160,7 @@ public class PedidoService {
 	 * @param usuario
 	 * @return pedido editado
 	 */
+	@Transactional
 	public Pedido editarPedido(Integer id, String email, String telefono, String direccion, Integer[] listaDeCantidades,
 			String envio, Usuario usuario) {
 		
@@ -185,6 +199,17 @@ public class PedidoService {
 		
 		
 	}
+
+	public void addLineaEdicion(LineaPedido linea, Integer id) {
+		
+		//Pedido pedido = this.pedidoREPO.findById(id).orElse(null);
+		
+		this.lineaREPO.save(linea);
+		
+		
+	}
+
+
 	
 	
 
