@@ -83,7 +83,6 @@ public class MainController {
 	  */
 	 @PostMapping("/login/submit")
 	 public String validarUsuario(@Valid @ModelAttribute("usuario") Usuario nuevoUsuario, Model model) {
-		 
 		 //compruebo si el usuario está en la base de datos y si no se encuentra te quedas en el login
 		 if( ! this.servicioUser.isFindUser(nuevoUsuario.getUserName(), nuevoUsuario.getPassword()) ) {
 			  return "login";
@@ -111,7 +110,7 @@ public class MainController {
 	  */
 	 @GetMapping("/opcionesUsuario")
 	 public String verOpciones(Model model) {
-		 
+		 System.out.println(this.sesion.getAttribute("idUsuario"));
 		 if(this.sesion.getAttribute("idUsuario")== null) {
 			 return "redirect:/login";
 		 }else {
