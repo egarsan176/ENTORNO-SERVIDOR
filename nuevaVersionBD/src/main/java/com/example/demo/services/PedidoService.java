@@ -60,7 +60,7 @@ public class PedidoService {
 		
 		this.pedidoREPO.delete(pedido);	//una vez eliminadas todas las lineas, puedo eliminar el pedido del repositorio
 		
-	};
+	}
 	
 	/**
 	 * Este método devuelve la lista pedidos de un usuario en concreto
@@ -106,7 +106,7 @@ public class PedidoService {
 	 */
 	public void  addLineaPedido(Pedido pedido, Integer produId, Integer cantidad) {
 
-		Producto produ = this.productoREPO.findAll().get(produId); //selecciono el producto en concreto a través de su ID
+		Producto produ = this.productoREPO.findById(produId).orElse(null); //selecciono el producto en concreto a través de su ID
 		
 		LineaPedido lineaDePedidosNueva = new LineaPedido(pedido, produ); //creamos una copia de la linea del usuario para comprobar si la tiene o no
 		
@@ -125,7 +125,6 @@ public class PedidoService {
 			//seteo la cantidad con la suma de la cantidad antigua de la línea más la que le paso por parámetro
 			pedido.getListadoLineasPedido().get(posicionLineaPedido).setCantidad(cantidadAntigua+cantidad);
 			
-			this.lineaREPO.save(lineaDePedidosNueva);
 			
 		}	else {
 			
@@ -135,6 +134,7 @@ public class PedidoService {
 			
 		}
 		
+		this.pedidoREPO.save(pedido);
 	}
 	
 	
@@ -171,8 +171,7 @@ public class PedidoService {
 		pedido.setTelefono(telefono);
 		pedido.setDireccion(direccion);
 		pedido.setEnvio(envio);
-		
-		//int i=0;
+
 		
 		for(int i=0; i<pedido.getListadoLineasPedido().size(); i++){
 			if(listaDeCantidades[i]>=0) {
@@ -181,7 +180,6 @@ public class PedidoService {
 				eliminarLineaVacia(pedido);
 			}
 		}
-		System.out.println("cantidad lineas pedido: "+pedido.getListadoLineasPedido().size());
 		this.pedidoREPO.save(pedido);
 		return pedido;
 		
@@ -210,6 +208,10 @@ public class PedidoService {
 		
 	}
 
+	/**
+	 * Este método elimina una línea del pedido que no tenga cantidades en alguna de sus líneas de pedido
+	 * @param pedido
+	 */
 	@Transactional
 	public void eliminarLineaVacia(Pedido pedido) {
 		//creo un iterador para recorrer las lineas de pedido

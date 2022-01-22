@@ -20,6 +20,9 @@ public class UsuarioService {
 	@Autowired
 	private PedidoRepository pedidoREPO;
 	
+	//para poder controlar si el usuario está logueado o no y que no se pueda acceder a cualquier página
+	private boolean isLogueado = false;
+	
 	/**
 	 * Este método devuelve el listado de usuarios de la BBDD
 	 * @return list con los usuarios de la BBDD
@@ -91,7 +94,24 @@ public class UsuarioService {
 		
 		return isEncontrado;
 	}
+
+	/**
+	 * para recuperar si un usuario está logueado o no
+	 * @return
+	 */
+	public boolean isLogueado() {
+		return isLogueado;
+	}
+
+	/**
+	 * para cambiar el estado de la propiedad isLogueado
+	 * @param isLogueado
+	 */
+	public void setLogueado(boolean isLogueado) {
+		this.isLogueado = isLogueado;
+	}
 	
+
 	
 
 }

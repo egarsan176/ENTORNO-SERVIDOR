@@ -57,7 +57,6 @@ public class Pedido {
 	
 	public Pedido() {
 		this.fecha = new Date();
-		//this.envio = "URGENTE";
 	}
 	
 	public Pedido(Integer id) {
@@ -164,13 +163,6 @@ public class Pedido {
 				+ email + ", telefono=" + telefono + ", costeTotalPedido=" + costeTotalPedido + ", listadoLineasPedido="
 				+ listadoLineasPedido + "]";
 	}
-	
-//	/**
-//	 * Este método aumenta el contador
-//	 */
-//	public void incrementarContador() {
-//		this.contador++;
-//	}
 	
 	/**
 	 * Este método muestra la fecha en un formato más entendible
