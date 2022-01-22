@@ -106,7 +106,7 @@ public class PedidoService {
 	 */
 	public void  addLineaPedido(Pedido pedido, Integer produId, Integer cantidad) {
 
-		Producto produ = this.productoREPO.findById(produId).orElse(null); //selecciono el producto en concreto a través de su ID
+		Producto produ = this.productoREPO.findAll().get(produId); //selecciono el producto en concreto a través de su ID
 		
 		LineaPedido lineaDePedidosNueva = new LineaPedido(pedido, produ); //creamos una copia de la linea del usuario para comprobar si la tiene o no
 		
@@ -134,7 +134,7 @@ public class PedidoService {
 			
 		}
 		
-		this.pedidoREPO.save(pedido);
+		//this.pedidoREPO.save(pedido);
 	}
 	
 	
