@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Don Tornillos</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/listarStyle.css"></link>
+</head>
+    <body>
+        <div>
+          <div class="tit">
+       		<h1>LISTA DE PEDIDOS</h1>
+          </div>
+          
+          <div class="content">
+            <table class="intro">
+	           <tr>
+		           <th scope="col">Bienvenid@ </th>
+		           <th th:text="${usuario.getNombre()}" scope="col"></th>
+		           <th scope="col">, </th>
+		           <th scope="col"> aquí está tu lista de pedidos:</th>
+	           </tr>
+		  	</table>
+		  	
+		  	<br>
+
+<div th:if="${listaDePedidos == null}">
+  <p>Ups, tu lista de pedidos aún está vacía</p>
+</div>
+<div th:unless="${listaDePedidos != null}">
+  <table border=1 class="pedido">
+				<tr class="cabeceraTabla">
+					<th scope="col">REFERENCIA</th>
+					<th scope="col">FECHA</th>
+					<th scope="col">DIRECCIÓN</th>
+					<th scope="col">TIPO DE ENVÍO</th>
+					<th scope="col">OPCIONES</th>
+				</tr>
+				<tr th:each="pedido : ${listaDePedidos}">
+					<td th:text="${pedido.getId()}"></td>
+					<td th:text="${pedido.getFechaBonita()}"></td>
+					<td th:text="${pedido.getDireccion()}"></td>
+					<td th:text="${pedido.envio}"></td>
+					<td>
+					<button><a th:href="@{/pedido/resumen/{id}(id=${pedido.id})}">VER</a></button>
+					<button><a th:href="@{/pedido/editar/{id}(id=${pedido.id})}">EDITAR</a></button>
+					<button><a th:href="@{/pedido/borrar/{id}(id=${pedido.id})}">BORRAR</a></button>
+					</td>
+				</tr>
+			</table>
+</div>
+            
+	  			<table border=1 class="pedido">
+				<tr class="cabeceraTabla">
+					<th scope="col">REFERENCIA</th>
+					<th scope="col">FECHA</th>
+					<th scope="col">DIRECCIÓN</th>
+					<th scope="col">TIPO DE ENVÍO</th>
+					<th scope="col">OPCIONES</th>
+				</tr>
+				<tr th:each="pedido : ${listaDePedidos}">
+					<td th:text="${pedido.getId()}"></td>
+					<td th:text="${pedido.getFechaBonita()}"></td>
+					<td th:text="${pedido.getDireccion()}"></td>
+					<td th:text="${pedido.envio}"></td>
+					<td>
+					<button><a th:href="@{/pedido/resumen/{id}(id=${pedido.id})}">VER</a></button>
+					<button><a th:href="@{/pedido/editar/{id}(id=${pedido.id})}">EDITAR</a></button>
+					<button><a th:href="@{/pedido/borrar/{id}(id=${pedido.id})}">BORRAR</a></button>
+					</td>
+				</tr>
+			</table>
+			
+        </div>
+		<button ><a href="/cerrarSesion">CERRAR SESIÓN</a></button>
+		<button ><a href="/opcionesUsuario">ATRÁS</a></button>
+	</body>
+</html>
+								
+							

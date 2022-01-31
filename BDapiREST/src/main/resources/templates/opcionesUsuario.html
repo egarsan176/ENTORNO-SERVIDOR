@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Don Tornillos</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/optionStyles.css">
+          
+          <div>
+          <div class="tit">
+       		<h1>OPCIONES DE USUARIO</h1>
+          </div>
+          
+            <div class="content">
+            <table>
+	           <tr>
+		           <th scope="col">Bienvenid@ </th>
+		           <th th:text="${usuario.getNombre()}" scope="col"></th>
+		           <th scope="col"> </th>
+		           <th scope="col">¿Qué quieres hacer?</th>
+	           </tr>
+		  	</table>
+		  	<br>
+                    
+                    <button><a href="/listarPedidos">Listar Pedidos</a></button>
+
+                    <button><a href="/opcionesUsuario/nuevoPedido">Crear Pedido</a></button>
+             
+                    <button><a href="/cerrarSesion">Cerrar sesión</a></button>
+
+            </div>
+
+        </div>
+    </body>
+</html>
