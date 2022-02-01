@@ -23,13 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ApiError;
+import com.example.demo.exception.LineaNotFoundException;
 import com.example.demo.exception.PedidoNotFoundException;
 import com.example.demo.exception.ProductoNotFoundException;
 import com.example.demo.exception.UsuarioNotFoundException;
+import com.example.demo.model.DatosPedido;
 import com.example.demo.model.LineaPedido;
 import com.example.demo.model.Pedido;
 import com.example.demo.model.Producto;
 import com.example.demo.model.Usuario;
+import com.example.demo.services.LineaService;
 import com.example.demo.services.PedidoService;
 import com.example.demo.services.ProductoService;
 import com.example.demo.services.UsuarioService;
@@ -50,6 +53,9 @@ public class MainController {
 	 
 	 @Autowired
 	 private ProductoService serviceProducto;
+	 
+	 @Autowired
+	 private LineaService serviceLinea;
 	 
 	 
 	 
@@ -633,25 +639,96 @@ public class MainController {
 			}
 		}
 		
-		
+		/**
+		 * Hago una petición PUT a http://localhost:8080/pedido/id y en el body le paso un objeto DatosPedido (contiene los datos que quiero editar del pedido)
+		 * @param id
+		 * @param datos
+		 * @return JSON con los datos que se han editado
+		 */
 		@PutMapping("pedido/{id}")
-		public Pedido editPedido(@PathVariable Integer id, @RequestBody Pedido pedidoEditado) {
+		public ResponseEntity<DatosPedido> editPedido(@PathVariable Integer id, @RequestBody DatosPedido datos) {
 			
 			Pedido pedido = this.servicioPedido.findPedido(id);
 			
+			if(pedido == null) {
+				
+				throw new PedidoNotFoundException(id);
+				
+			}else {
+				
+				this.servicioPedido.editarDatosPedido(pedido, datos);
+				this.servicioPedido.addPedidoaLaBBDD(pedido);
+				
+				return ResponseEntity.status(HttpStatus.CREATED).body(datos);
+			}	
 			
+		}
+		/**
+		 * Hago una petición GET a http://localhost:8080/pedido 
+		 * @return JSON con todos los pedidos de la base de datos
+		 */
+		@GetMapping("pedido")
+		public ResponseEntity<List<Pedido>> findAllPedidos() {
 			
-			return pedidoEditado;
+			List<Pedido> pedidos = this.servicioPedido.findAll();
+			
+			ResponseEntity<List<Pedido>> re; 
+			
+			if (pedidos.isEmpty()) {
+				re = ResponseEntity.notFound().build();
+			} else {
+				re = ResponseEntity.ok(pedidos);
+			}
+			
+			return re;
+		}
+		
+		/**
+		 * Hago una petición GET a http://localhost:8080/lineaPedido
+		 * @return JSON con todas las líneas de pedido
+		 */
+		@GetMapping("lineaPedido")
+		public ResponseEntity<List<LineaPedido>> findAllLineas(){
+			
+			List<LineaPedido> lineas = this.serviceLinea.findAll();
+			
+			ResponseEntity<List<LineaPedido>> re; 
+			
+			if (lineas.isEmpty()) {
+				re = ResponseEntity.notFound().build();
+			} else {
+				re = ResponseEntity.ok(lineas);
+			}
+			
+			return re;
 			
 		}
 		
+		//PREGUNTAR JORGE --> BUCLE CASI INFINITO
+		@PostMapping("pedido/{idPedido}/lineaPedido")
+		public ResponseEntity<LineaPedido> addLineaPedido(@PathVariable Integer idPedido, @RequestBody LineaPedido linea){
+			
+			Pedido pedido = this.servicioPedido.findPedido(idPedido);
+			
+			if(pedido == null) {
+				
+				throw new PedidoNotFoundException(idPedido);
+				
+			}else if(linea.getProducto() == null) {
+				
+				throw new LineaNotFoundException();
+				
+			}else {
+				
+				this.servicioPedido.addLineaPedido(pedido, linea.getProducto().getId(), linea.getCantidad());
+				this.servicioPedido.addPedidoaLaBBDD(pedido);
+				
+				return ResponseEntity.status(HttpStatus.CREATED).body(linea);
+			}
+			
+		}
 		
-		
-		
-//		
-//		listarPedidos
-//		obtener un pedido por id
-//		añadir pedido
+
 //		pedido/id/lineapedido
 		
 		

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.model.DatosPedido;
 import com.example.demo.model.LineaPedido;
 import com.example.demo.model.Pedido;
 import com.example.demo.model.Producto;
@@ -228,6 +229,28 @@ public class PedidoService {
 		}
 	}
 
+	/**
+	 * Este método edita los datos de un pedido (para la API)
+	 * @param pedido
+	 * @param datos
+	 */
+	public void editarDatosPedido(Pedido pedido, DatosPedido datos) {
+		
+		pedido.setDireccion(datos.getDireccion());
+		pedido.setEmail(datos.getEmail());
+		pedido.setEnvio(datos.getEnvio());
+		pedido.setTelefono(datos.getTelefono());
+		
+	}
+	
+	/**
+	 * Devuelve la lista de pedidos del repositorio
+	 * @return array de pedidos
+	 */
+	
+	public List<Pedido> findAll() {
+		return this.pedidoREPO.findAll();
+	}
 
 	
 	
