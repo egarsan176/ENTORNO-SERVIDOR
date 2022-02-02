@@ -5,29 +5,37 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
-@IdClass(LineaPedidoID.class)
 public class LineaPedido {
 
 
 	//PROPIEDADES
-	@Id
+	
 	@ManyToOne
 	@JoinColumn(name="pedido_id")
+	@JsonBackReference	       // paso3 --> solución del ciclo infinito
 	private Pedido pedido;
 	
-	@Id
+	
 	@ManyToOne
 	@JoinColumn(name="producto_id")
 	private Producto producto;
 	
 	@Column(name = "cantidad")
 	private Integer cantidad;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	
 	//CONSTRUCTOR
 
@@ -70,14 +78,23 @@ public class LineaPedido {
 	public void setCantidad(Integer cantidad) {
 		this.cantidad = cantidad;
 	}
+	
+	public Integer getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 
 	//HASHCODE Y EQUALS
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(pedido, producto);
+		return Objects.hash(id);
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -87,8 +104,10 @@ public class LineaPedido {
 		if (getClass() != obj.getClass())
 			return false;
 		LineaPedido other = (LineaPedido) obj;
-		return Objects.equals(pedido, other.pedido) && Objects.equals(producto, other.producto);
+		return Objects.equals(id, other.id);
 	}
+	
+
 
 	
 }

@@ -20,6 +20,24 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+/**
+ * INFO BUCLE INFINITO API
+ * 
+ * Cuando devolvemos datos al front-end a través de la interfaz del controlador,
+ * durante el proceso de serialización json, si los dos objetos dependen el uno del otro, el json seguirá funcionando.
+ * Esto conducirá a un desbordamiento de pila.
+ * 
+ * Para manejar el problema relacionado con la serialización del modelo al utilizar la API
+ * cuando los atributos del modelo tienen definida un lazy loading,
+ * debemos decirle al serializador que ignore la cadena o la basura útil que Hibernate añade a las clases
+ * para que pueda administrar el lazy loading de datos declarando la anotación @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
+*/
+
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // paso1 --> solución del ciclo infinito 
 @Entity
 @Table(name = "pedido")
 public class Pedido {
@@ -51,6 +69,7 @@ public class Pedido {
 	
 	@OneToMany
 	@NotFound(action=NotFoundAction.IGNORE)
+	@JsonManagedReference 					// paso2 --> solución del ciclo infinito  (paso3 en LineaPedido.class)
 	private List<LineaPedido> listadoLineasPedido = new ArrayList<>();
 	
 	//CONSTRUCTOR

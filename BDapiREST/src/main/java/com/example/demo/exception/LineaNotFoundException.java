@@ -11,8 +11,8 @@ public class LineaNotFoundException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = -3450970307798614804L;
 
-	public LineaNotFoundException() {
-		super("No se puede encontrar la línea seleccionada.");
+	public LineaNotFoundException(Integer id) {
+		super("No se puede encontrar la línea con id: "+id);
 	}
 
 }

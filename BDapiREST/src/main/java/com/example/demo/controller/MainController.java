@@ -36,6 +36,7 @@ import com.example.demo.services.LineaService;
 import com.example.demo.services.PedidoService;
 import com.example.demo.services.ProductoService;
 import com.example.demo.services.UsuarioService;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 @RestController
 public class MainController {
@@ -696,7 +697,8 @@ public class MainController {
 			
 			if (lineas.isEmpty()) {
 				re = ResponseEntity.notFound().build();
-			} else {
+			} 
+			else {
 				re = ResponseEntity.ok(lineas);
 			}
 			
@@ -704,9 +706,33 @@ public class MainController {
 			
 		}
 		
-		//PREGUNTAR JORGE --> BUCLE CASI INFINITO
+		/**
+		 * Hago una petición GET a http://localhost:8080/lineaPedido/id
+		 * @return JSON con la línea de pedido que coincide con el id pasado en la url
+		 */
+		@GetMapping("/lineaPedido/{id}")
+		public LineaPedido getLineaById(@PathVariable Integer id) {
+			
+			LineaPedido linea = this.serviceLinea.findById(id);
+			
+			if (linea == null) {
+				throw new LineaNotFoundException(id);
+			} 
+			else {
+				return linea;
+			}
+		}
+		
+		
+		
+		/**
+		 * Hago una petición POST a http://localhost:8080/pedido/{idPedido}/lineaPedido
+		 * @param idPedido lo indico en la URL
+		 * @param linea la paso en el body
+		 * @return JSON con los datos de la linea de pedido
+		 */
 		@PostMapping("pedido/{idPedido}/lineaPedido")
-		public ResponseEntity<LineaPedido> addLineaPedido(@PathVariable Integer idPedido, @RequestBody LineaPedido linea){
+		public ResponseEntity<LineaPedido> addLineaPedido(@PathVariable Integer idPedido, @RequestBody LineaPedido lineaPedido){
 			
 			Pedido pedido = this.servicioPedido.findPedido(idPedido);
 			
@@ -714,19 +740,84 @@ public class MainController {
 				
 				throw new PedidoNotFoundException(idPedido);
 				
-			}else if(linea.getProducto() == null) {
+			}else if(lineaPedido.getProducto() == null) {
 				
-				throw new LineaNotFoundException();
+				throw new LineaNotFoundException(lineaPedido.getId());
 				
 			}else {
 				
-				this.servicioPedido.addLineaPedido(pedido, linea.getProducto().getId(), linea.getCantidad());
+				this.servicioPedido.addLineaPedido(pedido, lineaPedido.getProducto().getId(), lineaPedido.getCantidad());
 				this.servicioPedido.addPedidoaLaBBDD(pedido);
 				
-				return ResponseEntity.status(HttpStatus.CREATED).body(linea);
+				return ResponseEntity.status(HttpStatus.CREATED).body(lineaPedido);
 			}
 			
 		}
+		
+		/**
+		 * Hago una petición PUT a http://localhost:8080/lineaPedido/id y en el body le paso un objeto LineaPedido
+		 * @param id de la línea que quiero editar
+		 * @param lineaPedido
+		 * @return JSON con la línea introducida en el body
+		 */
+		@PutMapping("lineaPedido/{id}")
+		public LineaPedido editarLineaPedido(@PathVariable Integer id, @RequestBody LineaPedido lineaPedido) {
+			
+			LineaPedido linea = this.serviceLinea.findById(id);
+			
+			if(linea == null) {
+				
+				throw new LineaNotFoundException(id);
+				
+			}else {
+				
+				linea.setProducto(lineaPedido.getProducto());
+				linea.setCantidad(lineaPedido.getCantidad());
+				this.serviceLinea.edit(linea);
+				
+				return linea;
+			}
+			
+		}
+		
+		/**
+		 * Hago una petición DELETE a http://localhost:8080/linea/id y se elimina la línea que coincide con el id pasado por parámetro
+		 * @param id
+		 * @return JSON vacío 
+		 */
+		@DeleteMapping("lineaPedido/{id}")
+		public ResponseEntity<?> deleteLineaPedido(@PathVariable Integer id) {
+			
+			LineaPedido linea = this.serviceLinea.findById(id);
+			
+			if (linea == null) {
+				throw new LineaNotFoundException(id);
+			
+			}else {
+				
+				this.serviceLinea.borrar(linea);
+				return ResponseEntity.noContent().build();
+			}
+		}
+			
+
+
+		/**
+		 * Para cuando existe un error de un JSON mal formado
+		 * @param ex
+		 * @return
+		 */
+		@ExceptionHandler(JsonMappingException.class)
+		public ResponseEntity<ApiError> handleJsonMappingException(JsonMappingException ex) {
+			ApiError apiError = new ApiError();
+			apiError.setEstado(HttpStatus.BAD_REQUEST);
+			apiError.setFecha(LocalDateTime.now());
+			apiError.setMensaje(ex.getMessage());
+			
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+		}
+			
+		
 		
 
 //		pedido/id/lineapedido
