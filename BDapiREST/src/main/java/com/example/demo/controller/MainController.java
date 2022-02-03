@@ -280,13 +280,13 @@ public class MainController {
 		}
 		
 		/**
-		 * Hago una petición GET a http://localhost:8080/lineaPedido
+		 * Hago una petición GET a http://localhost:8080/pedido/{id}/lineaPedido
 		 * @return JSON con todas las líneas de pedido
 		 */
-		@GetMapping("lineaPedido")
-		public ResponseEntity<List<LineaPedido>> findAllLineas(){
+		@GetMapping("pedido/{id}/lineaPedido")
+		public ResponseEntity<List<LineaPedido>> findAllLineas(@PathVariable Integer id){
 			
-			List<LineaPedido> lineas = this.serviceLinea.findAll();
+			List<LineaPedido> lineas =  this.servicioPedido.findPedido(id).getListadoLineasPedido();
 			
 			ResponseEntity<List<LineaPedido>> re; 
 			
@@ -302,11 +302,11 @@ public class MainController {
 		}
 		
 		/**
-		 * Hago una petición GET a http://localhost:8080/lineaPedido/id
+		 * Hago una petición GET a http://localhost:8080/pedido/{idPedido}/lineaPedido/{id}
 		 * @return JSON con la línea de pedido que coincide con el id pasado en la url
 		 */
-		@GetMapping("/lineaPedido/{id}")
-		public LineaPedido getLineaById(@PathVariable Integer id) {
+		@GetMapping("pedido/{idPedido}/lineaPedido/{id}")
+		public LineaPedido getLineaById(@PathVariable Integer idPedido, @PathVariable Integer id) {
 			
 			LineaPedido linea = this.serviceLinea.findById(id);
 			
@@ -355,7 +355,7 @@ public class MainController {
 		 * @param lineaPedido
 		 * @return JSON con la línea introducida en el body
 		 */
-		@PutMapping("lineaPedido/{id}")
+		@PutMapping("pedido/{idPedido}/lineaPedido/{id}")
 		public LineaPedido editarLineaPedido(@PathVariable Integer id, @RequestBody LineaPedido lineaPedido) {
 			
 			LineaPedido linea = this.serviceLinea.findById(id);
@@ -380,7 +380,7 @@ public class MainController {
 		 * @param id
 		 * @return JSON vacío 
 		 */
-		@DeleteMapping("lineaPedido/{id}")
+		@DeleteMapping("pedido/{idPedido}/lineaPedido/{id}")
 		public ResponseEntity<?> deleteLineaPedido(@PathVariable Integer id) {
 			
 			LineaPedido linea = this.serviceLinea.findById(id);
