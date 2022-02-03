@@ -67,7 +67,7 @@ public class Pedido {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Usuario usuario;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@NotFound(action=NotFoundAction.IGNORE)
 	@JsonManagedReference 					// paso2 --> solución del ciclo infinito  (paso3 en LineaPedido.class)
 	private List<LineaPedido> listadoLineasPedido = new ArrayList<>();
