@@ -39,8 +39,7 @@ public class Producto {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.descripcion = descripcion;
-//		this.id = contador;
-//		incrementarContador();
+
 	}
 
 	public Integer getId() {

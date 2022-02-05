@@ -3,23 +3,16 @@ package com.example.demo.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ApiError;
@@ -41,9 +34,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 @RestController
 public class MainController {
 	
-	//INYECCIÓN DE LA SESIÓN
-	 @Autowired
-	 private HttpSession sesion;
 	 
 	//INYECCIÓN DE LOS DISTINTOS SERVICIOS
 	 @Autowired
@@ -81,12 +71,12 @@ public class MainController {
 			return re;
 		}
 		
-		 /**
-			 * SOLO CONSULTA
-			 * Para realizar una petición GET a http://localhost:8080/usuario/id 
-			 * @return nos devuelve un JSON con los datos del usuario solicitado
-		 * @throws UsuarioNotFoundException 
-			 */
+		/**
+		* SOLO CONSULTA
+		* Para realizar una petición GET a http://localhost:8080/usuario/id 
+		* @return nos devuelve un JSON con los datos del usuario solicitado
+		* @throws UsuarioNotFoundException 
+		*/
 		@GetMapping("/usuario/{id}")
 		public Usuario getUsuarioById(@PathVariable Long id) throws UsuarioNotFoundException {
 			
@@ -100,7 +90,7 @@ public class MainController {
 		}
 		
 		/**
-		 * Este método gestiona la excepción UsuarioNotFoundException
+		 * GESTIÓN DE EXCEPCIÓN UsuarioNotFoundException
 		 * @param ex
 		 * @return un json con el estado, fecha, hora y mensaje de la excepción si el usuario no se encuentra --> para ignorar la traza de la excepción
 		 */
@@ -146,7 +136,7 @@ public class MainController {
 			Producto product = this.serviceProducto.findById(id);
 			
 			if (product == null) {
-				throw new ProductoNotFoundException(id);
+				throw new ProductoNotFoundException();
 				//si el producto no está me devuelve un 404, not found y me devuelve también toda la traza de la excepción 
 			} else {
 				return product;
@@ -174,8 +164,9 @@ public class MainController {
 				return pedido;
 			}
 		}
+		
 		/**
-		 * Este método gestiona la excepción PedidoNotFoundException 
+		 * GESTIÓN DE EXCEPCIÓN PedidoNotFoundException 
 		 * @param ex
 		 * @return un json con el estado, fecha, hora y mensaje de la excepción si el pedido no se encuentra --> para ignorar la traza de la excepción
 		 */
@@ -188,9 +179,11 @@ public class MainController {
 			
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
 		}
+		
 		/**
-		 * Hago una petición POST a http://localhost:8080/pedido y en el body le paso a un usuario
-		 * @param usuario
+		 * CREAR UN PEDIDO
+		 * Hago una petición POST a http://localhost:8080/pedido y en el body le paso el id de un usuario
+		 * @param usuario 
 		 * @return JSON con los datos del pedido creado
 		 */
 		@PostMapping("pedido")
@@ -204,8 +197,8 @@ public class MainController {
 				
 				//creo un nuevo pedido,se lo asocio al usuario y le añado datos iniciales
 				Pedido pedido = new Pedido();
-				pedido.setUsuario(usuario);
-				this.servicioPedido.establecerDatosInicialesPedido(pedido, usuario);
+				pedido.setUsuario(user);	//he puesto un JSONIgnore en el usuario para que al imprimir el pedido no aparezca toda la info del usuario
+				this.servicioPedido.establecerDatosInicialesPedido(pedido, user);
 				
 				//añado el pedido a la base de datos
 				this.servicioPedido.addPedidoaLaBBDD(pedido);
@@ -216,6 +209,7 @@ public class MainController {
 		}
 		
 		/**
+		 * ELIMINAR PEDIDO
 		 * Hago una petición DELETE a http://localhost:8080/pedido/id y se elimina el pedido que coincide con el id pasado por parámetro
 		 * @param id
 		 * @return JSON vacío 
@@ -236,9 +230,10 @@ public class MainController {
 		}
 		
 		/**
+		 * EDITAR UN PEDIDO
 		 * Hago una petición PUT a http://localhost:8080/pedido/id y en el body le paso un objeto DatosPedido (contiene los datos que quiero editar del pedido)
 		 * @param id
-		 * @param datos
+		 * @param datos a modificar del pedido
 		 * @return JSON con los datos que se han editado
 		 */
 		@PutMapping("pedido/{id}")
@@ -259,7 +254,9 @@ public class MainController {
 			}	
 			
 		}
+		
 		/**
+		 * SOLO CONSULTA
 		 * Hago una petición GET a http://localhost:8080/pedido 
 		 * @return JSON con todos los pedidos de la base de datos
 		 */
@@ -280,8 +277,9 @@ public class MainController {
 		}
 		
 		/**
+		 * SOLO CONSULTA
 		 * Hago una petición GET a http://localhost:8080/pedido/{id}/lineaPedido
-		 * @return JSON con todas las líneas de pedido
+		 * @return JSON con todas las líneas de un pedido
 		 */
 		@GetMapping("pedido/{id}/lineaPedido")
 		public ResponseEntity<List<LineaPedido>> findAllLineas(@PathVariable Integer id){
@@ -302,6 +300,7 @@ public class MainController {
 		}
 		
 		/**
+		 * SOLO CONSULTA
 		 * Hago una petición GET a http://localhost:8080/pedido/{idPedido}/lineaPedido/{id}
 		 * @return JSON con la línea de pedido que coincide con el id pasado en la url
 		 */
@@ -318,41 +317,43 @@ public class MainController {
 			}
 		}
 		
-		
-		
 		/**
+		 * PARA CREAR UNA NUEVA LÍNEA DE PEDIDO
 		 * Hago una petición POST a http://localhost:8080/pedido/{idPedido}/lineaPedido
 		 * @param idPedido lo indico en la URL
-		 * @param linea la paso en el body
-		 * @return JSON con los datos de la linea de pedido
+		 * @param linea paso en el body el id del pedido, el id del producto y la cantidad
+		 * @return JSON con los datos de la nueva linea de pedido
 		 */
 		@PostMapping("pedido/{idPedido}/lineaPedido")
 		public ResponseEntity<LineaPedido> addLineaPedido(@PathVariable Integer idPedido, @RequestBody LineaPedido lineaPedido){
 			
 			Pedido pedido = this.servicioPedido.findPedido(idPedido);
+			Producto product = this.serviceProducto.findById(lineaPedido.getProducto().getId());
 			
 			if(pedido == null) {
 				
 				throw new PedidoNotFoundException(idPedido);
 				
-			}else if(lineaPedido.getProducto() == null) {
+			}
+			else if(!this.serviceProducto.findAllProducts().contains(lineaPedido.getProducto()) || lineaPedido.getProducto() == null) {
 				
-				throw new LineaNotFoundException(lineaPedido.getId());
+				throw new ProductoNotFoundException();  //Devuelve 404 con toda la traza y el mensaje de la excepción
 				
 			}else {
 				
-				this.servicioPedido.addLineaPedido(pedido, lineaPedido.getProducto().getId(), lineaPedido.getCantidad());
+				LineaPedido linea = this.servicioPedido.addLineaPedido(pedido, lineaPedido.getProducto().getId(), lineaPedido.getCantidad());
 				this.servicioPedido.addPedidoaLaBBDD(pedido);
 				
-				return ResponseEntity.status(HttpStatus.CREATED).body(lineaPedido);
+				return ResponseEntity.status(HttpStatus.CREATED).body(linea);
 			}
 			
 		}
-		
+			
 		/**
-		 * Hago una petición PUT a http://localhost:8080/lineaPedido/id y en el body le paso un objeto LineaPedido
+		 * PARA EDITAR LA LÍNEA DE PEDIDO (solo la cantidad)
+		 * Hago una petición PUT a http://localhost:8080/lineaPedido/id y en el body le paso el id del producto y la cantidad
 		 * @param id de la línea que quiero editar
-		 * @param lineaPedido
+		 * @param lineaPedido con el id del producto y la cantidad
 		 * @return JSON con la línea introducida en el body
 		 */
 		@PutMapping("pedido/{idPedido}/lineaPedido/{id}")
@@ -366,16 +367,17 @@ public class MainController {
 				
 			}else {
 				
-				linea.setProducto(lineaPedido.getProducto());
+				linea.setProducto(this.serviceProducto.findById(lineaPedido.getProducto().getId()));
 				linea.setCantidad(lineaPedido.getCantidad());
-				this.serviceLinea.edit(linea);
+				LineaPedido nuevaLinea = this.serviceLinea.edit(linea);
 				
-				return linea;
+				return nuevaLinea;
 			}
 			
 		}
 		
 		/**
+		 * PARA ELIMINAR UNA LÍNEA DE PEDIDO
 		 * Hago una petición DELETE a http://localhost:8080/linea/id y se elimina la línea que coincide con el id pasado por parámetro
 		 * @param id
 		 * @return JSON vacío 
@@ -395,10 +397,8 @@ public class MainController {
 			}
 		}
 			
-
-
 		/**
-		 * Para cuando existe un error de un JSON mal formado
+		 * GESTIÓN DE EXCEPCIÓN DE JSON MAL FORMADO
 		 * @param ex
 		 * @return un json con el estado, fecha, hora y mensaje de la excepción --> ignora la traza de la excepción
 		 */
@@ -412,9 +412,6 @@ public class MainController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
 		}
 			
-
-		
-		
-		
+	
 
 }

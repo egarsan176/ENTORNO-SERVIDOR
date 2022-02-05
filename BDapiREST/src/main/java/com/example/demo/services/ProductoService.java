@@ -15,7 +15,7 @@ public class ProductoService {
 	private ProductoRepository productoREPO;
 	
 	/**
-	 * Este método busca la lista de productos de la BBDD
+	 * ENCUENTRA LA LISTA DE PRODUCTOS DEL REPOSITORIO
 	 * @return lista de productos de la BBDD
 	 */
 	public List<Producto> findAllProducts(){
@@ -23,7 +23,7 @@ public class ProductoService {
 	}
 	
 	/**
-	 * Para añadir un producto nuevo a la bbdd
+	 * AÑADIR UN NUEVO PRODUCTO AL REPOSITORIO
 	 * @param producto
 	 * @return producto añadido
 	 */
@@ -32,9 +32,9 @@ public class ProductoService {
 	}
 	
 	/**
-	 * Busca en la BBDD el producto que coincide con ese id
+	 * ENCUENTRA EL PRODUCTO QUE COINCIDE CON EL ID PASADO POR PARÁMETRO
 	 * @param id
-	 * @return producto que coincide con el IS pasado por parámetro
+	 * @return producto que coincide con ese id o null si no lo encuentra
 	 */
 	public Producto findById(Integer id) {
 		return productoREPO.findById(id).orElse(null);

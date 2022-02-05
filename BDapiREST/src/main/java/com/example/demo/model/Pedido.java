@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -64,10 +65,11 @@ public class Pedido {
 	@Column(name = "costeTotalPedido")
 	private double costeTotalPedido;
 	
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Usuario usuario;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany()
 	@NotFound(action=NotFoundAction.IGNORE)
 	@JsonManagedReference 					// paso2 --> solución del ciclo infinito  (paso3 en LineaPedido.class)
 	private List<LineaPedido> listadoLineasPedido = new ArrayList<>();
@@ -191,4 +193,7 @@ public class Pedido {
 		return new SimpleDateFormat("dd-MM-yyyy || hh:mm:ss").format(this.fecha);
 	}
 
+	public void removeLinea(int indiceLinea) {
+		this.listadoLineasPedido.remove(indiceLinea);
+	}
 }

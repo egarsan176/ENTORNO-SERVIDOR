@@ -13,18 +13,15 @@ import com.example.demo.repository.UsuarioRepository;
 @Service
 public class UsuarioService {
 	
-	// instancio los repositorios
+	// REPOSITORIOS
 	@Autowired
 	private UsuarioRepository usuarioREPO;
 	
 	@Autowired
 	private PedidoRepository pedidoREPO;
 	
-	//para poder controlar si el usuario está logueado o no y que no se pueda acceder a cualquier página
-	private boolean isLogueado = false;
-	
 	/**
-	 * Este método devuelve el listado de usuarios de la BBDD
+	 * ENCUENTRA LA LISTA DE TODOS LOS USUARIOS DEL REPOSITORIO
 	 * @return list con los usuarios de la BBDD
 	 */
 	public List<Usuario> findAllUsers(){
@@ -32,7 +29,7 @@ public class UsuarioService {
 	}
 	
 	/**
-	 * Este método añade un usuario al respositorio de la BBDD
+	 * AÑADIR UN USUARIO AL REPOSITORIO
 	 * @param usuario
 	 * @return
 	 */
@@ -41,7 +38,7 @@ public class UsuarioService {
 	}
 	
 	/**
-	 * Este método busca un usuario en la BBDD a través del id que se le pasa por parámetro
+	 * BUSCAR UN USUARIO A TRAVÉS DE SU ID
 	 * @param id
 	 * @return usuario que coincide con ese id
 	 */
@@ -50,7 +47,7 @@ public class UsuarioService {
 	}
 	
 	/**
-	 * Este método comprueba que un usuario existe en la BBDD y te lo devuelve
+	 * BUSCA UN USUARIO A TRAVÉS DE SU NOMBRE DE USUARIO (username)
 	 * @param userName
 	 * @return usuario que corresponde al userName que se le pasa por parámetro
 	 */
@@ -73,7 +70,7 @@ public class UsuarioService {
 	}
 	
 	/**
-	 * Este método comprueba que un usuario existe a través del userName y la contraseña
+	 * COMPRUEBA QUE EXISTA UN USUARIO A TRAVÉS DE SU USERNAME Y CONTRASEÑA
 	 * @param userName
 	 * @param password
 	 * @return false si el usuario no existe, y si existe true
@@ -95,21 +92,7 @@ public class UsuarioService {
 		return isEncontrado;
 	}
 
-	/**
-	 * para recuperar si un usuario está logueado o no
-	 * @return
-	 */
-	public boolean isLogueado() {
-		return isLogueado;
-	}
 
-	/**
-	 * para cambiar el estado de la propiedad isLogueado
-	 * @param isLogueado
-	 */
-	public void setLogueado(boolean isLogueado) {
-		this.isLogueado = isLogueado;
-	}
 	
 
 	

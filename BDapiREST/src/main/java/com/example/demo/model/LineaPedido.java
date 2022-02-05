@@ -51,7 +51,13 @@ public class LineaPedido {
 		super();
 		this.pedido = pedido;
 	}
-	
+
+	public LineaPedido(Pedido pedido, Producto producto, Integer cantidad) {
+		super();
+		this.pedido = pedido;
+		this.producto = producto;
+		this.cantidad = cantidad;
+	}
 
 	//GETTERS Y SETTERS 
 	

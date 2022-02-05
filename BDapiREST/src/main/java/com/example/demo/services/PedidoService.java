@@ -32,11 +32,17 @@ public class PedidoService {
 	@Autowired
 	private UsuarioRepository usuarioREPO;
 	
+	/**
+	 *USO DE @TRANSACTIONAL
+	 * La persistencia y eliminación de objetos requiere una transacción en JPA.
+	 * Con JPA/Hibernate cada vez que deseemos hacer una modificación sobre la base de datos necesitamos una transacción activa.
+	 * Para asegurarnos de que se esté ejecutando una transacción, lo que hacemos es anotar el método con @Transactional.
+	 */
 	
 	/**
-	 * Para añadir un pedido a la BBDD
+	 * AÑADIR UN NUEVO PEDIDO AL REPOSITORIO
 	 * @param pedido
-	 * @return
+	 * @return pedido que se ha añadido
 	 */
 	@Transactional
 	public Pedido addPedidoaLaBBDD(Pedido pedido) {
@@ -44,9 +50,8 @@ public class PedidoService {
 		}
 	
 	/**
-	 * Este método borra un pedido concreto del usuario
-	 * @param pedido
-	 * @param user
+	 * ELIMINAR UN PEDIDO
+	 * @param pedido que se quiere eliminar
 	 */
 	@Transactional
 	public void eliminarPedido(Pedido pedido) {
@@ -64,16 +69,16 @@ public class PedidoService {
 	}
 	
 	/**
-	 * Este método devuelve la lista pedidos de un usuario en concreto
+	 * ENCONTRAR LA LISTA DE PEDIDOS DE UN USUARIO EN CONCRETO
 	 * @param el id del usuario
-	 * @return pedido
+	 * @return lista de pedidos del usuario en concreto
 	 */
 	public List<Pedido>findListaPedidosUser(Long id){
 		return pedidoREPO.findByUsuarioId(id);
 	}
 	
 	/**
-	 * Este busca un pedido a través de su id
+	 * BUSCAR UN PEDIDO A TRAVÉS DE SU ID
 	 * @param pedidoID
 	 * @return pedido que coincide con ese ID
 	 */
@@ -82,9 +87,9 @@ public class PedidoService {
 	}
 	
 	/**
-	 * Este método calcula el precio total de un pedido
-	 * @param pedido
-	 * @return double precio
+	 * PARA CALCULAR EL PRECIO TOTAL DE UN PEDIDO
+	 * @param pedido del que quiero saber su coste
+	 * @return double precio del pedido
 	 */
 	public double calcularPrecioTotal(Pedido pedido) {
 		double precioTotal = 0;
@@ -100,12 +105,13 @@ public class PedidoService {
 	}
 	
 	/**
-	 * Este método añade una línea de pedido al pedido que se le pasa por parámetro
-	 * @param pedido
-	 * @param produId es el id del producto
-	 * @param cantidad la cantidad asociada
+	 * AÑADIR UNA NUEVA LÍNEA DE PEDIDO 
+	 * @param pedido al que quiero añadir la nueva línea
+	 * @param produId el id del producto que quiero añadir a la línea
+	 * @param cantidad la cantidad que quiero añadir a la línea de ese producto
+	 * @return la nueva línea de pedido que se ha añadido
 	 */
-	public void  addLineaPedido(Pedido pedido, Integer produId, Integer cantidad) {
+	public LineaPedido  addLineaPedido(Pedido pedido, Integer produId, Integer cantidad) {
 
 		Producto produ = this.productoREPO.findById(produId).orElse(null); //selecciono el producto en concreto a través de su ID
 		
@@ -137,15 +143,15 @@ public class PedidoService {
 			this.lineaREPO.save(lineaDePedidosNueva);
 			
 		}
-		
-		//this.pedidoREPO.save(pedido);
+		return lineaDePedidosNueva;
 	}
 	
 	
 	/**
-	 * Este método establece por defecto los datos iniciales de un pedido
-	 * @param pedido
-	 * @param usuario
+	 * ESTABLECER UNOS DATOS INICIALES EN UN PEDIDO
+	 * Este método establece que por defecto los datos de un pedido sean los del usuario al que pertenece el pedido
+	 * @param pedido 
+	 * @param usuario 
 	 */
 	public void establecerDatosInicialesPedido(Pedido pedido, Usuario usuario) {
 		pedido.setDireccion(usuario.getDireccion());
@@ -153,9 +159,8 @@ public class PedidoService {
 		pedido.setTelefono(usuario.getTelefono());
 	}
 
-
 	/**
-	 * Este método edita los datos de un pedido
+	 * EDITAR LOS DATOS DE UN PEDIDO
 	 * @param id
 	 * @param email
 	 * @param telefono
@@ -163,7 +168,7 @@ public class PedidoService {
 	 * @param listaDeCantidades
 	 * @param envio
 	 * @param usuario
-	 * @return pedido editado
+	 * @return pedido 	que ha sido editado
 	 */
 	@Transactional
 	public Pedido editarPedido(Integer id, String email, String telefono, String direccion, Integer[] listaDeCantidades,
@@ -181,7 +186,7 @@ public class PedidoService {
 			if(listaDeCantidades[i]>=0) {
 				pedido.getListadoLineasPedido().get(i).setCantidad(listaDeCantidades[i]);
 			}else if( listaDeCantidades[i]==0) {
-				eliminarLineaVacia(pedido);
+				eliminarLinea(pedido, null);
 			}
 		}
 		this.pedidoREPO.save(pedido);
@@ -191,9 +196,9 @@ public class PedidoService {
 	}
 
 	/**
-	 * Este método localiza los pedidos que no tienen asociada ninguna línea de pedido
-	 * @param idUSuario
-	 * @return pedido que no tiene lineas
+	 * ENCUENTRA EL PEDIDO DE UN USUARIO QUE NO TIENE ASOCIADA NINGUNA LÍNEA DE PEDIDO
+	 * @param idUSuario 
+	 * @return pedido que no tiene lineas asociadas
 	 */
 	public Pedido getPedidoSinLineas(Long idUSuario) {
 		
@@ -213,26 +218,21 @@ public class PedidoService {
 	}
 
 	/**
-	 * Este método elimina una línea del pedido que no tenga cantidades en alguna de sus líneas de pedido
+	 * ELIMINAR UNA LÍNEA DE PEDIDO
 	 * @param pedido
 	 */
 	@Transactional
-	public void eliminarLineaVacia(Pedido pedido) {
-		//creo un iterador para recorrer las lineas de pedido
-		Iterator<LineaPedido> iterator = pedido.getListadoLineasPedido().iterator();
+	public void eliminarLinea(Pedido pedido, LineaPedido linea) {
 		
-		while(iterator.hasNext()) {	//mientras haya siguiente linea
-			LineaPedido linea = iterator.next();
-			if(linea.getCantidad()==0) {
-				this.lineaREPO.delete(linea);	//elimino la linea del repositorio			
-			}
-		}
+		pedido.removeLinea(pedido.getListadoLineasPedido().indexOf(linea));
+		this.pedidoREPO.save(pedido);
+		this.lineaREPO.delete(linea);
 	}
 
 	/**
-	 * Este método edita los datos de un pedido (para la API)
+	 * EDITA LOS DATOS DE UN PEDIDO (dirección, teléfono, email, envio)
 	 * @param pedido
-	 * @param datos
+	 * @param datos con la info que se quiere editar en el pedido
 	 */
 	public void editarDatosPedido(Pedido pedido, DatosPedido datos) {
 		
@@ -244,13 +244,14 @@ public class PedidoService {
 	}
 	
 	/**
-	 * Devuelve la lista de pedidos del repositorio
+	 * ENCUENTRA LA LISTA DE PEDIDOS DEL REPOSITORIO
 	 * @return array de pedidos
 	 */
 	
 	public List<Pedido> findAll() {
 		return this.pedidoREPO.findAll();
 	}
+	
 
 	
 	

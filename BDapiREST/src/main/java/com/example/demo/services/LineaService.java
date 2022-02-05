@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.LineaPedido;
 import com.example.demo.model.Pedido;
+import com.example.demo.model.Producto;
 import com.example.demo.repository.LineaPedidoRepository;
 
 @Service
@@ -18,25 +19,47 @@ public class LineaService {
 	@Autowired
 	private PedidoService servicioPedido;
 	
+	@Autowired
+	private ProductoService servicioProducto;
+	
 
+	/**
+	 * AÑADIR UNA NUEVA LÍNEA DE PEDIDO
+	 * @param linea
+	 * @return linea de pedido que se ha añadido
+	 */
 	public LineaPedido add(LineaPedido linea) {
 		return lineaREPO.save(linea);
 	}
 
+	/**
+	 * BUSCAR TODAS LAS LÍNEAS DE PEDIDO DEL REPOSITORIO
+	 * @return lista con todas las líneas de pedido
+	 */
 	public List<LineaPedido> findAll() {
 		return lineaREPO.findAll();
 	}
 
+	/**
+	 * BUSCAR UNA LÍNEA DE PEDIDO POR SU ID
+	 * @param id
+	 * @return linea de pedido que coincide con ese id o null si no la encuentra
+	 */
 	public LineaPedido findById(Integer id) {
 		return lineaREPO.findById(id).orElse(null);
 	}
 
+	/**
+	 * EDITAR UNA LÍNEA DE PEDIDO
+	 * @param LINEA DE PEDIDO
+	 * @return linea de pedido editada
+	 */
 	public LineaPedido edit(LineaPedido linea) {
 		return lineaREPO.save(linea);
 	}
 
 	/**
-	 * Este método borra una línea de pedido
+	 * BORRAR UNA LÍNEA DE PEDIDO
 	 * @param id
 	 */
 	public void borrar(Integer id) {
@@ -47,17 +70,10 @@ public class LineaService {
 		
 		Pedido pedido = this.servicioPedido.findPedido(linea.getPedido().getId()); //busco el pedido que contiene esa línea
 		
-		this.servicioPedido.eliminarLineaVacia(pedido);	//elimino la línea del pedido
-		this.servicioPedido.addPedidoaLaBBDD(pedido);	//guardo el pedido sin la línea en la BBDD
+		this.servicioPedido.eliminarLinea(pedido, linea);	//elimino la línea del pedido
 		
-		this.lineaREPO.delete(linea);
 		
 	}
 	
-	public LineaPedido crearLineaPedido() {
-		return new LineaPedido();
-	}
 	
-
-
 }
