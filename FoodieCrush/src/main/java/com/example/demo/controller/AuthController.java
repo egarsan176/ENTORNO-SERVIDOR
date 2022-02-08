@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.LoginCredentials;
-import com.example.demo.model.Usuario;
+import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.security.JWTUtil;
 
@@ -27,7 +27,7 @@ public class AuthController {
     @Autowired private PasswordEncoder passwordEncoder;
 
     @PostMapping("/auth/register")
-    public Map<String, Object> registerHandler(@RequestBody Usuario user){
+    public Map<String, Object> registerHandler(@RequestBody User user){
         String encodedPass = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPass);
         user = userRepo.save(user);

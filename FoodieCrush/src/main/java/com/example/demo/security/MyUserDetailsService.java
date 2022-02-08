@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.model.Usuario;
+import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 
 @Component
@@ -21,10 +21,10 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Usuario> userRes = userRepo.findByEmail(email);
+        Optional<User> userRes = userRepo.findByEmail(email);
         if(userRes.isEmpty())
             throw new UsernameNotFoundException("Could not findUser with email = " + email);
-        Usuario user = userRes.get();
+        User user = userRes.get();
         return new org.springframework.security.core.userdetails.User(
                 email,
                 user.getPassword(),

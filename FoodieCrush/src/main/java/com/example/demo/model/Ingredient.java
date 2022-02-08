@@ -15,10 +15,10 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Ingrediente {
+public class Ingredient {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String nombre;
+	private String name;
 
 }

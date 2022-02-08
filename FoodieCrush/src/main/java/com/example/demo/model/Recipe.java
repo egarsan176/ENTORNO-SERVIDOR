@@ -22,21 +22,21 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Receta {
+public class Recipe {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	private String nombre;
-	private List<String> pasos = new  ArrayList<>();
-	@ManyToOne
-	private Usuario usuario;
-	@ManyToOne
-	private Categoria categoria;
-	@OneToMany
-	private LineaIngrediente lineaIngredientes;
-	@OneToMany
-	private List<Comentario> listaComentarios = new  ArrayList<>();
+	private String recipeName;
 	
+	@OneToMany
+	private List<Method> method = new  ArrayList<>();
+	@ManyToOne
+	private User user;
+	@ManyToOne
+	private Category category;
+	@OneToMany
+	private List<IngredientLine> ingredientLine = new ArrayList<>();
+	 
 }

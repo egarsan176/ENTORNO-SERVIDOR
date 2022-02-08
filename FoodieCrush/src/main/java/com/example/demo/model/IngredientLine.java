@@ -16,12 +16,12 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Comentario {
+public class IngredientLine {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String textoComentario;
-	@ManyToOne  //un usuario puede tener muchos comentarios, un comentario puede tener un único usuario
-	private Usuario usuario;
+	@ManyToOne 
+	private Ingredient ingredient;
+	private int amount;
 
 }

@@ -17,15 +17,16 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Usuario {
+public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String fullName;
 	private String username;
-	private String genero;
+	private String gender;
 	private String email;
-	private int yearNac;
+	private int yearOfBirth;
 	//Evita que el campo password se incluya en el JSON de respuesta
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;

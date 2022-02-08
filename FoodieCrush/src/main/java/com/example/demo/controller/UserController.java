@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.Usuario;
+import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 
 
@@ -16,7 +16,7 @@ public class UserController {
     @Autowired private UserRepo userRepo;
 
     @GetMapping("/user")
-    public Usuario getUserDetails(){
+    public User getUserDetails(){
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepo.findByEmail(email).get();
     }
