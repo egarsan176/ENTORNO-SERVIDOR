@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,7 +36,7 @@ public class UserController {
 
 
 	/**
-	 * MÉTODO para comprobar que un email existe en la base de datos
+	 * MÉTODO para comprobar que un email existe en la base de datos --> http://localhost:9000/user/estefaniagarci@gmail.com
 	 * @param email
 	 * @return usuario si el email existe, null si no existe
 	 */

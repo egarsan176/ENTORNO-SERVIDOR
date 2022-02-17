@@ -30,5 +30,14 @@ public interface UserRepo extends JpaRepository<User, Long> {
 	@Query(value="select email from user where email = ?1", nativeQuery = true) 
 	public String getEmail(String newEmail);
 	
+	/**
+	 * PARA EXCEPCIONES DEL LOGIN
+	 * CONSULTA para obtener la contraseña de un usuario a través de su email
+	 * @param newEmail
+	 * @return string password
+	 */
+	@Query(value="select password from user where email = ?1", nativeQuery = true) 
+	public String getPassword(String newEmail);
+	
 }
 	

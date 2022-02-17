@@ -28,8 +28,22 @@ public class CorsConfig implements WebMvcConfigurer{
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 				
+				
+				registry.addMapping("/user")
+				.allowedOrigins("http://localhost:4200")
+                .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+                        "Access-Control-Request-Headers")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+				
 				//para comprobar que el email no existe en la base de datos
 				registry.addMapping("/user/{email}")
+				.allowedOrigins("http://localhost:4200")
+                .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+                        "Access-Control-Request-Headers")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+				
+				//para gestionar las recetas 
+				registry.addMapping("/recipes/**")
 				.allowedOrigins("http://localhost:4200")
                 .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
                         "Access-Control-Request-Headers")

@@ -3,6 +3,7 @@ package com.example.demo.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,17 +27,39 @@ public class Recipe {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-
+	private Integer id;
 	private String recipeName;
-	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Method> method = new  ArrayList<>();
+	@JsonIgnore
 	@ManyToOne
 	private User user;
 	@ManyToOne
 	private Category category;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<IngredientLine> ingredientLine = new ArrayList<>();
+	
+	
+	public Recipe(String recipeName, List<Method> method, User user, Category category, List<IngredientLine> ingredientLine) {
+		super();
+		this.recipeName = recipeName;
+		this.method = method;
+		this.user = user;
+		this.category = category;
+		this.ingredientLine = ingredientLine;
+	}
+
+
+	public Recipe(String recipeName, List<Method> method, Category category, List<IngredientLine> ingredientLine) {
+		super();
+		this.recipeName = recipeName;
+		this.method = method;
+		this.category = category;
+		this.ingredientLine = ingredientLine;
+	}
+	
+	
+	
+	
 	 
 }

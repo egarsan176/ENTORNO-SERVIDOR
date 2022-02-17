@@ -21,8 +21,15 @@ public class Method {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	private String step;
+
+	public Method(String step) {
+		super();
+		this.step = step;
+	}
+	
+	
 
 }

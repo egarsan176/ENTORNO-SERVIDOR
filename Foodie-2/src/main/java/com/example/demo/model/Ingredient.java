@@ -18,7 +18,14 @@ import lombok.ToString;
 public class Ingredient {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	private String name;
+	
+	public Ingredient(String name) {
+		super();
+		this.name = name;
+	}
+	
+	
 
 }
