@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -38,6 +39,8 @@ public class Recipe {
 	private Category category;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<IngredientLine> ingredientLine = new ArrayList<>();
+	@OneToOne
+	private FileDB file;
 	
 	
 	public Recipe(String recipeName, List<Method> method, User user, Category category, List<IngredientLine> ingredientLine) {

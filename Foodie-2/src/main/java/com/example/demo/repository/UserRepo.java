@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,7 +14,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
     * @param email
     * @return usuario o null
     */
-	public User findByEmail(String email);
+	public Optional<User> findByEmail(String email);
 	
 	/**
 	 * MÉTODO para obtener un usuario por su username

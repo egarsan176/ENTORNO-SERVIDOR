@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ public class UserService {
 	 * @param email
 	 * @return usuario si existe email
 	 */
-	public User findByEmail(String email) {
+	public Optional<User> findByEmail(String email) {
 		return this.userRepo.findByEmail(email);
 	}
 

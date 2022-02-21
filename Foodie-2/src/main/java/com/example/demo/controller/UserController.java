@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,14 +27,15 @@ public class UserController {
 //        return userRepo.findByEmail(email)).get();
 //    }
     /**
-     * MÉTODO para encontrar el id de un usuario a través de su nombre de usuario
+     * MÉTODO para encontrar el id de un usuario a través de su email 
      * @return
      */
-	@GetMapping("/user")
-	public ResponseEntity<Long> getUserDetails() {
-		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok(this.userRepo.findByUsername(username).getId());
-	}
+	
+    @GetMapping("/user")
+    public ResponseEntity<Long> getUserDetails(){
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(this.userRepo.findByEmail(email).get().getId());
+    }
 
 
 	/**
@@ -41,7 +44,7 @@ public class UserController {
 	 * @return usuario si el email existe, null si no existe
 	 */
 	@GetMapping("/user/{email}")
-	public User checkEmailUser(@PathVariable String email) {
+	public Optional<User> checkEmailUser(@PathVariable String email) {
 		
 		return this.userService.findByEmail(email);
 	}

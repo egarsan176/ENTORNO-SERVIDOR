@@ -50,6 +50,10 @@ public class RecipeService {
 	public List<Recipe> findAllRecipes(){
 		return this.recipeRepo.findAll();
 	}
+	
+	public List<Recipe> findAllRecipesByCategory(Integer id){
+		return this.recipeRepo.findRecipesByCategory(id);
+	}
 
 
 }

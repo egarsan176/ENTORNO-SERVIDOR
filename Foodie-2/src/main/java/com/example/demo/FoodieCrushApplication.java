@@ -42,13 +42,13 @@ public class FoodieCrushApplication {
 		
 		return (args) -> {
 			categoryREPO.saveAll(Arrays.asList(
-					new Category("Pasta"),
-					new Category("Arroz"),
-					new Category("Carne"),
-					new Category("Guisos"),
-					new Category("Salsas"),
-					new Category("Postres"),
-					new Category("Otros")));
+					new Category("Pasta", 1),
+					new Category("Arroz",1),
+					new Category("Carne",1),
+					new Category("Guisos",1),
+					new Category("Salsas",1),
+					new Category("Postres",1),
+					new Category("Otros",1)));
 		};
 	}
 	

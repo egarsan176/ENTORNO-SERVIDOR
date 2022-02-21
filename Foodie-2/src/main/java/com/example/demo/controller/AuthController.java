@@ -26,6 +26,7 @@ import com.example.demo.model.LoginCredentials;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.security.JWTUtil;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 @RestController //para habilitar esta clase como un controlador REST y que pueda interceptar peticiones al servidor.
 public class AuthController {
@@ -70,6 +71,10 @@ public class AuthController {
         }
     }
     
+    
+    
+    ////////////////////////////////////////GESTIÓN DE EXCEPCIONES
+    
 	/**
 	 * GESTIÓN DE EXCEPCIÓN EmailNotFoundException
 	 * @param ex
@@ -99,7 +104,24 @@ public class AuthController {
 		
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
 	}
+	
+	/**
+	 * GESTIÓN DE EXCEPCIÓN DE JSON MAL FORMADO
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción --> ignora la traza de la excepción
+	 */
+	@ExceptionHandler(JsonMappingException.class)
+	public ResponseEntity<ApiError> handleJsonMappingException(JsonMappingException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.BAD_REQUEST);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+	}
 
+	
+	
     
     /**
 	 * A este método se accede para ver si el usuario tiene un token válido o no

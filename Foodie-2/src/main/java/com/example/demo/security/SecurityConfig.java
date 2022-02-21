@@ -33,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeHttpRequests()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/user/**").permitAll()
+                .antMatchers("/recipes/**").hasRole("USER") 	//necesita token para acceder a este apartado
                 .and()
                 .userDetailsService(uds)
                 .exceptionHandling()
