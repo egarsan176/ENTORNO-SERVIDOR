@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ApiError;
 import com.example.demo.exception.CategoryNotFoundException;
-import com.example.demo.exception.IngredienteLineNotFoundException;
+import com.example.demo.exception.IngredientLineExist;
+import com.example.demo.exception.IngredientLineNotFoundException;
 import com.example.demo.exception.RecipeNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Category;
@@ -28,6 +29,7 @@ import com.example.demo.model.Recipe;
 import com.example.demo.model.RecipeDates;
 import com.example.demo.model.User;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.IngredientLineService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -42,6 +44,7 @@ public class RecipeController {
 	@Autowired private RecipeService recipeService;
 	@Autowired private CategoryService categoryService;
 	@Autowired private UserService userService;
+	@Autowired private IngredientLineService ingredientLineService;
 	
 	//ACCESO A RECURSOS DE PRIMER NIVEL
 	
@@ -235,18 +238,69 @@ public class RecipeController {
 			Recipe recipe = this.recipeService.findRecipeById(id);
 			if(recipe == null) {
 				throw new RecipeNotFoundException(id);
+			
 			}else {
-				IngredientLine ingredientLine = this.recipeService.findRecipeById(id).getIngredientLine().get(idLine);
-				
-				if(ingredientLine == null) {
-					throw new IngredienteLineNotFoundException(idLine);
+				Integer index = recipe.getIngredientLine().indexOf(this.ingredientLineService.findById(idLine));
+
+				if(idLine-1>=recipe.getIngredientLine().size() || index==-1) {
+					throw new IngredientLineNotFoundException(idLine);
 				}else {
-					return ingredientLine;
+					return recipe.getIngredientLine().get(index);
 				}
 
 			}
 
 		
+		}
+		
+		@PostMapping("recipes/{id}/ingredientLine")
+		public ResponseEntity<IngredientLine> addIngredientLine(@PathVariable Integer id, @RequestBody IngredientLine line){
+			Recipe recipe = this.recipeService.findRecipeById(id);
+			if(recipe == null) {
+				throw new RecipeNotFoundException(id);
+			
+			}
+			else {
+				Integer index = recipe.getIngredientLine().indexOf(this.ingredientLineService.findByIngredient(line.getIngredient()));
+				if (index!=-1) {
+					throw new IngredientLineExist(line.getIngredient());
+				}else {
+					this.recipeService.addIngredientLine(line, recipe);
+					
+					return ResponseEntity.status(HttpStatus.CREATED).body(line);
+				}
+				
+			}
+		}
+		
+		/**
+		 * MÉTODO que gestiona petición PUT para editar la cantidad de una línea de ingredientes
+		 * @param id
+		 * @param idLine
+		 * @param amount
+		 * @return	
+		 * 			si receta no existe --> exception RecipeNotFoundException()
+		 * 			si la línea no existe --> exception IngredientLineNotFoundException()
+		 * 			si la línea existe --> línea con cantidad modificada
+		 */
+		@PutMapping("recipes/{id}/ingredientLine/{idLine}")
+		public IngredientLine editIngredientLine(@PathVariable Integer id, @PathVariable Integer idLine, @RequestBody Integer amount) {
+			Recipe recipe = this.recipeService.findRecipeById(id);
+			if(recipe == null) {
+				throw new RecipeNotFoundException(id);
+			
+			}else {
+				Integer index = recipe.getIngredientLine().indexOf(this.ingredientLineService.findById(idLine));
+
+				if(idLine-1>=recipe.getIngredientLine().size() || index==-1) {
+					throw new IngredientLineNotFoundException(idLine);
+				}else{
+					IngredientLine ingredientLine = recipe.getIngredientLine().get(index);
+					this.ingredientLineService.edit(ingredientLine, amount);
+					return ingredientLine;
+				}
+				
+			}
 		}
 	
 	
@@ -294,6 +348,21 @@ public class RecipeController {
 	 */
 	@ExceptionHandler(CategoryNotFoundException.class)
 	public ResponseEntity<ApiError> handleCategoryNotFound(CategoryNotFoundException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.NOT_FOUND);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+	}
+	
+	/**
+	 * GESTIÓN DE EXCEPCIÓN IngredientLineNotFoundException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si la linea de ingredientes no se encuentra 
+	 */
+	@ExceptionHandler(IngredientLineNotFoundException.class)
+	public ResponseEntity<ApiError> handleIngredientLineNotFound(IngredientLineNotFoundException ex) {
 		ApiError apiError = new ApiError();
 		apiError.setEstado(HttpStatus.NOT_FOUND);
 		apiError.setFecha(LocalDateTime.now());

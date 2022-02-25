@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Category;
+import com.example.demo.model.IngredientLine;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.RecipeDates;
 import com.example.demo.repository.RecipeRepo;
@@ -34,6 +35,10 @@ public class RecipeService {
 		return this.recipeRepo.save(recipe);
 	}
 	
+	/**
+	 * MÉTODO para borrar una receta de la base de datos
+	 * @param recipe
+	 */
 	@Transactional
 	public void deleteRecipe(Recipe recipe) {
 		this.recipeRepo.delete(recipe);
@@ -64,6 +69,11 @@ public class RecipeService {
 		return this.recipeRepo.findAll();
 	}
 	
+	/**
+	 * MÉTODO que devuelve todas las recetas de una categoría en concreto
+	 * @param id
+	 * @return
+	 */
 	public List<Recipe> findAllRecipesByCategory(Integer id){
 		return this.recipeRepo.findRecipesByCategory(id);
 	}
@@ -79,6 +89,11 @@ public class RecipeService {
 		datos.setCategory(cat);
 		recipe.setCategory(cat);
 		recipe.setRecipeName(datos.getRecipeName());
+	}
+	
+	public IngredientLine addIngredientLine(IngredientLine line, Recipe recipe) {
+		return line;
+		
 	}
 
 
