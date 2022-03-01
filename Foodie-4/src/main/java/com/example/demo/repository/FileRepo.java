@@ -7,7 +7,7 @@ import com.example.demo.model.FileDB;
 @Repository
 public interface FileRepo extends JpaRepository<FileDB, String>{
 	
-	@Query(value="select id from files where name = ?1", nativeQuery = true) 
-	public String findFileIDByName(String name);
+	@Query(value="select * from files where name = ?1", nativeQuery = true) 
+	public FileDB findFileByName(String name);
 
 }

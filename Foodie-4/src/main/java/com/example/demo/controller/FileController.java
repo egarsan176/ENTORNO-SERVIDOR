@@ -64,29 +64,18 @@ public class FileController {
 	    return ResponseEntity.status(HttpStatus.OK).body(files);
 	  }
 	 
-//	 /**
-//	  * MÉTODO GET para obtener un archivo de la bbdd a través de su id 
-//	  * @param id
-//	  * @return 
-//	  */
-//	 @GetMapping("/files/{id}")
-//	 public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-//	    FileDB fileDB = this.storageService.getFile(id);
-//	    return ResponseEntity.ok()
-//	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
-//	        .body(fileDB.getData());
-//	  }
+
 	 
 	/**
-	 * MÉTODO que me devuelve el id de un fichero a través de su nombre de fichero
+	 * MÉTODO que me devuelve un fichero a través de su nombre de fichero
 	 * @param name
 	 * @return
 	 */
 	 @GetMapping("/files/{name}")
-	 public ResponseEntity<String> getFileIDByName(@PathVariable String name) {
-	    String idFile = this.storageService.findFileByName(name);
-	    System.out.println(idFile);
-	    return ResponseEntity.ok(idFile);
+	 public ResponseEntity<FileDB> getFileIDByName(@PathVariable String name) {
+	    FileDB file = this.storageService.findFileByName(name);
+	    //System.out.println(file);
+	    return ResponseEntity.ok(file);
 	  }
 
 }

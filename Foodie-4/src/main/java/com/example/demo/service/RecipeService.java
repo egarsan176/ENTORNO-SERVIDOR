@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Category;
+import com.example.demo.model.Ingredient;
 import com.example.demo.model.IngredientLine;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.RecipeDates;
@@ -17,6 +18,8 @@ public class RecipeService {
 	
 	@Autowired private RecipeRepo recipeRepo;
 	@Autowired private CategoryService categoryService;
+	@Autowired private IngredientLineService ingredientLineService;
+	@Autowired private IngredientService ingredientService;
 	
 	/**
 	 *USO DE @TRANSACTIONAL
@@ -91,10 +94,41 @@ public class RecipeService {
 		recipe.setRecipeName(datos.getRecipeName());
 	}
 	
+	/**
+	 * MÉTODO  para añadirle una nueva línea de ingredientes a una receta ya existente
+	 * @param line
+	 * @param recipe
+	 * @return nueva línea de ingredientes
+	 */
 	public IngredientLine addIngredientLine(IngredientLine line, Recipe recipe) {
+		Ingredient ingredient = line.getIngredient();
+		this.ingredientService.addIngredient(ingredient);
+		this.ingredientLineService.add(line);
+		recipe.getIngredientLine().add(line);
+		
 		return line;
 		
 	}
+	
+	/**
+	 * MÉTODO para comprobar si una receta ya contiene a un ingrediente concreto
+	 * @param ingredientName
+	 * @return 0 si no lo contiene, !=0 si contiene el ingrediente
+	 */
+	public Integer checkRecipeIngredient(String ingredientName) {
+		return this.recipeRepo.isIngredientExists(ingredientName);
+	}
+	
+	/**
+	 * MÉTODO para comprobar si ya existe una receta con ese nombre
+	 * @param recipeName
+	 * @return 0 si no existe, !=0 si ya existe una receta con ese nombre
+	 */
+	public Integer checkRecipeName(String recipeName) {
+		return this.recipeRepo.isRecipeNameExists(recipeName);
+	}
+	
+	
 
 
 }

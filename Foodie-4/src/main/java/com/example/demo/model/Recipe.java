@@ -126,21 +126,6 @@ public class Recipe {
 	}
 
 
-	public FileDB getFile() {
-		return file;
-	}
-
-
-	public void setFile(FileDB file) {
-		this.file = file;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Recipe [id=" + id + ", recipeName=" + recipeName + ", method=" + method + ", user=" + user
-				+ ", category=" + category + ", ingredientLine=" + ingredientLine + ", file=" + file + "]";
-	}
 
 
 	public Date getFecha() {
@@ -152,6 +137,18 @@ public class Recipe {
 		this.fecha = fecha;
 	}
 	
+
+
+	public FileDB getFile() {
+		return file;
+	}
+
+
+	public void setFileID(FileDB file) {
+		this.file = file;
+	}
+	
+	
 	
 	/**
 	 * Este método muestra la fecha en un formato más entendible
@@ -160,8 +157,14 @@ public class Recipe {
 	public String getFechaBonita() {
 		return new SimpleDateFormat("dd-MM-yyyy || hh:mm:ss").format(this.fecha);
 	}
-	
-	
+
+
+	@Override
+	public String toString() {
+		return "Recipe [id=" + id + ", recipeName=" + recipeName + ", method=" + method + ", user=" + user
+				+ ", category=" + category + ", ingredientLine=" + ingredientLine + ", file=" + file + ", fecha="
+				+ fecha + "]";
+	}
 	
 	 
 }

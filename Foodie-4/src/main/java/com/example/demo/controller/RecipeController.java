@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ApiError;
 import com.example.demo.exception.CategoryNotFoundException;
-import com.example.demo.exception.IngredientLineExist;
+import com.example.demo.exception.IngredientLineExistException;
 import com.example.demo.exception.IngredientLineNotFoundException;
+import com.example.demo.exception.RecipeExistException;
 import com.example.demo.exception.RecipeNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Category;
@@ -70,7 +71,7 @@ public class RecipeController {
 		ResponseEntity<List<Recipe>> re = null ;
 		
 		if(userID==null && categoryID==null && recipes.isEmpty()) {
-			re = ResponseEntity.notFound().build(); //debería mandar notFound o noContent ¿?
+			re = ResponseEntity.notFound().build(); 
 		}
 		else if(userID==null && categoryID==null && !recipes.isEmpty()) {
 			re = ResponseEntity.ok(recipes);
@@ -130,10 +131,17 @@ public class RecipeController {
 	@PostMapping("/recipes/{id}")
 	public Recipe addRecipe(@RequestBody Recipe recipe, @PathVariable Long id) {
 		User user = this.userService.findById(id);
+		//para comprobar que no haya una receta con el mismo nombre en la bbdd
+		Integer check = this.recipeService.checkRecipeName(recipe.getRecipeName());
 		if(user!=null) {
+			
 			Integer idCategory = recipe.getCategory().getId();
 			Category cat = this.categoryService.findById(idCategory);
-			if(cat == null) {
+			
+			if(check!=0) {
+				throw new RecipeExistException(recipe.getRecipeName());
+			}
+			else if(cat == null) {
 				throw new CategoryNotFoundException(idCategory);
 			}else {
 				
@@ -215,7 +223,7 @@ public class RecipeController {
 			ResponseEntity<List<IngredientLine>> re;
 			
 			if(ingredients.isEmpty()) {
-				re = ResponseEntity.notFound().build(); 		//debería ser noContent??
+				re = ResponseEntity.notFound().build(); 
 			}else {
 				re = ResponseEntity.ok(ingredients); 
 			}
@@ -252,7 +260,16 @@ public class RecipeController {
 
 		
 		}
-		
+		/**
+		 * MÉTODO que gestiona una petición POST para añadir una nueva línea de ingredientes a una receta
+		 * @param id de la receta
+		 * @param line
+		 * @return	
+		 * 			si la receta no existe --> exception RecipeNotFoundException()
+		 * 			si la receta existe:
+		 * 					- si el ingrediente ya se encuentra en la receta --> exception IngredientLineExist()
+		 * 					- si no existe, lo añade a la receta
+		 */
 		@PostMapping("recipes/{id}/ingredientLine")
 		public ResponseEntity<IngredientLine> addIngredientLine(@PathVariable Integer id, @RequestBody IngredientLine line){
 			Recipe recipe = this.recipeService.findRecipeById(id);
@@ -261,13 +278,13 @@ public class RecipeController {
 			
 			}
 			else {
-				Integer index = recipe.getIngredientLine().indexOf(this.ingredientLineService.findByIngredient(line.getIngredient()));
-				if (index!=-1) {
-					throw new IngredientLineExist(line.getIngredient());
+				//para controlar si el ingrediente ya existe en la receta
+				Integer check = this.recipeService.checkRecipeIngredient(line.getIngredient().getName());
+
+				if (check!=0) {
+					throw new IngredientLineExistException(line.getIngredient().getName());
 				}else {
-					this.recipeService.addIngredientLine(line, recipe);
-					
-					return ResponseEntity.status(HttpStatus.CREATED).body(line);
+					return ResponseEntity.status(HttpStatus.CREATED).body(this.recipeService.addIngredientLine(line, recipe));
 				}
 				
 			}
@@ -302,7 +319,24 @@ public class RecipeController {
 				
 			}
 		}
-	
+		
+		
+		@DeleteMapping("recipes/{id}/ingredientLine/{idLine}")
+		public ResponseEntity<?> deleteIngredientLine(@PathVariable Integer id, @PathVariable Integer idLine){
+			Recipe recipe = this.recipeService.findRecipeById(id);
+			IngredientLine ingredientLine = this.ingredientLineService.findById(idLine);
+			
+			if(recipe==null) {
+				throw new RecipeNotFoundException(id);
+			}else if(ingredientLine== null) {
+				throw new IngredientLineNotFoundException(idLine);
+			}
+			else {
+				this.recipeService.deleteRecipe(recipe);
+				return ResponseEntity.noContent().build();
+			}
+		}
+		
 	
 
 	
@@ -372,6 +406,37 @@ public class RecipeController {
 	}
 	
 	/**
+	 * GESTIÓN DE EXCEPCIÓN IngredientLineExistException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si el ingredient ya existe en la receta
+	 */
+	@ExceptionHandler(IngredientLineExistException.class)
+	public ResponseEntity<ApiError> handleIngredientLineExists(IngredientLineExistException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.CONFLICT);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+	}
+	
+	/**
+	 * GESTIÓN DE EXCEPCIÓN RecipeExistException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si ya existe una receta en bbdd con ese nombre
+	 */
+	@ExceptionHandler(RecipeExistException.class)
+	public ResponseEntity<ApiError> handleRecipeExists(RecipeExistException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.CONFLICT);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+	}
+	
+	
+	/**
 	 * GESTIÓN DE EXCEPCIÓN DE JSON MAL FORMADO
 	 * @param ex
 	 * @return un json con el estado, fecha, hora y mensaje de la excepción --> ignora la traza de la excepción
@@ -385,5 +450,77 @@ public class RecipeController {
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//EXTRAS DE ANGULAR
+	
+	/**
+	 * MÉTODO que gestiona peticiones GET a /ver/id y  busca una receta por su ID
+	 * @param recipeID 
+	 * @return 
+	 * 			si existe la receta --> receta
+	 * 			si no existe la receta --> exception RecipeNotFoundException
+	 */
+	@GetMapping("/mostrar/{id}")
+	public Recipe getRecipeByID(@PathVariable Integer id) {
+		if(this.recipeService.findRecipeById(id)!=null) {
+			return this.recipeService.findRecipeById(id);	
+		}else {
+			throw new RecipeNotFoundException(id);
+		}
+	}
+	
+	/**
+	 * MÉTODO que gestiona peticiones GET a /ver?categoryID=x y devuelve una lista de todas las recetas de esa categoría
+	 * @param categoryID
+	 * @return
+	 */
+	@GetMapping("/mostrar")
+	public ResponseEntity<List<Recipe>> getRecipesByCategory(@RequestParam Integer categoryID){
+		
+		List<Recipe> recipes = this.recipeService.findAllRecipes();
+		ResponseEntity<List<Recipe>> re = null ;
+		
+		if(recipes.isEmpty()) {
+			re = ResponseEntity.notFound().build(); //debería mandar notFound o noContent ¿?
+		
+		}else {
+			Category category = this.categoryService.findById(categoryID);
+			if(category==null) {
+				throw new CategoryNotFoundException(categoryID);
+			}else if(this.recipeService.findAllRecipesByCategory(categoryID).isEmpty()){
+				re = ResponseEntity.noContent().build();
+			}else {
+				re = ResponseEntity.ok(this.recipeService.findAllRecipesByCategory(categoryID));
+			}
+		}
+		return re;
+		 
+		
+	}
+	
 
 }

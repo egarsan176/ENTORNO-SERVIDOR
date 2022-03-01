@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Ingredient;
 import com.example.demo.model.IngredientLine;
@@ -16,10 +17,7 @@ public class IngredientLineService {
 	@Autowired
 	private IngredientLineRepo ingredientLineREPO;
 	
-	@Autowired
-	private RecipeService recipeService;
-	
-	
+	@Transactional
 	public IngredientLine add(IngredientLine ingredientLine) {
 		return this.ingredientLineREPO.save(ingredientLine);
 	}

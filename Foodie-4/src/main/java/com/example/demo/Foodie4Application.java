@@ -40,8 +40,7 @@ public class Foodie4Application {
 					new Category("Pasta", 1),
 					new Category("Arroz",1),
 					new Category("Carne",1),
-					new Category("Guisos",1),
-					new Category("Salsas",1),
+					new Category("Pescados",1),
 					new Category("Postres",1),
 					new Category("Otros",1)));
 		};

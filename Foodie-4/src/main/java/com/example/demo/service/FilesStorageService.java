@@ -45,9 +45,9 @@ public class FilesStorageService {
 	  return this.fileREPO.findAll().stream();
 	}
 	
-	//te devuelve el id a través del nombre de la imagen
-	public String findFileByName(String name) {
-		return this.fileREPO.findFileIDByName(name);
+	//te devuelve el fichero a través del nombre de la imagen
+	public FileDB findFileByName(String name) {
+		return this.fileREPO.findFileByName(name);
 		
 	}
 	
