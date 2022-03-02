@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +21,8 @@ public class UserController {
     @Autowired private UserService userService;
 
     /**
-     * Método que te devuelve un usuario a través del token
-     * @return
+     * MÉTODO que gestiona peticiones GET a /user y que te devuelve un usuario a través del token
+     * @return usuario
      */
     @GetMapping("/user")
     public User getUserDetails(){
@@ -33,7 +32,7 @@ public class UserController {
 
 
 	/**
-	 * MÉTODO para comprobar que un email existe en la base de datos --> http://localhost:9000/user/estefaniagarci@gmail.com
+	 * MÉTODO que gestiona peticiones GET a /user/email para comprobar que un email existe en la base de datos --> http://localhost:9000/user/estefaniagarci@gmail.com
 	 * @param email
 	 * @return usuario si el email existe, null si no existe
 	 */

@@ -24,6 +24,11 @@ public class UserService {
 		return this.userRepo.findByEmail(email);
 	}
 
+	/**
+	 * MÉTODO para encontrar a un usuario a través de su id
+	 * @param id
+	 * @return usuario que coincide con ese id
+	 */
 	public User findById(Long id) {
 		return this.userRepo.findById(id).orElse(null);
 	}

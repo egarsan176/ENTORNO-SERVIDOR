@@ -105,13 +105,14 @@ public class RecipeService {
 		this.ingredientService.addIngredient(ingredient);
 		this.ingredientLineService.add(line);
 		recipe.getIngredientLine().add(line);
+		this.recipeRepo.save(recipe);
 		
 		return line;
 		
 	}
 	
 	/**
-	 * MÉTODO para comprobar si una receta ya contiene a un ingrediente concreto
+	 * MÉTODO para comprobar si una receta ya contiene a un ingrediente concreto a través de una consulta
 	 * @param ingredientName
 	 * @return 0 si no lo contiene, !=0 si contiene el ingrediente
 	 */
@@ -120,7 +121,7 @@ public class RecipeService {
 	}
 	
 	/**
-	 * MÉTODO para comprobar si ya existe una receta con ese nombre
+	 * MÉTODO para comprobar si ya existe una receta con ese nombre a través de una consulta
 	 * @param recipeName
 	 * @return 0 si no existe, !=0 si ya existe una receta con ese nombre
 	 */

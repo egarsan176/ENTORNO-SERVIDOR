@@ -11,7 +11,11 @@ import com.example.demo.repository.IngredientRepo;
 public class IngredientService {
 	
 	@Autowired private IngredientRepo ingredientREPO;
-	
+	/**
+	 * MÉTODO para añadir un ingrediente a la bbdd
+	 * @param ingredient
+	 * @return el ingrediente que se ha añadido
+	 */
 	@Transactional
 	public Ingredient addIngredient(Ingredient ingredient) {
 		return this.ingredientREPO.save(ingredient);

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +32,7 @@ public class FileController {
 	@PostMapping("/upload")
 	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
 		String message = "";
+		
 	    try {
 	      this.storageService.store(file);
 	      message = "El archivo se ha subido correctamente: " + file.getOriginalFilename();
@@ -77,5 +77,6 @@ public class FileController {
 	    //System.out.println(file);
 	    return ResponseEntity.ok(file);
 	  }
+	 
 
 }

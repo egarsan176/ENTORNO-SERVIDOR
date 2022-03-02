@@ -19,7 +19,11 @@ public interface RecipeRepo extends JpaRepository<Recipe, Integer>{
 	@Query(value="select * from recipe where category_id = ?1", nativeQuery = true) 
 	public List<Recipe> findRecipesByCategory(Integer idCategory);
 	
-	
+	/**
+	 * CONSULTA para saber si ya existe en la base de datos alguna receta con el nombre que se le pasa por parámetro
+	 * @param recipeName
+	 * @return si devuelve 0 es que no existe ninguna receta en la bbdd con ese nombre, si devuelve otro número es que sí existe
+	 */
 	@Query(value="select count(recipe_name) from recipe where recipe_name = ?1", nativeQuery = true)
 	public Integer isRecipeNameExists(String recipeName);
 	

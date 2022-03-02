@@ -36,6 +36,11 @@ public class AuthController {
     @Autowired private AuthenticationManager authManager;
     @Autowired private PasswordEncoder passwordEncoder;
 
+    /**
+     * MÉTODO que gestiona peticiones POST a /auth/register para registrar un nuevo usuario y almacenarlo en la bbdd
+     * @param user
+     * @return el token de ese usuario 
+     */
     @PostMapping("/auth/register")
     public Map<String, Object> registerHandler(@RequestBody User user){
         String encodedPass = passwordEncoder.encode(user.getPassword());
@@ -45,6 +50,11 @@ public class AuthController {
         return Collections.singletonMap("access_token", token);
     }
 
+    /**
+     * MÉTODO que gestiona peticiones POST a /auth/login y que comprueba si las credenciales pasadas en el body pertenecen a un usuario de la bbdd
+     * @param body
+     * @return	si las credenciales son correctas, nos devuelve el token de ese usuario que se acaba de autenticar, si no lo son nos devuelve un error
+     */
     @PostMapping("/auth/login")
     public Map<String, Object> loginHandler(@RequestBody LoginCredentials body){
         try {

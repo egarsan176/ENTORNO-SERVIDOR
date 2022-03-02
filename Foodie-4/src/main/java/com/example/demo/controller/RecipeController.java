@@ -320,7 +320,15 @@ public class RecipeController {
 			}
 		}
 		
-		
+		/**
+		 * MÉTODO que gestiona petición DELETE para borrar una línea de ingredientes de una receta
+		 * @param id
+		 * @param idLine
+		 * @return
+		 * 			si receta no existe --> exception RecipeNotFoundException()
+		 * 			si la línea no existe --> exception IngredientLineNotFoundException()
+		 * 			si la línea existe --> la borra
+		 */
 		@DeleteMapping("recipes/{id}/ingredientLine/{idLine}")
 		public ResponseEntity<?> deleteIngredientLine(@PathVariable Integer id, @PathVariable Integer idLine){
 			Recipe recipe = this.recipeService.findRecipeById(id);
@@ -332,7 +340,8 @@ public class RecipeController {
 				throw new IngredientLineNotFoundException(idLine);
 			}
 			else {
-				this.recipeService.deleteRecipe(recipe);
+				this.ingredientLineService.delete(ingredientLine);
+				this.recipeService.addRecipeBBDD(recipe);
 				return ResponseEntity.noContent().build();
 			}
 		}
