@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -128,9 +129,12 @@ public class RecipeController {
 	 * 			si la categoría de la receta no existe --> exception CategoryNotFoundException()
 	 * 			si todo es correcto --> receta
 	 */
-	@PostMapping("/recipes/{id}")
-	public Recipe addRecipe(@RequestBody Recipe recipe, @PathVariable Long id) {
-		User user = this.userService.findById(id);
+	@PostMapping("/recipes")
+	public Recipe addRecipe(@RequestBody Recipe recipe) {
+		
+		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = this.userService.findByEmail(email).get();
+		
 		//para comprobar que no haya una receta con el mismo nombre en la bbdd
 		Integer check = this.recipeService.checkRecipeName(recipe.getRecipeName());
 		if(user!=null) {
@@ -150,7 +154,7 @@ public class RecipeController {
 				return this.recipeService.addRecipeBBDD(recipe);
 			}
 		}else {
-			throw new UserNotFoundException(id);
+			throw new UserNotFoundException(user.getId());
 		}
 
 	}
@@ -250,7 +254,7 @@ public class RecipeController {
 			}else {
 				Integer index = recipe.getIngredientLine().indexOf(this.ingredientLineService.findById(idLine));
 
-				if(idLine-1>=recipe.getIngredientLine().size() || index==-1) {
+				if(index==-1) {
 					throw new IngredientLineNotFoundException(idLine);
 				}else {
 					return recipe.getIngredientLine().get(index);
@@ -514,7 +518,7 @@ public class RecipeController {
 		ResponseEntity<List<Recipe>> re = null ;
 		
 		if(recipes.isEmpty()) {
-			re = ResponseEntity.notFound().build(); //debería mandar notFound o noContent ¿?
+			re = ResponseEntity.noContent().build(); 
 		
 		}else {
 			Category category = this.categoryService.findById(categoryID);
@@ -529,6 +533,30 @@ public class RecipeController {
 		return re;
 		 
 		
+	}
+	
+	/**
+	 * MÉTODO que te devuelve el usuario de una receta
+	 * @param id
+	 * @return 
+	 */
+	@GetMapping("/mostrar/recipe/{id}")
+	public User getUserByRecipe(@PathVariable Integer id) {
+		if(this.recipeService.findRecipeById(id) == null) {
+			throw new RecipeNotFoundException(id);
+		}else {
+			return this.recipeService.getUserByRecipeID(id);
+		}
+	}
+	
+	@GetMapping("/category/{id}")
+	public ResponseEntity<Category> getCategoryByID(@PathVariable Integer id) {
+		if(this.categoryService.findById(id) == null) {
+			throw new CategoryNotFoundException(id);
+		}else {
+			System.out.println(this.categoryService.findById(id));
+			return ResponseEntity.ok(categoryService.findById(id));
+		}
 	}
 	
 

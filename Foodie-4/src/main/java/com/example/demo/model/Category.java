@@ -23,7 +23,7 @@ public class Category {
 	} 
 	
 	/**
-	 * Este constructor es una solución temporal porque en angular me está transformado el id de la categoría a String y entonces cuando llega al constructor de 
+	 * Este constructor es una solución temporal porque en angular me está transformado el id de la categoría a String y entonces cuando llega al constructor de  de categoría no funciona
 	 * @param name
 	 */
 	public Category(String name) {

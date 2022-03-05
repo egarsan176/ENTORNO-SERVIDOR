@@ -38,5 +38,15 @@ public interface RecipeRepo extends JpaRepository<Recipe, Integer>{
 			+ "      ril.ingredient_line_id = il.id and\n"
 			+ "      il.ingredient_id = i.id and i.name= ?1", nativeQuery = true)
 	public Integer isIngredientExists(String ingredientName);
+	
+	
+	/**
+	 * CONSULTA para encontrar el id de un usuario a través de una receta
+	 * @param idRecipe
+	 * @return el id del usuario de esa receta
+	 */
+	@Query(value="select user_id from recipe where id = ?1", nativeQuery = true)
+	public Long getUserIDFromRecipe(Integer idRecipe);
+	
 
 }

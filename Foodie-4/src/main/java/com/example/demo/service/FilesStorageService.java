@@ -51,6 +51,17 @@ public class FilesStorageService {
 		
 	}
 	
+	/**
+	 * MÉTODO que te devuelve el fichero asociado a una receta a través de una consulta
+	 * @param id de la receta
+	 * @return fichero
+	 */
+	public FileDB getfileByRecipe(Integer id) {
+		return this.fileREPO.findFileFromRecipe(id);
+	}
+	
+	
+	
 	
 }
 

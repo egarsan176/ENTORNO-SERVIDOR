@@ -11,6 +11,7 @@ import com.example.demo.model.Ingredient;
 import com.example.demo.model.IngredientLine;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.RecipeDates;
+import com.example.demo.model.User;
 import com.example.demo.repository.RecipeRepo;
 
 @Service
@@ -20,6 +21,7 @@ public class RecipeService {
 	@Autowired private CategoryService categoryService;
 	@Autowired private IngredientLineService ingredientLineService;
 	@Autowired private IngredientService ingredientService;
+	@Autowired private UserService userService;
 	
 	/**
 	 *USO DE @TRANSACTIONAL
@@ -127,6 +129,16 @@ public class RecipeService {
 	 */
 	public Integer checkRecipeName(String recipeName) {
 		return this.recipeRepo.isRecipeNameExists(recipeName);
+	}
+	
+	/**
+	 * MÉTODO para buscar al usuario de una receta a través de una consulta
+	 * @param recipeID
+	 * @return el usuario que coincide con el id de una receta
+	 */
+	public User getUserByRecipeID(Integer recipeID) {
+		long idUser =  this.recipeRepo.getUserIDFromRecipe(recipeID);
+		return this.userService.findById(idUser);
 	}
 	
 	

@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.demo.exception.ApiError;
+import com.example.demo.exception.FileNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.message.ResponseFile;
 import com.example.demo.message.ResponseMessage;
 import com.example.demo.model.FileDB;
@@ -21,6 +26,10 @@ import com.example.demo.service.FilesStorageService;
 
 @RestController
 public class FileController {
+	
+	//IMPLEMENTACIONES PARA EL PROYECTO FINAL
+	// - Que se puedan subir todas las imágenes y se les cambie el nombre al subirlas
+	// - Borrar una imagen
 	
 	@Autowired private FilesStorageService storageService;
 	
@@ -34,6 +43,10 @@ public class FileController {
 		String message = "";
 		
 	    try {
+	    	if(this.storageService.findFileByName(file.getOriginalFilename())!= null) {
+	    		message = "Ya existe una imagen con el nombre: " + file.getOriginalFilename() + ".";
+	    		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+	    	}
 	      this.storageService.store(file);
 	      message = "El archivo se ha subido correctamente: " + file.getOriginalFilename();
 	      return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
@@ -74,9 +87,40 @@ public class FileController {
 	 @GetMapping("/files/{name}")
 	 public ResponseEntity<FileDB> getFileIDByName(@PathVariable String name) {
 	    FileDB file = this.storageService.findFileByName(name);
-	    //System.out.println(file);
-	    return ResponseEntity.ok(file);
+	    if(file== null) {
+	    	throw new FileNotFoundException(name);
+	    }else {
+	    	return ResponseEntity.ok(file);
+	    }
 	  }
 	 
+	 
+	/**
+	 * MÉTODO que me devuelve un fichero de una receta
+	 * @param id
+	 * @return
+	 */
+	 @GetMapping("/file/{id}")
+	 public ResponseEntity<FileDB> getFileByRecipe(@PathVariable Integer id) {
+		  FileDB file = this.storageService.getfileByRecipe(id);
+		  return ResponseEntity.ok(file);
+	 }
+	 
+	 
+	 
+		/**
+		 * GESTIÓN DE EXCEPCIÓN FileNotFoundException
+		 * @param ex
+		 * @return un json con el estado, fecha, hora y mensaje de la excepción si el fichero no existe
+		 */
+		@ExceptionHandler(FileNotFoundException.class)
+		public ResponseEntity<ApiError> handleFileNotFound(FileNotFoundException ex) {
+			ApiError apiError = new ApiError();
+			apiError.setEstado(HttpStatus.NOT_FOUND);
+			apiError.setFecha(LocalDateTime.now());
+			apiError.setMensaje(ex.getMessage());
+			
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+		}
 
 }

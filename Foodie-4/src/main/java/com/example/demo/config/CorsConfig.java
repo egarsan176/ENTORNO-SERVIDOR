@@ -83,6 +83,11 @@ public class CorsConfig implements WebMvcConfigurer{
                 .allowedHeaders("GET", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+				registry.addMapping("/file/**")
+				.allowedOrigins("http://localhost:4200")
+                .allowedHeaders("GET", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+                        "Access-Control-Request-Headers")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 				
 				registry.addMapping("/files/{id}")
 				.allowedOrigins("http://localhost:4200")
@@ -97,6 +102,12 @@ public class CorsConfig implements WebMvcConfigurer{
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 				
 				registry.addMapping("/mostrar/**")
+				.allowedOrigins("http://localhost:4200")
+                .allowedHeaders("GET", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+                        "Access-Control-Request-Headers")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+				
+				registry.addMapping("/category/**")
 				.allowedOrigins("http://localhost:4200")
                 .allowedHeaders("GET", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
                         "Access-Control-Request-Headers")

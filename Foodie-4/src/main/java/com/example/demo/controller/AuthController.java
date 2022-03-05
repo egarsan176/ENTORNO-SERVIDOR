@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ApiError;
+import com.example.demo.exception.EmailExistException;
 import com.example.demo.exception.EmailNotFoundException;
+import com.example.demo.exception.LoginCredentialInvalidException;
 import com.example.demo.exception.PasswordNotFoundException;
 import com.example.demo.model.LoginCredentials;
 import com.example.demo.model.User;
@@ -43,6 +45,10 @@ public class AuthController {
      */
     @PostMapping("/auth/register")
     public Map<String, Object> registerHandler(@RequestBody User user){
+    	
+    	if(this.userRepo.findByEmail(user.getEmail()) != null) {
+    		throw new EmailExistException(user.getEmail());
+    	}
         String encodedPass = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPass);
         user = userRepo.save(user);
@@ -67,9 +73,13 @@ public class AuthController {
 
             return Collections.singletonMap("access_token", token);
         }catch (AuthenticationException authExc){
+        	
+        	if(body.getEmail() == null || body.getPassword() == null) {
+        		throw new LoginCredentialInvalidException();
+        	}
    
         	//email existe pero no es su contraseña
-        	if(this.userRepo.getEmail(body.getEmail()) !=  null && !Objects.equals(this.userRepo.getPassword(body.getEmail()), body.getPassword())) {
+        	else if(this.userRepo.getEmail(body.getEmail()) !=  null && !Objects.equals(this.userRepo.getPassword(body.getEmail()), body.getPassword())) {
         		throw new PasswordNotFoundException();
         	
         	}
@@ -99,6 +109,20 @@ public class AuthController {
 		
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
 	}
+	/**
+	 * GESTIÓN DE EXCEPCIÓN EmailExistException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si el email ya existe
+	 */
+	@ExceptionHandler(EmailExistException.class)
+	public ResponseEntity<ApiError> handleEmailIsExits(EmailExistException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.CONFLICT);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+	}
 	
 	/**
 	 * GESTIÓN DE EXCEPCIÓN PasswordNotFoundException
@@ -113,6 +137,21 @@ public class AuthController {
 		apiError.setMensaje(ex.getMessage());
 		
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+	}
+	
+	/**
+	 * GESTIÓN DE EXCEPCIÓN LoginCredentialInvalidException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si falta uno de los campos al hacer login
+	 */
+	@ExceptionHandler(LoginCredentialInvalidException.class)
+	public ResponseEntity<ApiError> handleCredentialsInvalid(LoginCredentialInvalidException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.CONFLICT);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
 	}
 	
 	/**

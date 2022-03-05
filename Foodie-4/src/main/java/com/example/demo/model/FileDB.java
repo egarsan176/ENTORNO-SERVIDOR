@@ -21,6 +21,8 @@ public class FileDB {
   @Lob		
   private byte[] data;
   
+  private static int COUNT = 0;
+  
 // @Lob --> LOB es un tipo de datos para almacenar datos de objetos grandes. Hay dos tipos de LOB: BLOB y CLOB:
 //	  - BLOB es para almacenar datos binarios
 //	  - CLOB es para almacenar datos de texto 
