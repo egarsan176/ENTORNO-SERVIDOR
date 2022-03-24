@@ -14,13 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.demo.repository.UserRepo;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired private UserRepo userRepo;
     @Autowired private JWTFilter filter;
     @Autowired private MyUserDetailsService uds;
 
@@ -32,7 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeHttpRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/user/**").permitAll()
+                .antMatchers("/mostrar").permitAll()
+                .antMatchers("/recipes/**").hasAnyRole("USER", "ADMIN") 	//necesita token para acceder a este apartado
+                .antMatchers("/admin/**").hasAnyRole("ADMIN") 
                 .and()
                 .userDetailsService(uds)
                 .exceptionHandling()

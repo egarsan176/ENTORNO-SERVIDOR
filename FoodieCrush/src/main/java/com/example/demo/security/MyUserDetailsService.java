@@ -13,7 +13,11 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
-
+/**
+ * Esta clase sirve para gestionar el login y los roles de usuario
+ * @author estefgar
+ *
+ */
 @Component
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -28,6 +32,6 @@ public class MyUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 email,
                 user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+user.getRole())));
     }
 }
