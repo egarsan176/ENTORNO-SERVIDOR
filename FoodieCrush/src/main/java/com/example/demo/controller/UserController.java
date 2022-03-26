@@ -11,7 +11,12 @@ import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.UserService;
 
-
+/**
+ * Esta clase es un controlador REST que intercepta peticiones al servidor,
+ * encargándose de tareas relacionadas con el usuario
+ * @author estefgar
+ *
+ */
 @RestController
 public class UserController {
 

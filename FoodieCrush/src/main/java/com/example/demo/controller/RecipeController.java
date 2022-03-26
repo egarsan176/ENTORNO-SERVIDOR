@@ -36,7 +36,8 @@ import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonMappingException;
 /**
- * Esta clase es un controlador REST que intercepta peticiones al servidor, encargándose de tareas relacionadas con la gestión de recetas.
+ * Esta clase es un controlador REST que intercepta peticiones al servidor, encargándose
+ * de tareas relacionadas con la gestión de recetas.
  * Para acceder a /recipes es necesario disponer del token
  * @author estefgar
  *
@@ -149,7 +150,9 @@ public class RecipeController {
 			else if(cat == null) {
 				throw new CategoryNotFoundException(idCategory);
 			}else {
-				
+				if(user.getRole()=="ADMIN") {
+					recipe.setPending(false);
+				}
 				recipe.setUser(user);
 				recipe.setCategory(cat);
 				return this.recipeService.addRecipeBBDD(recipe);

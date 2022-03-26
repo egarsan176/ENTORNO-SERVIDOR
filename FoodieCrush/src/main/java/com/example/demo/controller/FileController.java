@@ -23,12 +23,16 @@ import com.example.demo.message.ResponseFile;
 import com.example.demo.message.ResponseMessage;
 import com.example.demo.model.FileDB;
 import com.example.demo.service.FilesStorageService;
-
+/**
+ * Esta clase es un controlador REST que intercepta peticiones al servidor, encargándose de las tareas
+ * relacionadas con la gestión de ficheros
+ * @author estefgar
+ *
+ */
 @RestController
 public class FileController {
 	
 	//IMPLEMENTACIONES PARA EL PROYECTO FINAL
-	// - Que se puedan subir todas las imágenes y se les cambie el nombre al subirlas
 	// - Borrar una imagen
 	
 	@Autowired private FilesStorageService storageService;
@@ -81,7 +85,7 @@ public class FileController {
 
 	 
 	/**
-	 * MÉTODO que me devuelve un fichero a través de su nombre de fichero
+	 * MÉTODO GET que me devuelve un fichero a través de su nombre de fichero
 	 * @param name
 	 * @return
 	 */
@@ -97,7 +101,7 @@ public class FileController {
 	 
 	 
 	/**
-	 * MÉTODO que me devuelve un fichero de una receta
+	 * MÉTODO GET que me devuelve un fichero de una receta
 	 * @param id
 	 * @return
 	 */
@@ -109,20 +113,21 @@ public class FileController {
 	 }
 	 
 	 
+	 //GESTIÓN DE EXCEPCIONES
 	 
-		/**
-		 * GESTIÓN DE EXCEPCIÓN FileNotFoundException
-		 * @param ex
-		 * @return un json con el estado, fecha, hora y mensaje de la excepción si el fichero no existe
-		 */
-		@ExceptionHandler(FileNotFoundException.class)
-		public ResponseEntity<ApiError> handleFileNotFound(FileNotFoundException ex) {
-			ApiError apiError = new ApiError();
-			apiError.setEstado(HttpStatus.NOT_FOUND);
-			apiError.setFecha(LocalDateTime.now());
-			apiError.setMensaje(ex.getMessage());
-			
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
-		}
+	/**
+	 * GESTIÓN DE EXCEPCIÓN FileNotFoundException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si el fichero no existe
+	 */
+	@ExceptionHandler(FileNotFoundException.class)
+	public ResponseEntity<ApiError> handleFileNotFound(FileNotFoundException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.NOT_FOUND);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+	}
 
 }

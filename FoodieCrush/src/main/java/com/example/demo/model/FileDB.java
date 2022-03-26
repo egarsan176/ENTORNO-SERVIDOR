@@ -32,14 +32,13 @@ public class FileDB {
 
 
   
-  
   public FileDB() {}
   
   public FileDB(String name, String type, byte[] data) {
     this.name = PREFIX+COUNT;
     this.type = type;
     this.data = data;
-    this.COUNT++;
+    FileDB.COUNT++;
   }
   
   public String getId() {

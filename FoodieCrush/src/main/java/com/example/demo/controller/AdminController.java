@@ -38,7 +38,7 @@ public class AdminController {
 	 * 			- si requestParam=true --> devuelve todas las recetas que NO han sido aprobadas por el administrador
 	 */
 	@GetMapping("/admin/recipes")
-	public ResponseEntity<List<Recipe>> findAllRecipes(@RequestParam(required = true) boolean isPending){
+	public ResponseEntity<List<Recipe>> findAllRecipes(@RequestParam(required = false) boolean isPending){
 		
 		ResponseEntity<List<Recipe>> re = null ;
 		
@@ -60,12 +60,15 @@ public class AdminController {
 		return re;
 	
 	}
+
+
+	
 	/**
-	 * MÉTODO que gestiona petición PUT para cambiar el estado de una receta isPending
+	 * MÉTODO que gestiona petición GET para cambiar el estado de una receta isPending
 	 * @param id
 	 * @return
 	 */
-	@PutMapping("/admin/recipes/{id}")
+	@GetMapping("/admin/recipes/{id}")
 	public ResponseEntity<Recipe> changeStatusRecipe(@PathVariable Integer id){
 		Recipe recipe = this.recipeService.findRecipeById(id);
 		
