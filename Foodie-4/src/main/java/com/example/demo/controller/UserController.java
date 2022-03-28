@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,7 +36,7 @@ public class UserController {
 	 * @return usuario si el email existe, null si no existe
 	 */
 	@GetMapping("/user/{email}")
-	public Optional<User> checkEmailUser(@PathVariable String email) {
+	public User checkEmailUser(@PathVariable String email) {
 		
 		return this.userService.findByEmail(email);
 	}

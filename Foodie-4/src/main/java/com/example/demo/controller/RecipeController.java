@@ -133,7 +133,7 @@ public class RecipeController {
 	public Recipe addRecipe(@RequestBody Recipe recipe) {
 		
 		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User user = this.userService.findByEmail(email).get();
+		User user = this.userService.findByEmail(email);
 		
 		//para comprobar que no haya una receta con el mismo nombre en la bbdd
 		Integer check = this.recipeService.checkRecipeName(recipe.getRecipeName());

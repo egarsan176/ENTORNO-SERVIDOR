@@ -28,12 +28,14 @@ import com.example.demo.model.LoginCredentials;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.security.JWTUtil;
+import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 @RestController //para habilitar esta clase como un controlador REST y que pueda interceptar peticiones al servidor.
 public class AuthController {
 
     @Autowired private UserRepo userRepo;
+    @Autowired private UserService userService;
     @Autowired private JWTUtil jwtUtil;
     @Autowired private AuthenticationManager authManager;
     @Autowired private PasswordEncoder passwordEncoder;
@@ -46,7 +48,7 @@ public class AuthController {
     @PostMapping("/auth/register")
     public Map<String, Object> registerHandler(@RequestBody User user){
     	
-    	if(this.userRepo.findByEmail(user.getEmail()) != null) {
+    	if(this.userService.findByEmail(user.getEmail()) != null) {
     		throw new EmailExistException(user.getEmail());
     	}
         String encodedPass = passwordEncoder.encode(user.getPassword());
@@ -169,6 +171,20 @@ public class AuthController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
     

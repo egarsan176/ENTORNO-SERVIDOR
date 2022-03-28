@@ -103,6 +103,7 @@ public class FileController {
 	 @GetMapping("/file/{id}")
 	 public ResponseEntity<FileDB> getFileByRecipe(@PathVariable Integer id) {
 		  FileDB file = this.storageService.getfileByRecipe(id);
+		  System.out.println(file);
 		  return ResponseEntity.ok(file);
 	 }
 	 
