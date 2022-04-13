@@ -75,10 +75,10 @@ public class AdminController {
 		if(recipe==null) {
 			throw new RecipeNotFoundException(id);
 		}
-		else if(!recipe.isPending()){
+		else if(!recipe.getIsPending()){
 			throw new RecipeStatusException(id);
 		}else {
-			recipe.setPending(false);
+			recipe.setIsPending(false);
 			this.recipeService.addRecipeBBDD(recipe);
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(recipe);

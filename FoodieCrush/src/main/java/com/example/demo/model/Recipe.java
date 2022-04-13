@@ -152,12 +152,12 @@ public class Recipe {
 		this.file = file;
 	}
 	
-	public boolean isPending() {
+	public boolean getIsPending() {
 		return isPending;
 	}
 
 
-	public void setPending(boolean isPending) {
+	public void setIsPending(boolean isPending) {
 		this.isPending = isPending;
 	}
 	

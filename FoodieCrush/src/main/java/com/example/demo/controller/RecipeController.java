@@ -23,14 +23,17 @@ import com.example.demo.exception.CategoryNotFoundException;
 import com.example.demo.exception.IngredientLineExistException;
 import com.example.demo.exception.IngredientLineNotFoundException;
 import com.example.demo.exception.RecipeExistException;
+import com.example.demo.exception.RecipeNotAdmitCommentsException;
 import com.example.demo.exception.RecipeNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Category;
+import com.example.demo.model.Comment;
 import com.example.demo.model.IngredientLine;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.RecipeDates;
 import com.example.demo.model.User;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.CommentService;
 import com.example.demo.service.IngredientLineService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
@@ -49,6 +52,7 @@ public class RecipeController {
 	@Autowired private CategoryService categoryService;
 	@Autowired private UserService userService;
 	@Autowired private IngredientLineService ingredientLineService;
+	@Autowired private CommentService commentService;
 	
 	//ACCESO A RECURSOS DE PRIMER NIVEL
 	
@@ -74,7 +78,7 @@ public class RecipeController {
 		ResponseEntity<List<Recipe>> re = null ;
 		
 		if(userID==null && categoryID==null && recipes.isEmpty()) {
-			re = ResponseEntity.notFound().build(); 
+			re = ResponseEntity.noContent().build(); 
 		}
 		else if(userID==null && categoryID==null && !recipes.isEmpty()) {
 			re = ResponseEntity.ok(recipes);
@@ -151,7 +155,7 @@ public class RecipeController {
 				throw new CategoryNotFoundException(idCategory);
 			}else {
 				if(user.getRole()=="ADMIN") {
-					recipe.setPending(false);
+					recipe.setIsPending(false);
 				}
 				recipe.setUser(user);
 				recipe.setCategory(cat);
@@ -354,9 +358,126 @@ public class RecipeController {
 			}
 		}
 		
+		/**
+		 * MÉTODO que gestiona petición GET a /recipes/comments para obtener todos los comentarios existentes en la bbdd
+		 * @return lista con los comentarios de la base de datos o noContent si no hay ninguno
+		 */
+		@GetMapping("recipes/comments")
+		public ResponseEntity<List<Comment>> getCommentsFromBD(){
+			List<Comment> comments = this.commentService.getAllCommentBBDD();
+			ResponseEntity<List<Comment>> re = null ;
+			
+			if(comments.isEmpty()) {
+				re = ResponseEntity.noContent().build();
+			}else {
+				re = ResponseEntity.ok(comments);
+			}
+			
+			return re;
+			
+		}
+		
+		/**
+		 * MÉTODO que gestiona peticiones GET a /recipes/{idRecipe}/comments para obtener los comentarios (pendientes y no pendientes) de una receta en concreto
+		 * @param recipeID
+		 * @return 
+		 * 			si no se le pasa el requestParam:
+		 * 				- si la receta no existe --> exception RecipeNotFoundException(id)
+		 * 				- si la receta existe y tiene comentarios --> lista de los comentarios de la receta
+		 * 				- si la receta no tiene comentarios --> noContent
+		 * 			si se le pasa requestParam:
+		 * 				- si es false --> lista de comentarios de la receta que ya han sido aprobados por el admin
+		 * 				- si es true --> lista de comentarios de la receta que no han sido aprobados por el admin
+		 */
+		@GetMapping("recipes/{recipeID}/comments")
+		public ResponseEntity<List<Comment>> getCommentsFromRecipe(@PathVariable Integer recipeID, @RequestParam(required = false) String isPending){
+			ResponseEntity<List<Comment>> re = null ;
+			
+			Recipe recipe = this.recipeService.findRecipeById(recipeID);
+	
+			if(recipe==null) {
+				throw new RecipeNotFoundException(recipeID);
+			}else {
+				if(isPending == null) {
+					List<Comment> recipeComments = this.commentService.getCommentsFromRecipe(recipe);
+					
+					if(recipeComments.isEmpty()) {
+						re = ResponseEntity.noContent().build();
+					}else{
+						re = ResponseEntity.ok(recipeComments);
+					}
+				}else {
+					if("false".equals(isPending)) {
+						List<Comment> recipeNotPendingComments = this.commentService.getCommentsFromRecipeNotPending(recipeID);
+						if(recipeNotPendingComments.isEmpty()) {
+							re = ResponseEntity.noContent().build();
+						}else{
+							re = ResponseEntity.ok(recipeNotPendingComments);
+						}
+					}else if("true".equals(isPending)) {
+						List<Comment> recipePendingComments = this.commentService.getCommentsFromRecipePending(recipeID);
+						if(recipePendingComments.isEmpty()) {
+							re = ResponseEntity.noContent().build();
+						}else{
+							re = ResponseEntity.ok(recipePendingComments);
+						}
+					}
+					
+				}
+				
+			}
+			return re;
+		}
+		
+		/**
+		 * MÉTODO que gestiona peticiones POST a /recipes/{recipeID}/comments para añadir un comentario a una receta
+		 * @param recipeID
+		 * @param comment 
+		 * @return
+		 * 			si el usuario no existe --> exception UserNotFoundException()
+		 * 			si la receta no existes --> exception RecipeNotFoundException()
+		 * 			si la receta todavía no ha sido aprobada por el admin --> exception RecipeNotAdmitCommentsException()
+		 * 			si la receta existe y ha sido aprobada por el admin --> comentario
+		 */
+		@PostMapping("recipes/{recipeID}/comments")
+		public Comment addCommentToRecipe(@PathVariable Integer recipeID, @RequestBody Comment comment) {
+			
+			String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			User user = this.userService.findByEmail(email);
+		
+			if(user==null) {
+				throw new UserNotFoundException(user.getId());
+			}else {
+				Recipe recipe = this.recipeService.findRecipeById(recipeID);
+				if(recipe==null) {
+					throw new RecipeNotFoundException(recipeID);
+				}else {
+					if(recipe.getIsPending()) {
+						throw new RecipeNotAdmitCommentsException(recipeID);
+					}else {
+						if(user.getRole()=="ADMIN") {
+							comment.setPending(false);
+						}
+						comment.setUser(user);
+						comment.setUsername(user.getUsername());
+						return this.commentService.addComment(recipe, comment);
+					}
+					
+					
+				}
+			}
+			
+			
+		}
+		
+
+		
+		
+		
+		
+		
 	
 
-	
 	
 	//GESTIÓN DE EXCEPCIONES
 	
@@ -405,6 +526,21 @@ public class RecipeController {
 		apiError.setMensaje(ex.getMessage());
 		
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+	}
+	
+	/**
+	 * GESTIÓN DE EXCEPCIÓN RecipeNotAdmitCommentsException 
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si la receta no ha sido aprobada y no puede recibir comentarios
+	 */
+	@ExceptionHandler(RecipeNotAdmitCommentsException.class)
+	public ResponseEntity<ApiError> handleRecipeNotAdmitComments(RecipeNotAdmitCommentsException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.CONFLICT);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
 	}
 	
 	/**

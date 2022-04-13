@@ -51,15 +51,17 @@ public class CorsConfig implements WebMvcConfigurer{
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 				
 				//GESTIÓN DE RECETAS
-				registry.addMapping("/recipes")
+				registry.addMapping("/recipes/**")
 				.allowedOrigins(url)
+				.allowedMethods("PUT", "OPTIONS", "GET", "POST", "HEAD", "DELETE")
                 .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 				 
 				registry.addMapping("/recipes/{id}")
 				.allowedOrigins(url)
-                .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+				.allowedMethods("PUT", "OPTIONS", "GET", "POST", "HEAD", "DELETE")
+                .allowedHeaders("GET", "POST", "OPTIONS", "PUT", "DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 				
@@ -72,6 +74,14 @@ public class CorsConfig implements WebMvcConfigurer{
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 				
 				registry.addMapping("/recipes/{id}/ingredientLine/**")
+				.allowedOrigins(url)
+				.allowedMethods("PUT", "OPTIONS", "GET", "POST", "HEAD")
+                .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+                        "Access-Control-Request-Headers")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+				
+				//GESTIÓN DE COMENTARIOS
+				registry.addMapping("/recipes/{idRecipe}/comments")
 				.allowedOrigins(url)
 				.allowedMethods("PUT", "OPTIONS", "GET", "POST", "HEAD")
                 .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
@@ -112,6 +122,7 @@ public class CorsConfig implements WebMvcConfigurer{
 				//GESTIONES DEL ADMIN
 				registry.addMapping("/admin/**")
 				.allowedOrigins(url)
+				.allowedMethods("PUT", "OPTIONS", "GET", "POST", "HEAD")
                 .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
