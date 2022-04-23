@@ -1,12 +1,16 @@
 package com.example.demo.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,6 +29,8 @@ public class User {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	private String role;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Notification> notifications;
 	
 	
 	public User(String fullName, String username, String email, String password, String role) {
@@ -34,16 +40,19 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.notifications = new ArrayList<>();
 	}
 
 	public User(String username, String password) {
 		super();
 		this.username = username;
 		this.password = password;
+		this.notifications = new ArrayList<>();
 	}
 	
 	public User(Long id) {
 		this.id=id;
+		this.notifications = new ArrayList<>();
 	}
 
 	public User(String fullName, String username, String email) {
@@ -51,10 +60,12 @@ public class User {
 		this.fullName = fullName;
 		this.username = username;
 		this.email = email;
+		this.notifications = new ArrayList<>();
 	}
 
 	public User() {
 		super();
+		this.notifications = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -105,6 +116,14 @@ public class User {
 		this.role = role;
 	}
 	
+
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
 
 	@Override
 	public String toString() {

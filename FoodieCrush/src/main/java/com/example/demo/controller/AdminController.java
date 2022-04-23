@@ -14,10 +14,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ApiError;
+import com.example.demo.exception.CommentNotFoundException;
+import com.example.demo.exception.CommentStatusException;
 import com.example.demo.exception.RecipeNotFoundException;
 import com.example.demo.exception.RecipeStatusException;
+import com.example.demo.model.Comment;
+import com.example.demo.model.Notification;
 import com.example.demo.model.Recipe;
+import com.example.demo.model.User;
+import com.example.demo.service.CommentService;
+import com.example.demo.service.NotificationService;
 import com.example.demo.service.RecipeService;
+import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonMappingException;
 /**
  * Esta clase es un controlador REST que intercepta peticiones al servidor, encargándose de las tareas del administrador
@@ -29,6 +37,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public class AdminController {
 	
 	@Autowired private RecipeService recipeService;
+	@Autowired private CommentService commentService;
+	@Autowired private NotificationService notificationService;
+	@Autowired private UserService userService;
 	
 	/**
 	 * MÉTODO que gestiona las peticiones GET a /admin/recipes y que devuelve una lista de recetas
@@ -66,7 +77,7 @@ public class AdminController {
 	/**
 	 * MÉTODO que gestiona petición GET para cambiar el estado de una receta isPending
 	 * @param id
-	 * @return
+	 * @return receta
 	 */
 	@GetMapping("/admin/recipes/{id}")
 	public ResponseEntity<Recipe> changeStatusRecipe(@PathVariable Integer id){
@@ -78,11 +89,73 @@ public class AdminController {
 		else if(!recipe.getIsPending()){
 			throw new RecipeStatusException(id);
 		}else {
+			User userRecipe = recipe.getUser();
+			String titleNotif = "Receta Aprobada";
+			Notification notif = this.notificationService.addNotificationRecipe(userRecipe, recipe, titleNotif);
 			recipe.setIsPending(false);
 			this.recipeService.addRecipeBBDD(recipe);
+			userRecipe.getNotifications().add(notif);
+			this.userService.addUser(userRecipe);
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(recipe);
 	}
+	
+	/**
+	 * MÉTODO que gestiona las peticiones GET a /admin/recipes/comments y que devuelve una lista de comentarios
+	 * @param isPending puede ser true o false:		
+	 * @return 	
+	 * 			- si requestParam=false --> devuelve todas los comentarios que ya han sido aprobados por el administrador
+	 * 			- si requestParam=true --> devuelve todas los comentarios que NO han sido aprobados por el administrador
+	 */
+	@GetMapping("/admin/recipes/comments")
+	public ResponseEntity<List<Comment>> findAllComments(@RequestParam(required = false) boolean isPending){
+		
+		ResponseEntity<List<Comment>> re = null ;
+		
+		if(isPending) {
+			if(this.commentService.getAllCommentBDPending().isEmpty()) {
+				re = ResponseEntity.noContent().build();
+			}else {
+				re = ResponseEntity.ok(commentService.getAllCommentBDPending());
+			}
+		}else {
+			if(this.commentService.getAllCommentBDnotPending().isEmpty()) {
+				re = ResponseEntity.noContent().build();
+			}else {
+				re = ResponseEntity.ok(this.commentService.getAllCommentBDnotPending());
+			}
+		}
+		
+
+		return re;
+	
+	}
+	
+	/**
+	 * MÉTODO que gestiona petición GET para cambiar el estado de un comentario isPending
+	 * @param id
+	 * @return comentario
+	 */
+	@GetMapping("admin/recipes/comments/{commentID}")
+	public ResponseEntity<Comment> changeStatusCommentFromRecipe(@PathVariable Integer commentID){
+		
+			Comment comment = this.commentService.getCommentFromRecipeByID(commentID);
+			if(comment==null) {
+				throw new CommentNotFoundException(commentID);
+			}else if (!comment.getIsPending()){
+				throw new CommentStatusException(commentID);
+			}else {
+				User userComment = comment.getUser();
+				String titleNotif = "Comentario Aprobado";
+				Notification notif = this.notificationService.addNotificationComment(userComment, comment, titleNotif);
+				comment.setIsPending(false);
+				this.commentService.addComment(comment);
+				userComment.getNotifications().add(notif);
+				this.userService.addUser(userComment);
+			}
+			return ResponseEntity.status(HttpStatus.CREATED).body(comment);
+		}
+
 	
 	
 	
@@ -111,6 +184,35 @@ public class AdminController {
 	 */
 	@ExceptionHandler(RecipeStatusException.class)
 	public ResponseEntity<ApiError> handleRecipeStatus(RecipeStatusException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.NOT_FOUND);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+	}
+	/**
+	 * GESTIÓN DE EXCEPCIÓN CommentStatusException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si el comentario ya está aprobaba por el administrador
+	 */
+	@ExceptionHandler(CommentStatusException.class)
+	public ResponseEntity<ApiError> handleCommentStatus(CommentStatusException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.CONFLICT);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+	}
+	
+	/**
+	 * GESTIÓN DE EXCEPCIÓN CommentNotFoundException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si el comentario no se encuentra 
+	 */
+	@ExceptionHandler(CommentNotFoundException.class)
+	public ResponseEntity<ApiError> handleCommentNotFound(CommentNotFoundException ex) {
 		ApiError apiError = new ApiError();
 		apiError.setEstado(HttpStatus.NOT_FOUND);
 		apiError.setFecha(LocalDateTime.now());

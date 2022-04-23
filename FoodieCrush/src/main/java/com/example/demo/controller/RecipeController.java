@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.ApiError;
 import com.example.demo.exception.CategoryNotFoundException;
+import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.exception.IngredientLineExistException;
 import com.example.demo.exception.IngredientLineNotFoundException;
 import com.example.demo.exception.RecipeExistException;
@@ -35,6 +36,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.CommentService;
 import com.example.demo.service.IngredientLineService;
+import com.example.demo.service.NotificationService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -53,6 +55,7 @@ public class RecipeController {
 	@Autowired private UserService userService;
 	@Autowired private IngredientLineService ingredientLineService;
 	@Autowired private CommentService commentService;
+	@Autowired private NotificationService notificationService;
 	
 	//ACCESO A RECURSOS DE PRIMER NIVEL
 	
@@ -140,6 +143,7 @@ public class RecipeController {
 		
 		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = this.userService.findByEmail(email);
+		//System.out.println(user);
 		
 		//para comprobar que no haya una receta con el mismo nombre en la bbdd
 		Integer check = this.recipeService.checkRecipeName(recipe.getRecipeName());
@@ -154,7 +158,7 @@ public class RecipeController {
 			else if(cat == null) {
 				throw new CategoryNotFoundException(idCategory);
 			}else {
-				if(user.getRole()=="ADMIN") {
+				if("ADMIN".equals(user.getRole())) {
 					recipe.setIsPending(false);
 				}
 				recipe.setUser(user);
@@ -181,6 +185,14 @@ public class RecipeController {
 		if(recipe==null) {
 			throw new RecipeNotFoundException(id);
 		}else {
+			String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			User user = this.userService.findByEmail(email);
+			if("ADMIN".equals(user.getRole())) {
+				String titleNotif = "Receta No Aprobada";
+				Recipe recipe2 = recipe;
+				recipe.getUser().getNotifications().add(this.notificationService.addNotificationRecipeNotApproved(user, recipe2, titleNotif));
+				this.userService.addUser(recipe.getUser());
+			}
 			this.recipeService.deleteRecipe(recipe);
 			return ResponseEntity.noContent().build();
 		}
@@ -214,6 +226,9 @@ public class RecipeController {
 	
 	
 	//ACCESO A RECURSOS DE SEGUNDO NIVEL
+	
+	
+	//////////////////////////////////LÍNEAS DE INGREDIENTES
 	
 	/**
 	 * MÉTODO que gestiona una petición GET para obtener el listado de líneas de ingredientes de una receta
@@ -358,6 +373,8 @@ public class RecipeController {
 			}
 		}
 		
+		////////////////////////////////////////////COMENTARIOS
+		
 		/**
 		 * MÉTODO que gestiona petición GET a /recipes/comments para obtener todos los comentarios existentes en la bbdd
 		 * @return lista con los comentarios de la base de datos o noContent si no hay ninguno
@@ -391,41 +408,47 @@ public class RecipeController {
 		 */
 		@GetMapping("recipes/{recipeID}/comments")
 		public ResponseEntity<List<Comment>> getCommentsFromRecipe(@PathVariable Integer recipeID, @RequestParam(required = false) String isPending){
+			String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			User user = this.userService.findByEmail(email);
+			
 			ResponseEntity<List<Comment>> re = null ;
 			
 			Recipe recipe = this.recipeService.findRecipeById(recipeID);
 	
-			if(recipe==null) {
-				throw new RecipeNotFoundException(recipeID);
-			}else {
-				if(isPending == null) {
-					List<Comment> recipeComments = this.commentService.getCommentsFromRecipe(recipe);
-					
-					if(recipeComments.isEmpty()) {
-						re = ResponseEntity.noContent().build();
-					}else{
-						re = ResponseEntity.ok(recipeComments);
-					}
+			if(user == null || user != null) {
+				if(recipe==null) {
+					throw new RecipeNotFoundException(recipeID);
 				}else {
-					if("false".equals(isPending)) {
-						List<Comment> recipeNotPendingComments = this.commentService.getCommentsFromRecipeNotPending(recipeID);
-						if(recipeNotPendingComments.isEmpty()) {
+					if(isPending == null) {
+						List<Comment> recipeComments = this.commentService.getCommentsFromRecipe(recipe);
+						
+						if(recipeComments.isEmpty()) {
 							re = ResponseEntity.noContent().build();
 						}else{
-							re = ResponseEntity.ok(recipeNotPendingComments);
+							re = ResponseEntity.ok(recipeComments);
 						}
-					}else if("true".equals(isPending)) {
-						List<Comment> recipePendingComments = this.commentService.getCommentsFromRecipePending(recipeID);
-						if(recipePendingComments.isEmpty()) {
-							re = ResponseEntity.noContent().build();
-						}else{
-							re = ResponseEntity.ok(recipePendingComments);
+					}else {
+						if("false".equals(isPending)) {
+							List<Comment> recipeNotPendingComments = this.commentService.getCommentsFromRecipeNotPending(recipeID);
+							if(recipeNotPendingComments.isEmpty()) {
+								re = ResponseEntity.noContent().build();
+							}else{
+								re = ResponseEntity.ok(recipeNotPendingComments);
+							}
+						}else if("true".equals(isPending)) {
+							List<Comment> recipePendingComments = this.commentService.getCommentsFromRecipePending(recipeID);
+							if(recipePendingComments.isEmpty()) {
+								re = ResponseEntity.noContent().build();
+							}else{
+								re = ResponseEntity.ok(recipePendingComments);
+							}
 						}
+						
 					}
 					
 				}
-				
 			}
+
 			return re;
 		}
 		
@@ -438,6 +461,7 @@ public class RecipeController {
 		 * 			si la receta no existes --> exception RecipeNotFoundException()
 		 * 			si la receta todavía no ha sido aprobada por el admin --> exception RecipeNotAdmitCommentsException()
 		 * 			si la receta existe y ha sido aprobada por el admin --> comentario
+		 * @throws Exception 
 		 */
 		@PostMapping("recipes/{recipeID}/comments")
 		public Comment addCommentToRecipe(@PathVariable Integer recipeID, @RequestBody Comment comment) {
@@ -446,7 +470,7 @@ public class RecipeController {
 			User user = this.userService.findByEmail(email);
 		
 			if(user==null) {
-				throw new UserNotFoundException(user.getId());
+				throw new UserNotFoundException();
 			}else {
 				Recipe recipe = this.recipeService.findRecipeById(recipeID);
 				if(recipe==null) {
@@ -455,12 +479,10 @@ public class RecipeController {
 					if(recipe.getIsPending()) {
 						throw new RecipeNotAdmitCommentsException(recipeID);
 					}else {
-						if(user.getRole()=="ADMIN") {
-							comment.setPending(false);
+						if("ADMIN".equals(user.getRole())) {
+							comment.setIsPending(false);
 						}
-						comment.setUser(user);
-						comment.setUsername(user.getUsername());
-						return this.commentService.addComment(recipe, comment);
+						return this.commentService.postComment(comment, user, recipe);
 					}
 					
 					
@@ -469,6 +491,44 @@ public class RecipeController {
 			
 			
 		}
+		
+		@DeleteMapping("recipes/comments/{idComment}")
+		public ResponseEntity<?> deleteComment(@PathVariable Integer idComment){
+			
+			String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			User user = this.userService.findByEmail(email);
+		
+			if(user==null) {
+				throw new UserNotFoundException();
+			}else {
+			
+			Comment comment = this.commentService.findCommentById(idComment);
+			
+			if(comment == null) {
+				throw new CommentNotFoundException(idComment);
+			}
+			Recipe recipe = comment.getRecipe();
+			if(recipe == null) {
+				throw new RecipeNotFoundException(recipe.getId());
+			}
+			if("ADMIN".equals(user.getRole())) {
+				String titleNotif = "Comentario No Aprobado";
+				Comment comment2 = comment;
+				
+				comment.getUser().getNotifications().add(this.notificationService.addNotificationCommentNotApproved(user, comment2, titleNotif));
+				this.userService.addUser(comment.getUser());
+			}
+			this.commentService.delete(comment);
+			this.recipeService.addRecipeBBDD(recipe);
+			
+			return ResponseEntity.noContent().build();
+			}
+		}
+		
+		
+
+		
+		
 		
 
 		
@@ -628,7 +688,7 @@ public class RecipeController {
 	
 	
 	
-	//EXTRAS DE ANGULAR
+	//EXTRAS DE ANGULAR PARA MOSTRAR RECETAS Y ELEMENTOS SIN NECESIDAD DE ESTAR LOGUEADO
 	
 	/**
 	 * MÉTODO que gestiona peticiones GET a /ver/id y  busca una receta por su ID
@@ -694,9 +754,36 @@ public class RecipeController {
 		if(this.categoryService.findById(id) == null) {
 			throw new CategoryNotFoundException(id);
 		}else {
-			System.out.println(this.categoryService.findById(id));
+			//System.out.println(this.categoryService.findById(id));
 			return ResponseEntity.ok(categoryService.findById(id));
 		}
+	}
+	
+	/**
+	 * Método para visualizar los comentarios aprobados de una receta
+	 * @param id
+	 * @return lista de comentarios aprobados de una receta
+	 */
+	@GetMapping("mostrar/recipe/{id}/comments")
+	public ResponseEntity<List<Comment>> getCommentsApprovedFromRecipe(@PathVariable Integer id){
+		
+		Recipe recipe = this.recipeService.findRecipeById(id);
+		
+		if (recipe == null) {
+			throw new RecipeNotFoundException(id);
+		}
+		
+		
+		List<Comment> recipeComments = this.commentService.getCommentsFromRecipeNotPending(id);
+		ResponseEntity<List<Comment>> re = null ;
+		
+		if(recipeComments.isEmpty()) {
+			re = ResponseEntity.noContent().build();
+		}else {
+			re = ResponseEntity.ok(recipeComments);
+		}
+		
+		return re;
 	}
 	
 

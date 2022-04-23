@@ -36,5 +36,14 @@ public interface CommentRepo extends JpaRepository <Comment, Integer>{
 	 */
 	@Query(value="select * from comment where comment.is_pending = true and comment.recipe_id = ?1", nativeQuery = true)
 	public List<Comment> findCommentsFromRecipePending(Integer idRecipe);
+	
+	
+	/**
+	 * Borra de la tabla auxiliar recipe_comments el comentario que coincide con el id que se le pasa por parámetro 
+	 * (que actúa como fk y si no la eliminamos no podemos eliminarla del repositorio de comentarios)
+	 * @param id
+	 */
+	@Query(value="delete from recipe_comments where comments_id = ?1", nativeQuery = true)
+	public void deleteCommentFK(Integer id);
 
 }

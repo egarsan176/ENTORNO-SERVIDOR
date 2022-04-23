@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/mostrar").permitAll()
+                .antMatchers("/users/**").hasAnyRole("USER")
                 .antMatchers("/recipes/**").hasAnyRole("USER", "ADMIN") 	//necesita token para acceder a este apartado
                 .antMatchers("/admin/**").hasAnyRole("ADMIN") 
                 .and()

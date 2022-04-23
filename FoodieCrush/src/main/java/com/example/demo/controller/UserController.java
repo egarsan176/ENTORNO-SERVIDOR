@@ -2,13 +2,18 @@ package com.example.demo.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.exception.NotificationNotFoundException;
+import com.example.demo.model.Notification;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
+import com.example.demo.service.NotificationService;
 import com.example.demo.service.UserService;
 
 /**
@@ -23,6 +28,7 @@ public class UserController {
     @Autowired private UserRepo userRepo;
     
     @Autowired private UserService userService;
+    @Autowired private NotificationService notificationService;
 
     /**
      * MÉTODO que gestiona peticiones GET a /user y que te devuelve un usuario a través del token
@@ -55,6 +61,24 @@ public class UserController {
 	public User checkUsernameUser(@PathVariable String username) {
 		
 		return this.userService.findByUserName(username);
+	}
+	
+	@DeleteMapping("users/notifications/{id}")
+	public ResponseEntity<?> deleteNotification(@PathVariable Integer id){
+		
+		Notification notif = this.notificationService.getNotificationByID(id);
+		
+		if(notif!=null) {
+		
+		this.notificationService.delete(notif);
+		
+		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = this.userService.findByEmail(email);
+		this.userRepo.save(user);
+		return ResponseEntity.noContent().build();
+		}
+		throw new NotificationNotFoundException(id);
+		
 	}
 
 

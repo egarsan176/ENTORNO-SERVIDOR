@@ -25,8 +25,9 @@ public class Comment {
 	@JsonIgnore
 	@OneToOne
 	private Recipe recipe;
-	private boolean isPending;
+	private boolean isPending = true;
 	private String username;
+	private String recipeName;
 	@JsonIgnore
 	private Date fecha;
 	
@@ -34,14 +35,12 @@ public class Comment {
 	public Comment(String message) {
 		super();
 		this.message = message;
-		this.isPending = true;
 		this.fecha = new Date();
 		
 	}
 	
 	public Comment() {
 		super();
-		this.isPending = true;
 		this.fecha = new Date();
 	}
 
@@ -110,7 +109,7 @@ public class Comment {
 
 
 
-	public boolean isPending() {
+	public boolean getIsPending() {
 		return isPending;
 	}
 
@@ -118,7 +117,7 @@ public class Comment {
 
 
 
-	public void setPending(boolean isPending) {
+	public void setIsPending(boolean isPending) {
 		this.isPending = isPending;
 	}
 
@@ -147,6 +146,14 @@ public class Comment {
 	 */
 	public String getFechaBonita() {
 		return new SimpleDateFormat("dd-MM-yyyy || hh:mm:ss").format(this.fecha);
+	}
+
+	public String getRecipeName() {
+		return recipeName;
+	}
+
+	public void setRecipeName(String recipeName) {
+		this.recipeName = recipeName;
 	}
 
 	@Override
