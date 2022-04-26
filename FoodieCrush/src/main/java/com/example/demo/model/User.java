@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
@@ -31,6 +34,8 @@ public class User {
 	private String role;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Notification> notifications;
+	@JsonIgnore
+	private Date fecha;
 	
 	
 	public User(String fullName, String username, String email, String password, String role) {
@@ -41,6 +46,7 @@ public class User {
 		this.password = password;
 		this.role = role;
 		this.notifications = new ArrayList<>();
+		this.fecha = new Date();
 	}
 
 	public User(String username, String password) {
@@ -48,11 +54,13 @@ public class User {
 		this.username = username;
 		this.password = password;
 		this.notifications = new ArrayList<>();
+		this.fecha = new Date();
 	}
 	
 	public User(Long id) {
 		this.id=id;
 		this.notifications = new ArrayList<>();
+		this.fecha = new Date();
 	}
 
 	public User(String fullName, String username, String email) {
@@ -61,11 +69,13 @@ public class User {
 		this.username = username;
 		this.email = email;
 		this.notifications = new ArrayList<>();
+		this.fecha = new Date();
 	}
 
 	public User() {
 		super();
 		this.notifications = new ArrayList<>();
+		this.fecha = new Date();
 	}
 
 	public Long getId() {
@@ -123,6 +133,13 @@ public class User {
 
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
+	}
+	/**
+	 * Este método muestra la fecha en un formato más entendible
+	 * @return
+	 */
+	public String getFechaBonita() {
+		return new SimpleDateFormat("dd-MM-yyyy || hh:mm:ss").format(this.fecha);
 	}
 
 	@Override

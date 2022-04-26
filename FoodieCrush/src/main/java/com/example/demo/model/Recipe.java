@@ -27,7 +27,7 @@ public class Recipe {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Method> method = new  ArrayList<>();
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne (cascade = CascadeType.ALL)
 	private User user;
 	@ManyToOne
 	private Category category;

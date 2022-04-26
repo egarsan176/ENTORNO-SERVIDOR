@@ -157,6 +157,16 @@ public class RecipeService {
 		return this.userService.findById(idUser);
 	}
 	
+
+	public void deleteAllRecipesUser(User user) {
+		List<Recipe> listRecipesUser = this.findRecipeListUser(user.getId());
+		int index = listRecipesUser.size();
+		while (index>0) {
+			this.deleteRecipe(listRecipesUser.get(index-1));
+			index--;
+
+		}
+	}
 	
 	
 	

@@ -12,11 +12,11 @@ public interface RecipeRepo extends JpaRepository<Recipe, Integer>{
 	public List<Recipe>findByUserId(Long id);
 	
 	/**
-	 * CONSULTA obtener todas las recetas de una categoría
+	 * CONSULTA obtener todas las recetas de una categoría que ya han sido aprobadas por el admin
 	 * @param id de la categoría a buscar
-	 * @return lista de recetas que coinciden con esa categoría
+	 * @return lista de recetas que coinciden con esa categoría y que han sido aprobadas
 	 */
-	@Query(value="select * from recipe where category_id = ?1", nativeQuery = true) 
+	@Query(value="select * from recipe where category_id = ?1 and recipe.is_pending = false", nativeQuery = true) 
 	public List<Recipe> findRecipesByCategory(Integer idCategory);
 	
 	/**
@@ -61,5 +61,7 @@ public interface RecipeRepo extends JpaRepository<Recipe, Integer>{
 	 */
 	@Query(value="select * from recipe where recipe.is_pending = true", nativeQuery = true)
 	public List<Recipe> findRecipesPending();
+	
+	
 
 }

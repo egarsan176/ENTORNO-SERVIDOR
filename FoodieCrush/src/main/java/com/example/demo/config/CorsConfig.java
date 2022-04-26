@@ -129,7 +129,7 @@ public class CorsConfig implements WebMvcConfigurer{
 				//GESTIONES DEL ADMIN
 				registry.addMapping("/admin/**")
 				.allowedOrigins(url)
-				.allowedMethods("PUT", "OPTIONS", "GET", "POST", "HEAD")
+				.allowedMethods("PUT", "OPTIONS", "GET", "POST", "HEAD", "DELETE")
                 .allowedHeaders("GET", "POST", "OPTIONS", "PUT","DELETE", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");

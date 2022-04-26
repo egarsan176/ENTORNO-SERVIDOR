@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,8 @@ import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.exception.CommentStatusException;
 import com.example.demo.exception.RecipeNotFoundException;
 import com.example.demo.exception.RecipeStatusException;
+import com.example.demo.exception.UserDeleteException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Comment;
 import com.example.demo.model.Notification;
 import com.example.demo.model.Recipe;
@@ -155,6 +158,41 @@ public class AdminController {
 			}
 			return ResponseEntity.status(HttpStatus.CREATED).body(comment);
 		}
+	/**
+	 * MÉTODO que gestiona peticiones GET a /admin/users para obtener la lista de usuarios registrados en la base de datos
+	 * @return lista de usuarios
+	 */
+	@GetMapping("admin/users")
+	public ResponseEntity<List<User>> getAllUsersFromBD(){
+		List<User> users = this.userService.findAllUsers();
+		ResponseEntity<List<User>> re = null ;
+		
+		if(users.isEmpty()) {
+			re = ResponseEntity.noContent().build();
+		}else {
+			re =  ResponseEntity.ok(users);
+		}
+		
+		return re;
+	}
+	
+	@DeleteMapping("admin/users/{id}")
+	public ResponseEntity<?> deleteUser(@PathVariable Long id){
+		
+		User userDel = this.userService.findById(id);
+		
+		if(userDel == null) {
+			throw new UserNotFoundException(id);
+		}
+		if("ADMIN".equals(userDel.getRole())) {
+			throw new UserDeleteException(id);
+		}
+		
+		this.recipeService.deleteAllRecipesUser(userDel);
+		this.userService.deleteUser(userDel);
+		return ResponseEntity.noContent().build();
+		
+	}
 
 	
 	
@@ -175,6 +213,21 @@ public class AdminController {
 		apiError.setMensaje(ex.getMessage());
 		
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+	}
+	
+	/**
+	 * GESTIÓN DE EXCEPCIÓN UserDeleteException
+	 * @param ex
+	 * @return un json con el estado, fecha, hora y mensaje de la excepción si el usuario a borrar es ADMIN
+	 */
+	@ExceptionHandler(UserDeleteException.class)
+	public ResponseEntity<ApiError> handleUserDeleteException(UserDeleteException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.CONFLICT);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
 	}
 	
 	/**

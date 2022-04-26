@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Recipe;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 
@@ -14,8 +17,7 @@ import com.example.demo.repository.UserRepo;
 @Service
 public class UserService {
 	
-	@Autowired
-	private UserRepo userRepo;
+	@Autowired private UserRepo userRepo;
 	
 	
 	/**
@@ -64,6 +66,19 @@ public class UserService {
 	 */
 	public User addUser(User user) {
 		return this.userRepo.save(user);
+	}
+	
+	/**
+	 * MÉTODO para devolver la lista completa de usuarios de la base de datos
+	 * @return lista de usuarios registrados
+	 */
+	public List<User> findAllUsers(){
+		return this.userRepo.findAll();
+	}
+	
+	public void deleteUser(User user) {
+		
+		this.userRepo.delete(user);
 	}
 	
 	
