@@ -207,22 +207,32 @@ public class RecipeController {
 	 * 			si la categoría no existe --> CategoryNotFoundException()
 	 * 			si receta y categoría existen --> JSON con los datos que se han editado
 	 */
+//	@PutMapping("recipes/{id}")
+//	public ResponseEntity<RecipeDates> editRecipe(@PathVariable Integer id, @RequestBody RecipeDates datos){
+//		
+//		Recipe recipe = this.recipeService.findRecipeById(id);
+//		Category category = this.categoryService.findById(datos.getCategory().getId());
+//		if(recipe == null) {
+//			throw new RecipeNotFoundException(id);
+//		}else if(category==null){
+//			throw new CategoryNotFoundException(datos.getCategory().getId());
+//		}else {
+//			this.recipeService.editRecipeDates(recipe, datos);
+//			this.recipeService.addRecipeBBDD(recipe);
+//		}
+//		return ResponseEntity.status(HttpStatus.CREATED).body(datos);
+//		
+//	}
 	@PutMapping("recipes/{id}")
-	public ResponseEntity<RecipeDates> editRecipe(@PathVariable Integer id, @RequestBody RecipeDates datos){
+	public ResponseEntity<Recipe> editRecipe(@PathVariable Integer id, @RequestBody Recipe editRecipe){
 		
-		Recipe recipe = this.recipeService.findRecipeById(id);
-		Category category = this.categoryService.findById(datos.getCategory().getId());
-		if(recipe == null) {
+		if(this.recipeService.findRecipeById(id) == null) {
 			throw new RecipeNotFoundException(id);
-		}else if(category==null){
-			throw new CategoryNotFoundException(datos.getCategory().getId());
-		}else {
-			this.recipeService.editRecipeDates(recipe, datos);
-			this.recipeService.addRecipeBBDD(recipe);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(datos);
 		
+		return ResponseEntity.status(HttpStatus.CREATED).body(this.recipeService.editRecipe(editRecipe, id));
 	}
+	
 	
 	
 	//ACCESO A RECURSOS DE SEGUNDO NIVEL

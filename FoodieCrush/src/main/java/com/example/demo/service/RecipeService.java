@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.model.Category;
 import com.example.demo.model.Ingredient;
 import com.example.demo.model.IngredientLine;
+import com.example.demo.model.Method;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.RecipeDates;
 import com.example.demo.model.User;
@@ -22,6 +23,7 @@ public class RecipeService {
 	@Autowired private IngredientLineService ingredientLineService;
 	@Autowired private IngredientService ingredientService;
 	@Autowired private UserService userService;
+	@Autowired private MethodService methodService;
 	
 	/**
 	 *USO DE @TRANSACTIONAL
@@ -99,17 +101,53 @@ public class RecipeService {
 		return this.recipeRepo.findRecipesByCategory(id);
 	}
 	
+//	/**
+//	 * MÉTODO para editar el nombre y la categoría de una receta
+//	 * @param recipe
+//	 * @param datos
+//	 */
+//	public void editRecipeDates(Recipe recipe, RecipeDates datos) {
+//		Integer idCategory = datos.getCategory().getId();
+//		Category cat = this.categoryService.findById(idCategory);
+//		datos.setCategory(cat);
+//		recipe.setCategory(cat);
+//		recipe.setRecipeName(datos.getRecipeName());
+//	}
+	
 	/**
-	 * MÉTODO para editar el nombre y la categoría de una receta
-	 * @param recipe
-	 * @param datos
+	 * Método para editar los campos de una receta
+	 * @param editRecipe
+	 * @param idRecipe
+	 * @return
 	 */
-	public void editRecipeDates(Recipe recipe, RecipeDates datos) {
-		Integer idCategory = datos.getCategory().getId();
-		Category cat = this.categoryService.findById(idCategory);
-		datos.setCategory(cat);
-		recipe.setCategory(cat);
-		recipe.setRecipeName(datos.getRecipeName());
+	public Recipe editRecipe(Recipe editRecipe, Integer idRecipe) {
+		
+		Recipe recipe = this.findRecipeById(idRecipe);
+		
+		if(editRecipe.getCategory() != null &&  editRecipe.getCategory() != recipe.getCategory()) {
+			Category cat = this.categoryService.findById(editRecipe.getCategory().getId());
+			recipe.setCategory(cat);
+		}
+		if(editRecipe.getFile()!=null) {
+			recipe.setFileID(editRecipe.getFile());
+		}
+		if(editRecipe.getIngredientLine()!= null) {
+			recipe.setIngredientLine(editRecipe.getIngredientLine());
+		}
+		if(editRecipe.getMethod()!= null) {
+			List<Method> methodDelete= recipe.getMethod();
+			recipe.setMethod(editRecipe.getMethod());
+			this.methodService.deleteMethod(methodDelete); //para que en la bbdd no se queden almacenados los métodos antiguos que ya no corresponden a ninguna receta
+		}
+		if(editRecipe.getRecipeName()!= null && editRecipe.getRecipeName() != recipe.getRecipeName()) {
+			recipe.setRecipeName(editRecipe.getRecipeName());
+		}
+		recipe.setComments(null);
+		recipe.setIsPending(true);
+		recipe.setFecha(editRecipe.getFecha());
+		
+		return this.addRecipeBBDD(recipe);
+		
 	}
 	
 	/**
