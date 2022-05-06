@@ -1,18 +1,24 @@
 package com.example.demo.controller;
 
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.NotificationNotFoundException;
+import com.example.demo.model.MessageEmail;
 import com.example.demo.model.Notification;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
+import com.example.demo.service.EmailSMTP;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.UserService;
 
@@ -29,6 +35,8 @@ public class UserController {
     
     @Autowired private UserService userService;
     @Autowired private NotificationService notificationService;
+    
+    @Autowired private EmailSMTP sendEmail;
 
     /**
      * MÉTODO que gestiona peticiones GET a /user y que te devuelve un usuario a través del token
@@ -79,6 +87,18 @@ public class UserController {
 		}
 		throw new NotificationNotFoundException(id);
 		
+	}
+	
+  
+	/**
+	 * A este método se accede cuando un usuario rellena el formulario de contacto y se envia un email a la cuenta de correo de FoodieCrush
+	 * @param datos
+	 * @throws MessagingException
+	 */
+    @PostMapping("/contactUs")
+    public void sendEmail(@RequestBody MessageEmail datos) throws MessagingException {
+    	
+		this.sendEmail.sendSimpleMessage(datos, "FoodieHELP! - "+datos.getFullName()+" ha enviado un mensaje!");
 	}
 
 
