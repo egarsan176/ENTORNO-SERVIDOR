@@ -137,6 +137,7 @@ public class CorsConfig implements WebMvcConfigurer{
 				//AUXILIARES PARA ANGULAR
 				registry.addMapping("/mostrar/**")
 				.allowedOrigins(url)
+				.allowedMethods("PUT", "OPTIONS", "GET", "POST", "HEAD", "DELETE")
                 .allowedHeaders("GET", "Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");

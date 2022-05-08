@@ -20,10 +20,10 @@ public class EmailSMTP {
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper;
 		
-		String finalMsg = new String("El siguiente usuario se ha puesto en contacto con FoodieCrush:<br><br><b>Nombre:</b> "
-				+datos.getFullName()+". <br>"
+		String finalMsg = new String("<h3>El siguiente usuario se ha puesto en contacto con FoodieCrush:</h3>"
+				+"<b>Nombre:</b> "+datos.getFullName()+". <br>"
 				+"<b>Mensaje:</b><br><i>"+datos.getMessage()+"</i><br>"
-				+"<b>Email de contacto:</b> "+datos.getEmail());
+				+"<b>Email de contacto:</b> "+datos.getEmail())+"";
 		
 		helper = new MimeMessageHelper(message, true);
 

@@ -143,19 +143,18 @@ public class RecipeController {
 		
 		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = this.userService.findByEmail(email);
-		//System.out.println(user);
 		
 		//para comprobar que no haya una receta con el mismo nombre en la bbdd
-		Integer check = this.recipeService.checkRecipeName(recipe.getRecipeName());
+		//Integer check = this.recipeService.checkRecipeName(recipe.getRecipeName());
 		if(user!=null) {
 			
 			Integer idCategory = recipe.getCategory().getId();
 			Category cat = this.categoryService.findById(idCategory);
 			
-			if(check!=0) {
-				throw new RecipeExistException(recipe.getRecipeName());
-			}
-			else if(cat == null) {
+//			if(check!=0) {
+//				throw new RecipeExistException(recipe.getRecipeName());
+//			}
+			if(cat == null) {
 				throw new CategoryNotFoundException(idCategory);
 			}else {
 				if("ADMIN".equals(user.getRole())) {
@@ -193,6 +192,7 @@ public class RecipeController {
 				recipe.getUser().getNotifications().add(this.notificationService.addNotificationRecipeNotApproved(user, recipe2, titleNotif));
 				this.userService.addUser(recipe.getUser());
 			}
+			
 			this.recipeService.deleteRecipe(recipe);
 			return ResponseEntity.noContent().build();
 		}
@@ -223,6 +223,12 @@ public class RecipeController {
 //		return ResponseEntity.status(HttpStatus.CREATED).body(datos);
 //		
 //	}
+	/**
+	 * Este método sirve para editar una receta a través de una petición PUT
+	 * @param id
+	 * @param editRecipe
+	 * @return
+	 */
 	@PutMapping("recipes/{id}")
 	public ResponseEntity<Recipe> editRecipe(@PathVariable Integer id, @RequestBody Recipe editRecipe){
 		
@@ -717,7 +723,7 @@ public class RecipeController {
 	}
 	
 	/**
-	 * MÉTODO que gestiona peticiones GET a /ver?categoryID=x y devuelve una lista de todas las recetas de esa categoría que ya han sido aprobabas por el admin
+	 * MÉTODO que gestiona peticiones GET a /mostrar?categoryID=x y devuelve una lista de todas las recetas de esa categoría que ya han sido aprobabas por el admin
 	 * @param categoryID
 	 * @return
 	 */
@@ -759,6 +765,11 @@ public class RecipeController {
 		}
 	}
 	
+	/**
+	 * Método para obtener una categoría a través de su id
+	 * @param id
+	 * @return categoría con todos sus datos que pertenece al id que se le pasa
+	 */
 	@GetMapping("/category/{id}")
 	public ResponseEntity<Category> getCategoryByID(@PathVariable Integer id) {
 		if(this.categoryService.findById(id) == null) {
@@ -794,6 +805,83 @@ public class RecipeController {
 		}
 		
 		return re;
+	}
+	
+	/**
+	 * Método que a través de una petición GET obtiene las recetas que coinciden con el nombre que se le pasa por parámetro
+	 * @param recipeName
+	 * @return listado de recetas cuyo nombre coincide exactamente con el nombre pasado por parámetro
+	 */
+	@GetMapping("mostrar/recipes/name")
+	public ResponseEntity<List<Recipe>> getRecipesByName(@RequestParam(required = true) String recipeName){
+		
+		List<Recipe> recipes = this.recipeService.findRecipesByName(recipeName);
+		ResponseEntity<List<Recipe>> re = null;
+		
+		if(recipes.isEmpty()) {
+			re = ResponseEntity.noContent().build();
+		}else {
+			re = ResponseEntity.ok(recipes);
+		}
+				
+		return re;
+		
+	}
+	
+	/**
+	 * Método que a través de una petición GET obtiene las recetas que coinciden en parte con el nombre que se le pasa por parámetro
+	 * @param recipeName
+	 * @return listado de recetas cuyo nombre coincide en alguna parte con el nombre pasado por parámetro
+	 */
+	@GetMapping("mostrar/recipes/similar")
+	public ResponseEntity<List<Recipe>> getRecipesBySimilarName(@RequestParam(required = true) String recipeName){
+		
+		List<Recipe> recipes = this.recipeService.findRecipesBySimilarName(recipeName);
+		ResponseEntity<List<Recipe>> re = null;
+		
+		if(recipes.isEmpty()) {
+			re = ResponseEntity.noContent().build();
+		}else {
+			re = ResponseEntity.ok(recipes);
+		}
+				
+		return re;
+		
+	}
+	
+	/**
+	 * Método que a través de una petición GET busca las recetas que contienen uno, dos o tres ingredientes en concreto
+	 * @param recipeName1 siempre presente
+	 * @param recipeName2 puede estar o no
+	 * @param recipeName3 puede estar o no
+	 * @return listado de recetas que contienen esos ingredientes
+	 */
+	@GetMapping("mostrar/recipes/ingredients")
+	public ResponseEntity<List<Recipe>> getRecipesByIngredients(@RequestParam(required = true) String ingredientName1,
+			@RequestParam(required = false) String ingredientName2, @RequestParam(required = false) String ingredientName3){
+		
+		List<Recipe> recipes = null;
+		ResponseEntity<List<Recipe>> re = null;
+		
+		if(ingredientName1 != null && ingredientName2 == null && ingredientName3 == null) {
+			recipes = this.recipeService.findRecipesOneIngredient(ingredientName1); 
+		}
+		else if(ingredientName1 != null && ingredientName2 != null && ingredientName3 == null) {
+			recipes = this.recipeService.findRecipesTwoIngredients(ingredientName1, ingredientName2); 
+		}
+		else {
+			recipes = this.recipeService.findRecipesThreeIngredients(ingredientName1, ingredientName2, ingredientName3); 
+		}
+		
+		
+		if(recipes.isEmpty()) {
+			re = ResponseEntity.noContent().build();
+		}else {
+			re = ResponseEntity.ok(recipes);
+		}
+				
+		return re;
+		
 	}
 	
 

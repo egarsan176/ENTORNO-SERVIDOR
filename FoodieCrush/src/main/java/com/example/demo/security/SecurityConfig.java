@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeHttpRequests()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/user/**").permitAll()
-                .antMatchers("/mostrar").permitAll()
+                .antMatchers("/mostrar/**").permitAll()
                 .antMatchers("/contactUs").permitAll()
                 .antMatchers("/users/**").hasAnyRole("USER")
                 .antMatchers("/recipes/**").hasAnyRole("USER", "ADMIN") 	//necesita token para acceder a este apartado

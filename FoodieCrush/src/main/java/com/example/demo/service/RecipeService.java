@@ -48,6 +48,7 @@ public class RecipeService {
 	 */
 	@Transactional
 	public void deleteRecipe(Recipe recipe) {
+		recipe.setUser(null);
 		this.recipeRepo.delete(recipe);
 	}
 	/**
@@ -95,10 +96,28 @@ public class RecipeService {
 	/**
 	 * MÉTODO que devuelve todas las recetas de una categoría en concreto
 	 * @param id
-	 * @return
+	 * @return lista de recetas de la categoría que coincide con el id que se le pasa por parámetro
 	 */
 	public List<Recipe> findAllRecipesByCategory(Integer id){
 		return this.recipeRepo.findRecipesByCategory(id);
+	}
+	
+	/**
+	 * MÉTODO para obtener las recetas que coinciden con el nombre que se le pasa por parámetro
+	 * @param recipeName
+	 * @return lista de recetas que coinciden cone se nombre
+	 */
+	public List<Recipe> findRecipesByName(String recipeName){
+		return this.recipeRepo.findRecipeByName(recipeName);
+	}
+	
+	/**
+	 * MÉTODO para obtener las recetas que contienen en su nombre parte del nombre que se le pasa por parámetro
+	 * @param recipeName
+	 * @return lista de recetas que contienen parte del nombre que se le pasa
+	 */
+	public List<Recipe> findRecipesBySimilarName(String recipeName){
+		return this.recipeRepo.findRecipeBySimilarName(recipeName);
 	}
 	
 //	/**
@@ -196,6 +215,10 @@ public class RecipeService {
 	}
 	
 
+	/**
+	 * MÉTODO que elimina todas las recetas de un usuario
+	 * @param user
+	 */
 	public void deleteAllRecipesUser(User user) {
 		List<Recipe> listRecipesUser = this.findRecipeListUser(user.getId());
 		int index = listRecipesUser.size();
@@ -206,6 +229,33 @@ public class RecipeService {
 		}
 	}
 	
+	/**
+	 * MÉTODO que busca las recetas que contienen un ingrediente en concreto
+	 * @param name nombre del ingrediente
+	 * @return lista de recetas que contienen ese ingrediente
+	 */
+	public List<Recipe> findRecipesOneIngredient(String name){
+		return this.recipeRepo.findRecipesOneIngredient(name);
+	}
+	
+	
+	/**
+	 * MÉTODO que busca las recetas que contienen dos ingredientes en concreto
+	 * @param name1, name2 nombre de los ingredientes
+	 * @return lista de recetas que contienen esos ingredientes
+	 */
+	public List<Recipe> findRecipesTwoIngredients(String name1, String name2){
+		return this.recipeRepo.findRecipesTwoIngredients(name1, name2);
+	}
+	
+	/**
+	 * MÉTODO que busca las recetas que contienen tres ingredientes en concreto
+	 * @param name1, name2, name3 nombre de los ingredientes
+	 * @return lista de recetas que contienen esos ingredientes
+	 */
+	public List<Recipe> findRecipesThreeIngredients(String name1, String name2, String name3){
+		return this.recipeRepo.findRecipesThreeIngredients(name1, name2, name3);
+	}
 	
 	
 
