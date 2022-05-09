@@ -864,12 +864,15 @@ public class RecipeController {
 		ResponseEntity<List<Recipe>> re = null;
 		
 		if(ingredientName1 != null && ingredientName2 == null && ingredientName3 == null) {
+			
 			recipes = this.recipeService.findRecipesOneIngredient(ingredientName1); 
 		}
 		else if(ingredientName1 != null && ingredientName2 != null && ingredientName3 == null) {
+			
 			recipes = this.recipeService.findRecipesTwoIngredients(ingredientName1, ingredientName2); 
 		}
 		else {
+			
 			recipes = this.recipeService.findRecipesThreeIngredients(ingredientName1, ingredientName2, ingredientName3); 
 		}
 		
