@@ -22,10 +22,12 @@ import com.example.demo.exception.RecipeStatusException;
 import com.example.demo.exception.UserDeleteException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Comment;
+import com.example.demo.model.Ingredient;
 import com.example.demo.model.Notification;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.User;
 import com.example.demo.service.CommentService;
+import com.example.demo.service.IngredientService;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
@@ -41,6 +43,7 @@ public class AdminController {
 	
 	@Autowired private RecipeService recipeService;
 	@Autowired private CommentService commentService;
+	@Autowired private IngredientService ingredientService;
 	@Autowired private NotificationService notificationService;
 	@Autowired private UserService userService;
 	
@@ -193,6 +196,51 @@ public class AdminController {
 		return ResponseEntity.noContent().build();
 		
 	}
+	
+	
+	/**
+	 * Método que a través de una petición GET obtiene los ingredientes de la base de datos
+	 * @param isPending 
+	 * @return 	isPending es true --> devuelve los ingredientes pendientes
+	 * 			isPending es false --> devuelve los ingredientes aprobados
+	 * 			no contiene isPending --> devuelve todos los ingredientes de la BBDD
+	 */
+	@GetMapping("admin/ingredients")
+	public ResponseEntity<List<Ingredient>> getIngredients(@RequestParam(required = false) String isPending){
+		
+		
+		ResponseEntity<List<Ingredient>> re = null;
+		
+		if(isPending == null) {
+			List<Ingredient> ingredients = this.ingredientService.getAllIngredientsFromBD();
+			if(ingredients.isEmpty()) {
+				re = ResponseEntity.noContent().build();
+			}else {
+				re = ResponseEntity.ok(ingredients);
+			}
+		}
+		else {
+			if("false".equals(isPending)) {
+				List<Ingredient> ingredients = this.ingredientService.getIngredientsApproved();
+				if(ingredients.isEmpty()) {
+					re = ResponseEntity.noContent().build();
+				}else {
+					re = ResponseEntity.ok(ingredients);
+				}
+			}else if("true".equals(isPending)) {
+				List<Ingredient> ingredients = this.ingredientService.getIngredientsPending();
+				if(ingredients.isEmpty()) {
+					re = ResponseEntity.noContent().build();
+				}else {
+					re = ResponseEntity.ok(ingredients);
+				}
+			}
+		}
+		
+		
+		
+		return re;
+		}
 
 	
 	

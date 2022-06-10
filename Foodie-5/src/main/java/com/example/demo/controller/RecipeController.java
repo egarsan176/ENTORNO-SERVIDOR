@@ -29,6 +29,7 @@ import com.example.demo.exception.RecipeNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Category;
 import com.example.demo.model.Comment;
+import com.example.demo.model.Ingredient;
 import com.example.demo.model.IngredientLine;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.RecipeDates;
@@ -36,6 +37,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.CommentService;
 import com.example.demo.service.IngredientLineService;
+import com.example.demo.service.IngredientService;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
@@ -56,6 +58,7 @@ public class RecipeController {
 	@Autowired private IngredientLineService ingredientLineService;
 	@Autowired private CommentService commentService;
 	@Autowired private NotificationService notificationService;
+	@Autowired private IngredientService ingredientService;
 	
 	//ACCESO A RECURSOS DE PRIMER NIVEL
 	
@@ -144,16 +147,11 @@ public class RecipeController {
 		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = this.userService.findByEmail(email);
 		
-		//para comprobar que no haya una receta con el mismo nombre en la bbdd
-		//Integer check = this.recipeService.checkRecipeName(recipe.getRecipeName());
 		if(user!=null) {
 			
 			Integer idCategory = recipe.getCategory().getId();
 			Category cat = this.categoryService.findById(idCategory);
-			
-//			if(check!=0) {
-//				throw new RecipeExistException(recipe.getRecipeName());
-//			}
+
 			if(cat == null) {
 				throw new CategoryNotFoundException(idCategory);
 			}else {
@@ -886,6 +884,28 @@ public class RecipeController {
 		return re;
 		
 	}
+	
+	/**
+	 * Método que a través de una petición GET obtiene los nombres de todos los ingredientes de la base de datos
+	 * @return lista con los nombres de los ingredientes existentes
+	 */
+	@GetMapping("mostrar/ingredients")
+	public ResponseEntity<List<String>> getIngredientsFromBBDD(){
+		
+		List<String> ingredients = this.ingredientService.getNameAllIngredientsFromBD();
+		ResponseEntity<List<String>> re = null;
+		
+		if(ingredients.isEmpty()) {
+			re = ResponseEntity.noContent().build();
+		}else {
+			re = ResponseEntity.ok(ingredients);
+		}
+		
+		return re;
+		}
+	
+
+	
 	
 
 }
