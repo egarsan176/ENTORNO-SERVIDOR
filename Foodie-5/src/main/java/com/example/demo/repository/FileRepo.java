@@ -3,7 +3,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.example.demo.model.FileDB;
-
+/**
+ * Encargada de la persistencia de datos de FileDB
+ * @author estefgar
+ *
+ */
 @Repository
 public interface FileRepo extends JpaRepository<FileDB, String>{
 	

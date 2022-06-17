@@ -10,7 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+/**
+ * Clase Notification. Entidad.
+ * Crea el objeto notificación cuyos atributos son:
+ * id, title, message, user, fecha.
+ * @author estefgar
+ *
+ */
 @Entity
 public class Notification {
 	

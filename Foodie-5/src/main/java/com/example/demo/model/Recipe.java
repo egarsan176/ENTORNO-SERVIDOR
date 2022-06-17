@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,7 +17,13 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
+/**
+ * Clase Recipe. Entidad.
+ * Crea el objeto Receta cuyos atributos son:
+ * id, recipeName, method, user, category, ingredientLine, file, fecha, isPending, comments.
+ * @author estefgar
+ *
+ */
 @Entity
 public class Recipe {
 	
@@ -33,6 +40,7 @@ public class Recipe {
 	private Category category;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<IngredientLine> ingredientLine = new ArrayList<>();
+	
 	@OneToOne
 	private FileDB file;
 	@JsonIgnore
@@ -186,6 +194,25 @@ public class Recipe {
 		return "Recipe [id=" + id + ", recipeName=" + recipeName + ", method=" + method + ", user=" + user
 				+ ", category=" + category + ", ingredientLine=" + ingredientLine + ", file=" + file + ", fecha="
 				+ fecha + ", isPending=" + isPending + ", comments=" + comments + "]";
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Recipe other = (Recipe) obj;
+		return Objects.equals(id, other.id);
 	}
 
 	

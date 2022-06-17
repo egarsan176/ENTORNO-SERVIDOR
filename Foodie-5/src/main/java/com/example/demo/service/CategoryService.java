@@ -5,7 +5,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Category;
 import com.example.demo.repository.CategoryRepo;
-
+/**
+ * Servicio que se encarga de mediar entre el controller y el repositorio de Category
+ * @author estefgar
+ *
+ */
 @Service
 public class CategoryService {
 	

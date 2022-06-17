@@ -6,7 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.model.Ingredient;
-
+/**
+ * Encargada de la persistencia de datos de Ingredient
+ * @author estefgar
+ *
+ */
 public interface IngredientRepo extends JpaRepository<Ingredient, Integer> {
 	
 	@Query(value="select name from ingredient", nativeQuery = true)

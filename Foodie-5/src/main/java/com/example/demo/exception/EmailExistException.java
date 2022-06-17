@@ -2,7 +2,11 @@ package com.example.demo.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
+/**
+ * Excepción para un email que ya está registrado en la base de datos
+ * @author estefgar
+ *
+ */
 @ResponseStatus(HttpStatus.CONFLICT)
 public class EmailExistException extends RuntimeException{
 

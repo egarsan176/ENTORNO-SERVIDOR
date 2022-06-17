@@ -18,7 +18,13 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
+/**
+ * Clase User. Entidad.
+ * Crea el objeto usuario cuyos atributos son:
+ * id, fullName, username, email, password, role, notifications, fecha.
+ * @author estefgar
+ *
+ */
 @Entity
 @Table(name = "Users")
 public class User {

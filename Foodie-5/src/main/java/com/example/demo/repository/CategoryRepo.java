@@ -3,7 +3,11 @@ package com.example.demo.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.model.Category;
-
+/**
+ * Encargada de la persistencia de datos de Category
+ * @author estefgar
+ *
+ */
 public interface CategoryRepo extends JpaRepository<Category, Integer>  {
 	
 	/**

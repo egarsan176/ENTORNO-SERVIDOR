@@ -18,7 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.exception.ApiError;
 import com.example.demo.exception.FileNotFoundException;
-import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.message.ResponseFile;
 import com.example.demo.message.ResponseMessage;
 import com.example.demo.model.FileDB;
@@ -31,9 +30,6 @@ import com.example.demo.service.FilesStorageService;
  */
 @RestController
 public class FileController {
-	
-	//IMPLEMENTACIONES PARA EL PROYECTO FINAL
-	// - Borrar una imagen
 	
 	@Autowired private FilesStorageService storageService;
 	
@@ -53,7 +49,7 @@ public class FileController {
 	    	}
 	     FileDB  newFile =this.storageService.store(file);
 	      message = "Su archivo -"+file.getOriginalFilename()+"- se ha subido correctamente con el nombre de: "+newFile.getName();
-	      //System.out.println(newFile);
+	     
 	      return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 	    } catch (Exception e) {
 	      message = "No se ha podido subir el archivo: " + file.getOriginalFilename() + "!";
@@ -108,7 +104,7 @@ public class FileController {
 	 @GetMapping("/file/{id}")
 	 public ResponseEntity<FileDB> getFileByRecipe(@PathVariable Integer id) {
 		  FileDB file = this.storageService.getfileByRecipe(id);
-		  System.out.println(file);
+
 		  return ResponseEntity.ok(file);
 	 }
 	 

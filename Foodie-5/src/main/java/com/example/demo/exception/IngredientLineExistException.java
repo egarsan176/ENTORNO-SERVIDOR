@@ -4,7 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.example.demo.model.Ingredient;
-
+/**
+ * Excepción para cuando ya exista una línea de ingrediente que contenga al ingrediente x.
+ * @author estefgar
+ *
+ */
 @ResponseStatus(HttpStatus.CONFLICT)
 public class IngredientLineExistException extends RuntimeException{
 

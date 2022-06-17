@@ -9,8 +9,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.example.demo.message.ResponseMessage;
 
-/*
- * Para el caso en el que una solicitud excede el tamaño máximo de carga
+/**
+ * Excepción para el caso en el que una solicitud excede el tamaño máximo de carga
+ * @author estefgar
+ *
  */
 @ControllerAdvice
 public class FileUploadExceptionAdvice extends ResponseEntityExceptionHandler {

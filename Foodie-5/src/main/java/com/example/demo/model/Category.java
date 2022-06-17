@@ -7,7 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+/**
+ * Clase Category. Entidad.
+ * Crea el objeto Categoría.
+ * Sus atributos son: id, name
+ * @author estefgar
+ *
+ */
 
 @Entity
 

@@ -5,7 +5,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
+/**
+ * Clase Method. Entidad.
+ * Crea el objeto Método (pasos de la receta) cuyos atributos son:
+ * id, step.
+ * @author estefgar
+ *
+ */
 @Entity
 public class Method {
 	

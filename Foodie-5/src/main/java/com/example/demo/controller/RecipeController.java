@@ -29,14 +29,10 @@ import com.example.demo.exception.RecipeNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Category;
 import com.example.demo.model.Comment;
-import com.example.demo.model.Ingredient;
-import com.example.demo.model.IngredientLine;
 import com.example.demo.model.Recipe;
-import com.example.demo.model.RecipeDates;
 import com.example.demo.model.User;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.CommentService;
-import com.example.demo.service.IngredientLineService;
 import com.example.demo.service.IngredientService;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.RecipeService;
@@ -55,7 +51,6 @@ public class RecipeController {
 	@Autowired private RecipeService recipeService;
 	@Autowired private CategoryService categoryService;
 	@Autowired private UserService userService;
-	@Autowired private IngredientLineService ingredientLineService;
 	@Autowired private CommentService commentService;
 	@Autowired private NotificationService notificationService;
 	@Autowired private IngredientService ingredientService;
@@ -196,31 +191,7 @@ public class RecipeController {
 		}
 	}
 	
-	/**
-	 * MÉTODO que gestiona petición PUT para editar el nombre y la categoría de una receta existente
-	 * @param id
-	 * @param datos a modificar de la receta
-	 * @return 
-	 * 			si la receta no existe --> exception RecipeNotFoundException()
-	 * 			si la categoría no existe --> CategoryNotFoundException()
-	 * 			si receta y categoría existen --> JSON con los datos que se han editado
-	 */
-//	@PutMapping("recipes/{id}")
-//	public ResponseEntity<RecipeDates> editRecipe(@PathVariable Integer id, @RequestBody RecipeDates datos){
-//		
-//		Recipe recipe = this.recipeService.findRecipeById(id);
-//		Category category = this.categoryService.findById(datos.getCategory().getId());
-//		if(recipe == null) {
-//			throw new RecipeNotFoundException(id);
-//		}else if(category==null){
-//			throw new CategoryNotFoundException(datos.getCategory().getId());
-//		}else {
-//			this.recipeService.editRecipeDates(recipe, datos);
-//			this.recipeService.addRecipeBBDD(recipe);
-//		}
-//		return ResponseEntity.status(HttpStatus.CREATED).body(datos);
-//		
-//	}
+
 	/**
 	 * Este método sirve para editar una receta a través de una petición PUT
 	 * @param id
@@ -240,152 +211,6 @@ public class RecipeController {
 	
 	
 	//ACCESO A RECURSOS DE SEGUNDO NIVEL
-	
-	
-	//////////////////////////////////LÍNEAS DE INGREDIENTES
-	
-	/**
-	 * MÉTODO que gestiona una petición GET para obtener el listado de líneas de ingredientes de una receta
-	 * @param id de la receta
-	 * @return
-	 * 			si la receta no existe --> exception RecipeNotFoundException()
-	 * 			si la receta existe y no tiene líneas --> not Found
-	 * 			si la receta existe y tiene líneas --> JSON con todas las líneas de pedido de la receta
-	 */
-	@GetMapping("recipes/{id}/ingredientLine")
-	public ResponseEntity<List<IngredientLine>> findAllIngredientsLine(@PathVariable Integer id){
-		
-		Recipe recipe = this.recipeService.findRecipeById(id);
-		if(recipe == null) {
-			throw new RecipeNotFoundException(id);
-		}else {
-			List<IngredientLine> ingredients = this.recipeService.findRecipeById(id).getIngredientLine();
-			
-			ResponseEntity<List<IngredientLine>> re;
-			
-			if(ingredients.isEmpty()) {
-				re = ResponseEntity.notFound().build(); 
-			}else {
-				re = ResponseEntity.ok(ingredients); 
-			}
-			
-			return re;
-		}
-	}
-		
-		/**
-		 * MÉTODO que gestiona una petición GET para obtener una línea de ingredientes concreta de una receta
-		 * @param id de la receta
-		 * @return
-		 * 			si la receta no existe --> exception RecipeNotFoundException()
-		 * 			si la línea no existe --> exception IngredientLineNotFoundException()
-		 * 			si la línea existe --> línea
-		 */
-		@GetMapping("recipes/{id}/ingredientLine/{idLine}")
-		public IngredientLine getIngredientLineByID(@PathVariable Integer id, @PathVariable Integer idLine){
-			
-			Recipe recipe = this.recipeService.findRecipeById(id);
-			if(recipe == null) {
-				throw new RecipeNotFoundException(id);
-			
-			}else {
-				Integer index = recipe.getIngredientLine().indexOf(this.ingredientLineService.findById(idLine));
-
-				if(index==-1) {
-					throw new IngredientLineNotFoundException(idLine);
-				}else {
-					return recipe.getIngredientLine().get(index);
-				}
-
-			}
-
-		
-		}
-		/**
-		 * MÉTODO que gestiona una petición POST para añadir una nueva línea de ingredientes a una receta
-		 * @param id de la receta
-		 * @param line
-		 * @return	
-		 * 			si la receta no existe --> exception RecipeNotFoundException()
-		 * 			si la receta existe:
-		 * 					- si el ingrediente ya se encuentra en la receta --> exception IngredientLineExist()
-		 * 					- si no existe, lo añade a la receta
-		 */
-		@PostMapping("recipes/{id}/ingredientLine")
-		public ResponseEntity<IngredientLine> addIngredientLine(@PathVariable Integer id, @RequestBody IngredientLine line){
-			Recipe recipe = this.recipeService.findRecipeById(id);
-			if(recipe == null) {
-				throw new RecipeNotFoundException(id);
-			
-			}
-			else {
-				//para controlar si el ingrediente ya existe en la receta
-				Integer check = this.recipeService.checkRecipeIngredient(line.getIngredient().getName());
-
-				if (check!=0) {
-					throw new IngredientLineExistException(line.getIngredient().getName());
-				}else {
-					return ResponseEntity.status(HttpStatus.CREATED).body(this.recipeService.addIngredientLine(line, recipe));
-				}
-				
-			}
-		}
-		
-		/**
-		 * MÉTODO que gestiona petición PUT para editar la cantidad de una línea de ingredientes
-		 * @param id
-		 * @param idLine
-		 * @param amount
-		 * @return	
-		 * 			si receta no existe --> exception RecipeNotFoundException()
-		 * 			si la línea no existe --> exception IngredientLineNotFoundException()
-		 * 			si la línea existe --> línea con cantidad modificada
-		 */
-		@PutMapping("recipes/{id}/ingredientLine/{idLine}")
-		public IngredientLine editIngredientLine(@PathVariable Integer id, @PathVariable Integer idLine, @RequestBody Integer amount) {
-			Recipe recipe = this.recipeService.findRecipeById(id);
-			if(recipe == null) {
-				throw new RecipeNotFoundException(id);
-			
-			}else {
-				Integer index = recipe.getIngredientLine().indexOf(this.ingredientLineService.findById(idLine));
-
-				if(idLine-1>=recipe.getIngredientLine().size() || index==-1) {
-					throw new IngredientLineNotFoundException(idLine);
-				}else{
-					IngredientLine ingredientLine = recipe.getIngredientLine().get(index);
-					this.ingredientLineService.edit(ingredientLine, amount);
-					return ingredientLine;
-				}
-				
-			}
-		}
-		
-		/**
-		 * MÉTODO que gestiona petición DELETE para borrar una línea de ingredientes de una receta
-		 * @param id
-		 * @param idLine
-		 * @return
-		 * 			si receta no existe --> exception RecipeNotFoundException()
-		 * 			si la línea no existe --> exception IngredientLineNotFoundException()
-		 * 			si la línea existe --> la borra
-		 */
-		@DeleteMapping("recipes/{id}/ingredientLine/{idLine}")
-		public ResponseEntity<?> deleteIngredientLine(@PathVariable Integer id, @PathVariable Integer idLine){
-			Recipe recipe = this.recipeService.findRecipeById(id);
-			IngredientLine ingredientLine = this.ingredientLineService.findById(idLine);
-			
-			if(recipe==null) {
-				throw new RecipeNotFoundException(id);
-			}else if(ingredientLine== null) {
-				throw new IngredientLineNotFoundException(idLine);
-			}
-			else {
-				this.ingredientLineService.delete(ingredientLine);
-				this.recipeService.addRecipeBBDD(recipe);
-				return ResponseEntity.noContent().build();
-			}
-		}
 		
 		////////////////////////////////////////////COMENTARIOS
 		
@@ -506,6 +331,11 @@ public class RecipeController {
 			
 		}
 		
+		/**
+		 * MÉTODO para eliminar un comentario de una receta
+		 * @param idComment
+		 * @return
+		 */
 		@DeleteMapping("recipes/comments/{idComment}")
 		public ResponseEntity<?> deleteComment(@PathVariable Integer idComment){
 			
@@ -773,7 +603,6 @@ public class RecipeController {
 		if(this.categoryService.findById(id) == null) {
 			throw new CategoryNotFoundException(id);
 		}else {
-			//System.out.println(this.categoryService.findById(id));
 			return ResponseEntity.ok(categoryService.findById(id));
 		}
 	}
@@ -848,39 +677,23 @@ public class RecipeController {
 	}
 	
 	/**
-	 * Método que a través de una petición GET busca las recetas que contienen uno, dos o tres ingredientes en concreto
-	 * @param recipeName1 siempre presente
-	 * @param recipeName2 puede estar o no
-	 * @param recipeName3 puede estar o no
+	 * Método que a través de una petición GET busca las recetas que contienen exactamente los ingredientes que contiene la lista que se le pasa por parámetro
+	 * @param List<String> ingredientList
 	 * @return listado de recetas que contienen esos ingredientes
 	 */
+	
 	@GetMapping("mostrar/recipes/ingredients")
-	public ResponseEntity<List<Recipe>> getRecipesByIngredients(@RequestParam(required = true) String ingredientName1,
-			@RequestParam(required = false) String ingredientName2, @RequestParam(required = false) String ingredientName3){
+	public ResponseEntity<List<Recipe>> getRecipesByIngredients(@RequestParam List<String> ingredientList){
+	
 		
-		List<Recipe> recipes = null;
+		List<Recipe> recipes = this.recipeService.findRecipesFromIngredients(ingredientList, ingredientList.size());
 		ResponseEntity<List<Recipe>> re = null;
-		
-		if(ingredientName1 != null && ingredientName2 == null && ingredientName3 == null) {
-			
-			recipes = this.recipeService.findRecipesOneIngredient(ingredientName1); 
-		}
-		else if(ingredientName1 != null && ingredientName2 != null && ingredientName3 == null) {
-			
-			recipes = this.recipeService.findRecipesTwoIngredients(ingredientName1, ingredientName2); 
-		}
-		else {
-			
-			recipes = this.recipeService.findRecipesThreeIngredients(ingredientName1, ingredientName2, ingredientName3); 
-		}
-		
 		
 		if(recipes.isEmpty()) {
 			re = ResponseEntity.noContent().build();
 		}else {
 			re = ResponseEntity.ok(recipes);
 		}
-				
 		return re;
 		
 	}

@@ -5,7 +5,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.model.Ingredient;
 import com.example.demo.model.IngredientLine;
-
+/**
+ * Encargada de la persistencia de datos de IngredientLine
+ * @author estefgar
+ *
+ */
 public interface IngredientLineRepo extends JpaRepository<IngredientLine, Integer> {
 	/**
 	 * Busca una línea de ingredientes a través de un ingrediente concreto

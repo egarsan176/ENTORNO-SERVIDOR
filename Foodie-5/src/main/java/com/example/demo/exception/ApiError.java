@@ -6,7 +6,11 @@ import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-
+/**
+ * Esta clase actúa de modelo para gestionar las excepciones del que se planteen en el proyecto
+ * @author estefgar
+ *
+ */
 public class ApiError {
 	
 	private HttpStatus estado;

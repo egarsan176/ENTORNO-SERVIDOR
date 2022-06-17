@@ -10,7 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.FileDB;
 import com.example.demo.repository.FileRepo;
-
+/**
+ * Servicio que se encarga de mediar entre el controller y el repositorio de FileDB
+ * @author estefgar
+ *
+ */
 @Service
 public class FilesStorageService {
 

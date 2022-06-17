@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.model.User;
 /**
- * Interfaz que gestiona los métodos del Repositorio de Usuario
+ * Encargada de la persistencia de datos de User
  * @author estefgar
  *
  */

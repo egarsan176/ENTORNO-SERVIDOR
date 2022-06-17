@@ -11,7 +11,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+/**
+ * Clase Comment. Entidad.
+ * Crea el objeto comentario cuyos atributos son:
+ * id, message, user, recipe, isPending, username, recipeName, fecha.
+ * @author estefgar
+ *
+ */
 @Entity
 public class Comment {
 	

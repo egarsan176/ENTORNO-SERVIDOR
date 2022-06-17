@@ -11,10 +11,13 @@ import com.example.demo.model.Ingredient;
 import com.example.demo.model.IngredientLine;
 import com.example.demo.model.Method;
 import com.example.demo.model.Recipe;
-import com.example.demo.model.RecipeDates;
 import com.example.demo.model.User;
 import com.example.demo.repository.RecipeRepo;
-
+/**
+ * Servicio que se encarga de mediar entre el controller y el repositorio de Recipe
+ * @author estefgar
+ *
+ */
 @Service
 public class RecipeService {
 	
@@ -120,19 +123,6 @@ public class RecipeService {
 		return this.recipeRepo.findRecipeBySimilarName(recipeName);
 	}
 	
-//	/**
-//	 * MÉTODO para editar el nombre y la categoría de una receta
-//	 * @param recipe
-//	 * @param datos
-//	 */
-//	public void editRecipeDates(Recipe recipe, RecipeDates datos) {
-//		Integer idCategory = datos.getCategory().getId();
-//		Category cat = this.categoryService.findById(idCategory);
-//		datos.setCategory(cat);
-//		recipe.setCategory(cat);
-//		recipe.setRecipeName(datos.getRecipeName());
-//	}
-	
 	/**
 	 * Método para editar los campos de una receta
 	 * @param editRecipe
@@ -147,6 +137,7 @@ public class RecipeService {
 			Category cat = this.categoryService.findById(editRecipe.getCategory().getId());
 			recipe.setCategory(cat);
 		}
+		
 		if(editRecipe.getFile()!=null) {
 			recipe.setFileID(editRecipe.getFile());
 		}
@@ -230,31 +221,13 @@ public class RecipeService {
 	}
 	
 	/**
-	 * MÉTODO que busca las recetas que contienen un ingrediente en concreto
-	 * @param name nombre del ingrediente
-	 * @return lista de recetas que contienen ese ingrediente
+	 * MÉTODO que busca las recetas que contienen una serie de ingredientes
+	 * @param ingredientList
+	 * @param number
+	 * @return lista de recetas que contienen los ingredientes que se pasan en la lista
 	 */
-	public List<Recipe> findRecipesOneIngredient(String name){
-		return this.recipeRepo.findRecipesOneIngredient(name);
-	}
-	
-	
-	/**
-	 * MÉTODO que busca las recetas que contienen dos ingredientes en concreto
-	 * @param name1, name2 nombre de los ingredientes
-	 * @return lista de recetas que contienen esos ingredientes
-	 */
-	public List<Recipe> findRecipesTwoIngredients(String name1, String name2){
-		return this.recipeRepo.findRecipesTwoIngredients(name1, name2);
-	}
-	
-	/**
-	 * MÉTODO que busca las recetas que contienen tres ingredientes en concreto
-	 * @param name1, name2, name3 nombre de los ingredientes
-	 * @return lista de recetas que contienen esos ingredientes
-	 */
-	public List<Recipe> findRecipesThreeIngredients(String name1, String name2, String name3){
-		return this.recipeRepo.findRecipesThreeIngredients(name1, name2, name3);
+	public List<Recipe> findRecipesFromIngredients(List<String> ingredientList, int number){
+		return this.recipeRepo.findRecipesFromIngredients(ingredientList, ingredientList.size());
 	}
 	
 	

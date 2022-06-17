@@ -11,10 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.model.Category;
-import com.example.demo.model.Ingredient;
 import com.example.demo.model.User;
 import com.example.demo.repository.CategoryRepo;
-import com.example.demo.repository.IngredientRepo;
 import com.example.demo.repository.UserRepo;
 
 @SpringBootApplication
@@ -23,17 +21,17 @@ public class Foodie5Application extends SpringBootServletInitializer{
 	public static void main(String[] args) {
 		SpringApplication.run(Foodie5Application.class, args);
 	}
-	
-@Autowired private PasswordEncoder passEncoder; //para que la contraseña se encripte al guardarla en la bbdd
+	//encriptación de la contraseña
+@Autowired private PasswordEncoder passEncoder; 
 	
 
-
+//creación de usuarios iniciales
 @Bean
 CommandLineRunner iniData (UserRepo userREPO) {
 	return (args) -> {
-		userREPO.save(new User("Estefanía García", "estefgar", "estefaniagarci@gmail.com", passEncoder.encode("123456"), "USER"));
+		userREPO.save(new User("Lola Flores", "lolaFLO", "lolaFlores@gmail.com", passEncoder.encode("123456"), "USER"));
 		userREPO.save(new User("Pepe López", "pepLo", "pelopez@gmail.com", passEncoder.encode("123456"), "USER"));
-		userREPO.save(new User("Lola Flores", "lolaFLO", "admin@admin.com", passEncoder.encode("admin"), "ADMIN"));
+		userREPO.save(new User("Estefanía García", "estefgar", "admin@admin.com", passEncoder.encode("admin"), "ADMIN"));
 	};
 }
 

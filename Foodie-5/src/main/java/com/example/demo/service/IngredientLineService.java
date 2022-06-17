@@ -10,7 +10,11 @@ import com.example.demo.model.Ingredient;
 import com.example.demo.model.IngredientLine;
 import com.example.demo.repository.IngredientLineRepo;
 
-
+/**
+ * Servicio que se encarga de mediar entre el controller y el repositorio de IngredientLine
+ * @author estefgar
+ *
+ */
 @Service
 public class IngredientLineService {
 	

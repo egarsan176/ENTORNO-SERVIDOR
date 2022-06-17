@@ -8,7 +8,11 @@ import com.example.demo.model.Notification;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.User;
 import com.example.demo.repository.NotificationRepo;
-
+/**
+ * Servicio que se encarga de mediar entre el controller y el repositorio de Notification
+ * @author estefgar
+ *
+ */
 @Service
 public class NotificationService {
 	

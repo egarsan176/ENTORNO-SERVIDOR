@@ -9,7 +9,13 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-
+/**
+ * Clase FileDB. Entidad.
+ * Crea el objeto fichero, cuyos atributos son:
+ * id, name, type, data
+ * @author estefgar
+ *
+ */
 @Entity
 @Table(name = "files")
 public class FileDB {

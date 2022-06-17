@@ -7,7 +7,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-
+/**
+ * Clase IngredientLine. Entidad.
+ * Crea el objeto Línea de Ingredientes, cuyos atributos son:
+ * id, ingredient, cantidad
+ * @author estefgar
+ *
+ */
 @Entity
 public class IngredientLine {
 	

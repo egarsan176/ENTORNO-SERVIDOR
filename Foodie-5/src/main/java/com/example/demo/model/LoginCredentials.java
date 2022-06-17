@@ -1,6 +1,11 @@
 package com.example.demo.model;
 
-
+/**
+ * Clase DTO LoginCredentials
+ * Crea un objeto LoginCredential que sirve para hacer login
+ * @author estefgar
+ *
+ */
 public class LoginCredentials {
 
     private String email;

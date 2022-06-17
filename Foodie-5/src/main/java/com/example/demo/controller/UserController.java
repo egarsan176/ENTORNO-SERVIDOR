@@ -71,6 +71,11 @@ public class UserController {
 		return this.userService.findByUserName(username);
 	}
 	
+	/**
+	 * MÉTODO que gestiona peticiones DELETE a users/notifications/id pa borrar uu¡na notificación de la lista de notificaciones del usuario
+	 * @param id
+	 * @return
+	 */
 	@DeleteMapping("users/notifications/{id}")
 	public ResponseEntity<?> deleteNotification(@PathVariable Integer id){
 		

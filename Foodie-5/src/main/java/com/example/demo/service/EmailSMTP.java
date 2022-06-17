@@ -9,7 +9,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.model.MessageEmail;
-
+/**
+ * Sirve para enviar los emails del formulario de contacto
+ * @author estefgar
+ *
+ */
 @Component
 public class EmailSMTP {
 	

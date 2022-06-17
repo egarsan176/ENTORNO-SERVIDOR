@@ -7,7 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Method;
 import com.example.demo.repository.MethodRepo;
-
+/**
+ * Servicio que se encarga de mediar entre el controller y el repositorio de Method
+ * @author estefgar
+ *
+ */
 @Service
 public class MethodService {
 
@@ -19,7 +23,6 @@ public class MethodService {
 	 */
 	public void deleteMethod(List<Method> recipeMethod) {
 		for (Method method : recipeMethod) {
-			System.out.println(method);
 			this.methodREPO.delete(method);
 		}
 		

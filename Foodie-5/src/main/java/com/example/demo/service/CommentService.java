@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Comment;
-import com.example.demo.model.IngredientLine;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommentRepo;
-
+/**
+ * Servicio que se encarga de mediar entre el controller y el repositorio de Comment
+ * @author estefgar
+ *
+ */
 @Service
 public class CommentService {
 	

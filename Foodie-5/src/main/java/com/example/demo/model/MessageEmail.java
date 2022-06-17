@@ -2,13 +2,13 @@ package com.example.demo.model;
 
 import java.util.Objects;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Esta clase se necesita para enviar un email
+ * Clase MessageEmail.
+ * Esta clase es necesaria para enviar un email (formulario de contacto)
  * @author estefgar
  *
  */
